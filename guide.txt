@@ -1,0 +1,126 @@
+A continuación, presento un análisis exhaustivo del diseño, estructura y funcionamiento del sitio web de Cuberto, seguido de un informe estratégico de creación y un instructivo técnico minucioso para replicar su comportamiento utilizando exclusivamente tecnologías nativas (Vanilla HTML, CSS y JavaScript), sin recurrir a frameworks. Todo el proyecto estará basado en la tipografía Exo.
+
+PARTE 1: Análisis Profundo de la Estructura y Elementos
+Estructura Semántica (HTML)
+El sitio se divide en grandes bloques de contenido a pantalla completa y secciones de desplazamiento extenso:
+
+1-Header Principal: Navegación persistente superior con el logotipo, enlaces a secciones principales (Servicios, Proyectos, Sobre nosotros) y un botón de "Contacto".
+2-Hero Section (Inicio): Un encabezado monumental y un llamado a la acción inicial.
+3-Services (Servicios): Desglose de sus pilares fundamentales.
+4-Marquee (Con la confianza de): Carrusel infinito con logotipos de clientes.
+5-Featured Projects (Trabajo seleccionado): Cuadrícula asimétrica de proyectos con imágenes y videos que se reproducen al pasar el puntero.
+6-Testimonials (Testimonios): Validaciones y reseñas de clientes.
+7-Metrics/Stats (Por qué Cuberto): Bloque de métricas clave (años de experiencia, proyectos entregados).
+8-Insights/Blog: Entradas recientes sobre rediseño y desarrollo.
+9-FAQ (Preguntas Frecuentes): Lista de consultas con sistema desplegable.
+10-Footer (Pie de página): Cierre monumental con información de contacto, sedes y un botón gigante para iniciar proyectos.
+
+Contenido Textual (Traducción al Español)
+
+Digital design & development agency ➔ Agencia de diseño y desarrollo digital.
+
+We design and build digital products, brands and websites for companies ready to move beyond the ordinary. ➔ Diseñamos y construimos productos digitales, marcas y sitios web para empresas listas para ir más allá de lo ordinario.
+
+What we do ➔ Lo que hacemos.
+
+Digital Product Design ➔ Diseño de Productos Digitales.
+
+Web Design & Development ➔ Diseño y Desarrollo Web.
+
+Trusted by remarkable global brands ➔ Con la confianza de marcas globales destacadas.
+
+Selected work ➔ Trabajo seleccionado.
+
+View all projects ➔ Ver todos los proyectos.
+
+Why Cuberto ➔ Por qué Cuberto.
+
+What does the typical website redesign or revamp process look like? ➔ ¿Cómo es el proceso típico de rediseño o renovación de un sitio web?
+
+Paleta Cromática y Dirección de Arte
+El diseño se basa en el contraste máximo y el uso agresivo del espacio en blanco (o espacio negativo).
+
+Fondos: Transiciones bruscas pero elegantes entre Negro Absoluto y Blanco Puro o Gris Hielo, dependiendo de la sección.
+
+Tipografía: Contraste total (letras blancas sobre fondos oscuros y viceversa).
+
+Acentos: Tonos neutros (grises medios) para divisores y bordes sutiles. El color real y la vitalidad del sitio recaen casi exclusivamente en el contenido multimedia (videos y fotografías de los proyectos).
+
+Funciones Técnicas Especiales (Nomenclatura Técnica)
+
+Custom Cursor (Cursor Personalizado): Intercepción del puntero nativo para reemplazarlo por una geometría dinámica dibujada en el DOM.
+
+Magnetic Buttons (Botones Magnéticos): Cálculos geométricos que atraen el contenedor del botón y su etiqueta de texto hacia las coordenadas del ratón.
+
+Smooth Scroll via LERP (Desplazamiento Suave con Interpolación Lineal): Secuestro del desplazamiento nativo (Scroll Hijacking) aplicando fórmulas matemáticas para generar inercia y fluidez extrema.
+
+Parallax Scrolling: Alteración de la velocidad de traslación en el eje Y de ciertos elementos (imágenes) en relación con la velocidad de desplazamiento del usuario.
+
+Intersection Observer API Animations: Animaciones de entrada (fade-in, slide-up) que se desencadenan estrictamente cuando el elemento cruza el umbral visual (viewport).
+
+Infinite Marquee (Carrusel Infinito): Bucle continuo de traslación horizontal para elementos tipográficos o logotipos.
+
+Accordion (Tarjetas Desplegables): Sistema de colapso y expansión para la sección de Preguntas Frecuentes calculando la altura dinámica (scrollHeight).
+
+PARTE 2: Informe Extensivo de Planificación y Creación
+Para replicar esta experiencia a un nivel de agencia de primer nivel utilizando código puro (Vanilla), el proyecto requiere una arquitectura rigurosa. Al no contar con motores de estado o enrutadores virtuales, el rendimiento y la organización del DOM son críticos.
+
+Arquitectura del Proyecto
+La estructura de archivos debe dividirse en módulos estrictos. El HTML debe mantener una jerarquía semántica inquebrantable para no perjudicar la accesibilidad frente a la pesada capa de animaciones visuales. Los estilos CSS se organizarán preferiblemente mediante convenciones similares a BEM (Block Element Modifier), estableciendo un archivo de variables base (:root) para controlar los tiempos de transición, los colores del tema y las escalas tipográficas de la fuente Exo. El ecosistema de JavaScript debe separarse por responsabilidades: un controlador maestro para el bucle de renderizado, un observador de intersecciones, un gestor del cursor y rutinas matemáticas.
+
+Estrategia Tipográfica (Fuente Exo)
+La tipografía Exo será la espina dorsal del diseño visual. Para emular el impacto de Cuberto, se debe jugar drásticamente con los grosores (font-weight). Los encabezados principales (Hero y Footer) utilizarán variantes de peso máximo con un espaciado entre letras (letter-spacing) ajustado en negativo para dar compacidad, mientras que los párrafos de cuerpo usarán pesos finos o regulares con una altura de línea generosa (line-height) para garantizar legibilidad.
+
+Estrategia de Rendimiento (Performance)
+Dado que se implementarán efectos continuos vinculados al ratón y al desplazamiento, es obligatorio evitar los temidos "reflows" (recálculos de diseño del navegador). Todas las animaciones, sin excepción, deberán ejecutarse manipulando únicamente las propiedades CSS transform (para mover o escalar) y opacity (para desvanecer). Modificar propiedades como márgenes o anchos durante una animación destruirá la tasa de fotogramas (FPS).
+
+PARTE 3: Instructivo Minucioso de Desarrollo (Vanilla HTML, CSS, JS)
+A continuación, el paso a paso lógico y algorítmico para construir cada pieza maestra de la página sin escribir una sola línea de código en la instrucción, enfocado en el desarrollo puro.
+
+Fase 1: Fundamentos y Tipografía
+Integración de Exo: Configura la fuente Exo desde un proveedor de fuentes web o archivos locales mediante la regla de cara de fuente. Aplica esta fuente globalmente al cuerpo del documento.
+
+Variables Globales (CSS): En la pseudo-clase de la raíz, declara los valores hexadecimales para tus blancos y negros. Crea variables para los tiempos de animación (por ejemplo, transiciones rápidas de un tercio de segundo y transiciones lentas de un segundo completo).
+
+Reseteo Estricto: Elimina todos los márgenes y rellenos por defecto del navegador. Establece el modelo de caja en borde-caja globalmente para que los rellenos no sumen ancho a los elementos. Oculta el desbordamiento horizontal en el cuerpo para evitar barras de desplazamiento indeseadas en resoluciones estrechas.
+
+Fase 2: El Bucle de Renderizado y el Desplazamiento Suave (Smooth Scroll)
+Secuestro del Desplazamiento: Envuelve todo el contenido del sitio dentro de una etiqueta contenedora principal. En el CSS de esta etiqueta, configúrala con posicionamiento fijo, ocupando el cien por ciento del ancho y alto. Esto anula el desplazamiento normal del navegador.
+
+Cálculo de Altura: Mediante JavaScript, calcula la altura total real de todo el contenido interior. Asigna esa misma altura al cuerpo (body) del documento para forzar al navegador a mostrar la barra de desplazamiento nativa (aunque la pantalla en sí esté fija).
+
+Interpolación Lineal (LERP): Crea variables en JavaScript para almacenar la posición de desplazamiento actual, la posición objetivo y un factor de suavizado (un decimal pequeño). Captura el evento de la rueda del ratón y el desplazamiento nativo de la ventana para actualizar la "posición objetivo".
+
+Bucle de Animación: Invoca la función nativa de solicitud de fotograma de animación (requestAnimationFrame) de forma recursiva. En cada fotograma, acerca la "posición actual" a la "posición objetivo" utilizando la fórmula matemática de LERP. Aplica la posición resultante traduciendo verticalmente (eje Y) el contenedor principal mediante la propiedad de transformación CSS.
+
+Fase 3: Cursor Personalizado y Botones Magnéticos
+Ocultamiento del Puntero: Asigna la regla de ocultar cursor nativo a todos los elementos interactivos y al cuerpo general.
+
+Creación del Cursor en el DOM: Inserta una capa vacía absoluta flotando sobre toda la página, estilizada como un pequeño círculo (usando bordes redondeados al máximo) con mezcla de exclusión o diferencia de color para que contraste dinámicamente con el fondo que toque.
+
+Seguimiento del Ratón: Escucha el evento de movimiento del ratón en la ventana. Actualiza continuamente las coordenadas X e Y. Utilizando el mismo bucle de renderizado del paso anterior, aplica LERP a estas coordenadas para que el círculo siga al puntero físico con un levísimo retraso fluido.
+
+Lógica del Botón Magnético: Para cada botón de acción, escucha la entrada, movimiento y salida del ratón. Al moverse dentro del botón, calcula sus dimensiones y posición en pantalla usando el método de obtención de rectángulo delimitador (getBoundingClientRect). Encuentra el centro exacto del botón. Calcula la distancia desde el centro hasta el cursor actual. Aplica una fracción de esa distancia (dividida por un factor de resistencia) para mover temporalmente la etiqueta de texto y el fondo del botón en esa dirección. Al salir del área del botón, devuelve las transformaciones a cero.
+
+Fase 4: Aparición de Elementos (Intersection Observer)
+Preparación CSS: Define clases base para los elementos ocultos, asignándoles opacidad cero y una traslación vertical hacia abajo (ej. desplazados cincuenta píxeles). Define una clase complementaria de "visibilidad" que retorne la opacidad a uno y la traslación a cero, adosándole una transición CSS curva y lenta.
+
+Instanciación del Observador: En JavaScript, crea una nueva instancia del Observador de Intersección. Configura sus opciones para que actúe cuando aproximadamente el diez o veinte por ciento del elemento sea visible en pantalla.
+
+Vigilancia de Nodos: Captura todos los títulos principales, tarjetas de servicios y proyectos. Pásalos por el observador. En la función de devolución de llamada (callback), cuando el objeto intersecte el área de visión, añádele la clase de "visibilidad" descrita en el primer punto y dile al observador que deje de vigilar ese nodo específico para consumir menos memoria.
+
+Fase 5: El Carrusel Infinito (Marquee)
+Contención: Crea una caja contenedora con rebose oculto.
+
+Pista de Movimiento: Dentro de la caja, inserta una pista (puedes usar modelo de caja flexible - Flexbox) que sea el doble o triple del ancho normal. Repite visualmente los logotipos o el texto al menos dos veces seguidas en el HTML.
+
+Animación CSS Pura: Define fotogramas clave (@keyframes) que muevan la pista de la posición inicial (cero por ciento) hasta la mitad exacta de su propia longitud negativa. Asigna esta animación a la pista con una curva de tiempo completamente lineal y una iteración infinita. Al llegar a la mitad (que es idéntica al inicio por la duplicación de contenido), saltará visualmente sin que el ojo humano perciba el reinicio.
+
+Fase 6: Sistema de Tarjetas Desplegables (FAQ Accordion)
+Estructura del Acordeón: Para cada pregunta frecuente, define un botón interactivo (la pregunta) y un contenedor inmediatamente inferior (la respuesta). Oculta el contenedor de la respuesta dándole una altura máxima de cero y un rebose oculto, con una transición CSS aplicada a dicha altura máxima.
+
+Cálculo Dinámico de Altura: Al detectar un clic en la pregunta, JavaScript debe leer la propiedad nativa de altura de desplazamiento (scrollHeight) del contenedor de respuesta oculto. Esta propiedad devuelve el espacio exacto que el texto necesita, incluso si está comprimido.
+
+Alternancia de Clases: Si la tarjeta estaba cerrada, aplica en línea el valor en píxeles del paso anterior a la altura máxima del contenedor de respuesta, disparando la animación de expansión. Simultáneamente, recorre el resto de las tarjetas y fuerza su altura de nuevo a cero para asegurar que solo haya una respuesta abierta a la vez.
+
+La correcta concatenación de estas matemáticas y rutinas del DOM, combinada con un diseño tipográfico monumental basado en Exo, dará como resultado la experiencia visual y fluida de un sitio premium sin necesidad de inyectar dependencias de terceros.
