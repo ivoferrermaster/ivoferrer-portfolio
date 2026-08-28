@@ -10,32 +10,10 @@ El sitio se divide en grandes bloques de contenido a pantalla completa y seccion
 4-Marquee (Con la confianza de): Carrusel infinito con logotipos de clientes.
 5-Featured Projects (Trabajo seleccionado): Cuadrícula asimétrica de proyectos con imágenes y videos que se reproducen al pasar el puntero.
 6-Testimonials (Testimonios): Validaciones y reseñas de clientes.
-7-Metrics/Stats (Por qué Cuberto): Bloque de métricas clave (años de experiencia, proyectos entregados).
+7-Metrics/Stats: Bloque de métricas clave (años de experiencia, proyectos entregados).
 8-Insights/Blog: Entradas recientes sobre rediseño y desarrollo.
 9-FAQ (Preguntas Frecuentes): Lista de consultas con sistema desplegable.
 10-Footer (Pie de página): Cierre monumental con información de contacto, sedes y un botón gigante para iniciar proyectos.
-
-Contenido Textual (Traducción al Español)
-
-Digital design & development agency ➔ Agencia de diseño y desarrollo digital.
-
-We design and build digital products, brands and websites for companies ready to move beyond the ordinary. ➔ Diseñamos y construimos productos digitales, marcas y sitios web para empresas listas para ir más allá de lo ordinario.
-
-What we do ➔ Lo que hacemos.
-
-Digital Product Design ➔ Diseño de Productos Digitales.
-
-Web Design & Development ➔ Diseño y Desarrollo Web.
-
-Trusted by remarkable global brands ➔ Con la confianza de marcas globales destacadas.
-
-Selected work ➔ Trabajo seleccionado.
-
-View all projects ➔ Ver todos los proyectos.
-
-Why Cuberto ➔ Por qué Cuberto.
-
-What does the typical website redesign or revamp process look like? ➔ ¿Cómo es el proceso típico de rediseño o renovación de un sitio web?
 
 Paleta Cromática y Dirección de Arte
 El diseño se basa en el contraste máximo y el uso agresivo del espacio en blanco (o espacio negativo).
@@ -69,7 +47,7 @@ Arquitectura del Proyecto
 La estructura de archivos debe dividirse en módulos estrictos. El HTML debe mantener una jerarquía semántica inquebrantable para no perjudicar la accesibilidad frente a la pesada capa de animaciones visuales. Los estilos CSS se organizarán preferiblemente mediante convenciones similares a BEM (Block Element Modifier), estableciendo un archivo de variables base (:root) para controlar los tiempos de transición, los colores del tema y las escalas tipográficas de la fuente Exo. El ecosistema de JavaScript debe separarse por responsabilidades: un controlador maestro para el bucle de renderizado, un observador de intersecciones, un gestor del cursor y rutinas matemáticas.
 
 Estrategia Tipográfica (Fuente Exo)
-La tipografía Exo será la espina dorsal del diseño visual. Para emular el impacto de Cuberto, se debe jugar drásticamente con los grosores (font-weight). Los encabezados principales (Hero y Footer) utilizarán variantes de peso máximo con un espaciado entre letras (letter-spacing) ajustado en negativo para dar compacidad, mientras que los párrafos de cuerpo usarán pesos finos o regulares con una altura de línea generosa (line-height) para garantizar legibilidad.
+La tipografía Exo será la espina dorsal del diseño visual. Para emular el impacto, se debe jugar drásticamente con los grosores (font-weight). Los encabezados principales (Hero y Footer) utilizarán variantes de peso máximo con un espaciado entre letras (letter-spacing) ajustado en negativo para dar compacidad, mientras que los párrafos de cuerpo usarán pesos finos o regulares con una altura de línea generosa (line-height) para garantizar legibilidad.
 
 Estrategia de Rendimiento (Performance)
 Dado que se implementarán efectos continuos vinculados al ratón y al desplazamiento, es obligatorio evitar los temidos "reflows" (recálculos de diseño del navegador). Todas las animaciones, sin excepción, deberán ejecutarse manipulando únicamente las propiedades CSS transform (para mover o escalar) y opacity (para desvanecer). Modificar propiedades como márgenes o anchos durante una animación destruirá la tasa de fotogramas (FPS).

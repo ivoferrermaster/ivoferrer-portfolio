@@ -31,7 +31,7 @@ html {
 }
 
 body {
-    font-family: 'Exo', sans-serif;
+    font-family: 'Moul', sans-serif;
     background-color: var(--white);
     color: var(--black);
     overflow-x: hidden;
@@ -165,16 +165,12 @@ button {
 }
 
 .text-image {
-    font-size: 15vw;
-    font-weight: 900;
+    font-size: 14vw;
     line-height: 0.85;
     text-transform: uppercase;
-    background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop') center/cover;
-    -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    letter-spacing: -0.05em;
+    color: white;
+    letter-spacing: -0.1rem;
 }
 
 .role {
