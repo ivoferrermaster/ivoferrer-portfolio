@@ -14,7 +14,7 @@
     --radius: 28px;
     --radius-lg: 40px;
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
-    --fluid-ease: cubic-bezier(0.19, 1, 0.22, 1); /* Nueva curva ultra suave */
+    --fluid-ease: cubic-bezier(0.19, 1, 0.22, 1);
     --fast: 0.33s;
     --slow: 1s;
 }
@@ -31,10 +31,14 @@ html {
 }
 
 body {
-    font-family: 'Moul', sans-serif;
+    font-family: 'Work Sans', sans-serif; 
     background-color: var(--white);
     color: var(--black);
     overflow-x: hidden;
+}
+
+h1, .text-image, .logo {
+    font-family: 'Moul', sans-serif;
 }
 
 img {
@@ -183,7 +187,7 @@ button {
     will-change: transform;
 }
 
-/* --- SERVICIOS (Update: Smooth Grid Animation) --- */
+/* --- SERVICIOS --- */
 .services {
     padding: 2rem 0 6rem;
     background: var(--white);
@@ -201,7 +205,6 @@ button {
     color: var(--black);
     position: relative;
     overflow: hidden;
-    /* Transición mucho más lenta para los colores */
     transition: background 1.2s ease, color 1.2s ease;
 }
 
@@ -227,14 +230,12 @@ button {
     transition: opacity 1s var(--fluid-ease);
 }
 
-/* Usando CSS Grid para animar altura de 0 a auto (1fr) con fluidez perfecta */
 .service-row__content {
     display: grid;
     grid-template-rows: 0fr;
     opacity: 0;
     position: relative;
     z-index: 2;
-    /* Animación lenta y curva ultra suave */
     transition: grid-template-rows 1.2s var(--fluid-ease), opacity 0.8s var(--fluid-ease);
 }
 
@@ -251,7 +252,6 @@ button {
     max-width: 75%;
 }
 
-/* Hover / Estado desplegado */
 .service-row:hover {
     background: linear-gradient(90deg, var(--black) 55%, #7a7a7a 85%, #f2f2f2 100%);
     color: var(--white);
@@ -272,7 +272,6 @@ button {
 .service-row:hover .service-row__content p {
     color: rgba(255, 255, 255, 0.85);
 }
-
 
 /* --- CLIENTES --- */
 .clients {
@@ -305,6 +304,85 @@ button {
     font-weight: 700;
     letter-spacing: -0.04em;
     color: #9a9a9a;
+}
+
+/* --- PIXELATED VIDEO BREAK --- */
+.video-break {
+    position: relative;
+    height: 100vh;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--black);
+}
+
+.video-break__media {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    /* Convierte el video a blanco y negro y sube el contraste */
+    filter: grayscale(100%) contrast(180%) brightness(0.9);
+    z-index: 1;
+}
+
+.video-break__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    /* Crea la trama de píxeles/puntos */
+    background-image: radial-gradient(var(--black) 1px, transparent 2px);
+    background-size: 4px 4px; /* Ajusta este valor para hacer los píxeles más grandes o pequeños */
+    mix-blend-mode: multiply;
+}
+
+.video-break .relative-z {
+    position: relative;
+    z-index: 3;
+    color: var(--white);
+    width: 100%; 
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.178);
+}
+
+/* Contenedor flex en modo columna */
+.video-break__content {
+    display: flex;
+    flex-direction: column; /* Apila el texto DEBAJO del título */
+    align-items: flex-start; 
+    justify-content: center;
+    gap: 10vw; /* El gap ahora funciona como separación vertical entre ambos */
+    text-align: left;
+    margin-left: 25px; /* Lo separa 25px extras del margen izquierdo */
+}
+
+.video-break__title {
+    font-family: 'Moul', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 7rem); /* Aumentamos mucho el tamaño del título */
+    line-height: 1.05;
+    margin-top: 5vw; /* Margen superior de 5vw */
+}
+
+.video-break__text {
+    font-size: clamp(1.2rem, 2vw, 1.8rem); /* Texto bastante más grande */
+    line-height: 1.3;
+    font-weight: 500;
+    max-width: 900px; /* Permitimos que ocupe más ancho porque la letra es más grande */
+}
+
+/* Ajuste responsive para pantallas pequeñas (móviles/tablets) */
+@media (max-width: 980px) {
+    .video-break__content {
+        gap: 5vw; /* Reducimos un poco el gap en móviles para que no haya espacios vacíos enormes */
+        margin-left: 10px; /* En móvil ajustamos un poco el margen izquierdo */
+    }
 }
 
 /* --- PROJECTS --- */
@@ -580,7 +658,7 @@ button {
     padding: 1.55rem 0;
     font-size: clamp(1rem, 1.6vw, 1.35rem);
     font-weight: 600;
-    font-family: 'Exo', sans-serif;
+    font-family: 'Work Sans', sans-serif; 
     color: var(--white);
     display: flex;
     justify-content: space-between;

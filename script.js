@@ -16,8 +16,6 @@ function setBodyHeight() {
 window.addEventListener('load', setBodyHeight);
 window.addEventListener('resize', setBodyHeight);
 
-// Implementación de ResizeObserver para recalcular dinámicamente la altura 
-// durante las animaciones fluidas (como el hover de las cards de servicios)
 const resizeObserver = new ResizeObserver(() => {
     setBodyHeight();
 });
