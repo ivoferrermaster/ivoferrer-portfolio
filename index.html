@@ -9,7 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Moul&family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">   
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="loading">
+    <!-- PRELOADER -->
+    <div id="preloader" class="preloader">
+        <div class="preloader-content">
+            <span class="preloader-name">Ivo Ferrer</span>
+            <div class="preloader-bar-container">
+                <div class="preloader-bar" id="preloader-bar"></div>
+            </div>
+            <span class="preloader-percentage" id="preloader-percentage">0%</span>
+        </div>
+    </div>
 
     <div id="cursor"></div>
     <div id="trail-container"></div>
@@ -183,7 +193,7 @@
         <section class="video-break">
             <div class="video-break__overlay"></div>
             <video class="video-break__media" autoplay loop muted playsinline>
-                <source src="videoloop.mp4" type="video/mp4">
+                <source src="asd3.mp4" type="video/mp4">
             </video>
             <div class="container relative-z video-break__content">
                 <h3 class="video-break__title hidden-element">¿QUE ES LO<br>QUE HAGO?</h3>
@@ -193,8 +203,8 @@
             </div>
         </section>
 
-        <!-- TESTIMONIOS Y MÉTRICAS -->
-        <section class="trust" id="sobre-mi">
+        <!-- TESTIMONIOS -->
+        <section class="trust">
             <div class="container">
                 <h2 class="section-title hidden-element">La confianza de<br>mis clientes</h2>
 
@@ -212,32 +222,39 @@
                         <span>Founder, Vortex</span>
                     </article>
                 </div>
+            </div>
+        </section>
 
-                <div class="stats-grid">
-                    <article class="stat-card hidden-element">
-                        <strong>5+</strong>
-                        <span>Años de experiencia</span>
-                    </article>
-                    <article class="stat-card hidden-element">
-                        <strong>80+</strong>
-                        <span>Proyectos entregados</span>
-                    </article>
-                    <article class="stat-card hidden-element">
-                        <strong>99%</strong>
-                        <span>Clientes satisfechos</span>
-                    </article>
-                    <article class="stat-card stat-card--offices hidden-element">
-                        <svg class="stat-card__map" width="48" height="48" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M12 21s7-4.4 7-11a7 7 0 10-14 0c0 6.6 7 11 7 11z" stroke="currentColor" stroke-width="1.4"/>
-                            <circle cx="12" cy="10" r="2.2" stroke="currentColor" stroke-width="1.4"/>
-                        </svg>
-                        <ul>
-                            <li>Río Tercero, Córdoba</li>
-                            <li>Argentina</li>
-                            <li>Disponible Remoto</li>
-                            <li>Globalmente</li>
-                        </ul>
-                    </article>
+        <!-- STATS EXTRAVAGANTES -->
+        <section class="extravagant-stats">
+            <div class="stat-row">
+                <span class="stat-label">Años de experiencia</span>
+                <div class="stat-value">
+                    <span class="stat-number" data-target="5">0</span>
+                    <span class="stat-suffix">+</span>
+                </div>
+            </div>
+            
+            <div class="stat-row">
+                <span class="stat-label">Proyectos entregados</span>
+                <div class="stat-value">
+                    <span class="stat-number" data-target="80">0</span>
+                    <span class="stat-suffix">+</span>
+                </div>
+            </div>
+            
+            <div class="stat-row">
+                <span class="stat-label">Clientes satisfechos</span>
+                <div class="stat-value">
+                    <span class="stat-number" data-target="99">0</span>
+                    <span class="stat-suffix">%</span>
+                </div>
+            </div>
+            
+            <div class="stat-row">
+                <span class="stat-label">Países alcanzados</span>
+                <div class="stat-value">
+                    <span class="stat-number" data-target="14">0</span>
                 </div>
             </div>
         </section>

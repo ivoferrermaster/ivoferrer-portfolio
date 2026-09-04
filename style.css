@@ -4,6 +4,7 @@
     --white: #ffffff;
     --black: #000000;
     --off-black: #0c0c0c;
+    --violet: #7628b6;
     --ink: #111111;
     --grey-bar: #1a1a1a;
     --grey-bar-alt: #2a2a2a;
@@ -528,49 +529,82 @@ button {
     z-index: 2;
 }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
+/* --- EXTRAVAGANT STATS --- */
+.extravagant-stats {
+    background-color: var(--white);
+    color: var(--black);
+    width: 100%;
+    padding-bottom: 5rem;
 }
 
-.stat-card {
-    background: var(--ice);
-    border-radius: 24px;
-    min-height: 210px;
-    padding: 1.8rem 1.5rem;
+.stat-row {
+    position: relative; /* Necesario para ubicar los elementos hijos al milímetro */
+    height: 30vh; 
+    
+    /* Le restamos 40px al ancho total (20px de cada lado) y lo centramos 
+       para que las líneas NUNCA toquen los bordes de la pantalla */
+    width: calc(100% - 100px);
+    margin: 0 auto;
+    
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    align-items: center; /* Mantiene el número centrado verticalmente en los 30vh */
+    border-bottom: 1px solid var(--muted);
 }
 
-.stat-card strong {
-    font-size: clamp(2.4rem, 4vw, 3.6rem);
-    font-weight: 800;
-    letter-spacing: -0.05em;
+.stat-row:first-child {
+    border-top: 1px solid var(--muted);
+}
+
+.stat-label {
+    position: absolute;
+    top: 20px; /* Clavado exactamente a 20px de la línea superior */
+    left: 20px;   /* Como el .stat-row ya está a 20px del margen, "left: 0" lo deja a 20px del margen izquierdo de la pantalla */
+    font-size: 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    position: absolute;
+    /* Ubica el número a exactamente 20vw del borde izquierdo de la pantalla. 
+       Le restamos los 20px del margen del contenedor para mantener la matemática perfecta */
+    left: calc(70vw - 10px); 
+    display: flex;
+    align-items: baseline;
+}
+
+.stat-number {
+    font-family: 'Moul', sans-serif;
+    font-size: clamp(80px, 12vw, 200px); 
     line-height: 1;
 }
 
-.stat-card span {
-    margin-top: 0.7rem;
-    font-size: 0.95rem;
-    color: #444;
+.stat-suffix {
+    font-family: 'Moul', sans-serif;
+    font-size: clamp(40px, 6vw, 100px);
+    line-height: 1;
 }
 
-.stat-card--offices {
-    justify-content: space-between;
+/* Ajustes de seguridad para tablets y móviles */
+@media (max-width: 980px) {
+    .stat-value {
+        /* En pantallas medianas, 20vw es muy poco espacio y pisaría el texto. Lo empujamos. */
+        left: 30vw; 
+    }
 }
 
-.stat-card__map {
-    color: #222;
+@media (max-width: 680px) {
+    .stat-label {
+        font-size: 16px;
+    }
+    .stat-value {
+        /* En celulares muy pequeños, desactivamos los vw y lo pegamos a la derecha para que no choque */
+        left: unset;
+        right: 0; 
+    }
 }
 
-.stat-card ul {
-    list-style: none;
-    font-size: 0.92rem;
-    line-height: 1.55;
-    color: #333;
-}
+
 
 /* --- INSIGHTS + FAQ --- */
 .insights-faq {
@@ -873,4 +907,151 @@ button {
     .service-row__content p {
         max-width: 100%;
     }
+}
+
+/* --- PRELOADER --- */
+body.loading {
+    overflow: hidden !important;
+}
+
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    pointer-events: none; 
+}
+
+.preloader-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    color: var(--white);
+    opacity: 1;
+    transition: opacity 0.4s ease;
+}
+
+/* Oculta la barra de carga cuando llega a 100% */
+.preloader.loaded .preloader-content {
+    opacity: 0; 
+}
+
+.preloader-name {
+    font-family: 'Moul', sans-serif;
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.preloader-bar-container {
+    width: 150px;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.preloader-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%; 
+    background-color: var(--cyan); 
+    transition: width 0.1s linear;
+}
+
+.preloader-percentage {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    font-weight: 500;
+    font-variant-numeric: tabular-nums; 
+}
+
+/* --- COREOGRAFÍA DE ENTRADA (HERO & PANEL VIOLETA) --- */
+
+/* 1. El panel violeta se inyecta por detrás de las letras en el Hero */
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--violet);
+    z-index: 0; 
+    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+    transition-delay: 1.6s; /* Espera a que las letras se formen antes de irse */
+}
+
+body.start-anim .hero::before {
+    transform: translateX(-100%);
+}
+
+/* Aseguramos que los textos destaquen por encima del panel violeta */
+.hero-content {
+    position: relative;
+    z-index: 2; 
+}
+
+/* Letras individuales generadas por JS */
+.rand-letter {
+    position: relative;
+    display: inline-block; /* Crucial para que funcionen las animaciones de movimiento */
+    opacity: 0;
+    top: 30px;
+    filter: blur(12px);
+    transition: opacity 0.6s ease, top 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+}
+
+/* Estado materializado */
+.rand-letter.revealed {
+    opacity: 1;
+    top: 0;
+    filter: blur(0);
+}
+
+/* 3. SOLUCIÓN: Usamos 'top' en lugar de 'transform' para que el Parallax no la anule */
+.hero-content > * {
+    position: relative; /* Necesario para que funcione el 'top' */
+    opacity: 0;
+    top: 40px; 
+    filter: blur(15px);
+    transition: opacity 1.5s ease, top 1.5s cubic-bezier(0.16, 1, 0.3, 1), filter 1.5s ease;
+}
+
+/* 4. Materialización en cascada sobre el fondo violeta */
+body.start-anim .hero-content .subtitle {
+    opacity: 1; top: 0; filter: blur(0);
+    transition-delay: 0.2s;
+}
+
+body.start-anim .hero-content .text-image {
+    opacity: 1; top: 0; filter: blur(0);
+    transition-delay: 0.4s;
+}
+
+body.start-anim .hero-content .role {
+    opacity: 1; top: 0; filter: blur(0);
+    transition-delay: 0.6s;
+}
+
+/* 5. HEADER (Excepción): No se materializa. Baja suavemente después de que el panel se va */
+.site-header {
+    opacity: 0;
+    margin-top: -20px;
+    transition: opacity 1s ease, margin-top 1s ease;
+    transition-delay: 1.8s; /* Sincronizado para aparecer justo cuando el telón violeta huye */
+}
+
+body.start-anim .site-header {
+    opacity: 1;
+    margin-top: 0;
 }

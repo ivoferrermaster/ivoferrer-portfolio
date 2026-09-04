@@ -1,4 +1,81 @@
 /**
+ * 0. PRELOADER & ENTRANCE ANIMATION
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    const preloaderBar = document.getElementById('preloader-bar');
+    const preloaderPercentage = document.getElementById('preloader-percentage');
+    const preloader = document.getElementById('preloader');
+    
+    // 1. Preparar las letras del Hero dividiéndolas en spans
+    const heroTexts = document.querySelectorAll('.hero-content > *');
+    let allLetters = [];
+    
+    heroTexts.forEach(el => {
+        let newHtml = '';
+        el.childNodes.forEach(node => {
+            if(node.nodeType === 3) { // Si es texto puro
+                const text = node.textContent;
+                for(let i=0; i<text.length; i++) {
+                    if(text[i].trim() === '') {
+                        newHtml += text[i]; // Mantiene espacios
+                    } else {
+                        newHtml += `<span class="rand-letter">${text[i]}</span>`;
+                    }
+                }
+            } else {
+                newHtml += node.outerHTML || ''; // Mantiene etiquetas como <br>
+            }
+        });
+        el.innerHTML = newHtml;
+    });
+    
+    // Guardamos todas las letras ocultas en un array
+    allLetters = Array.from(document.querySelectorAll('.rand-letter'));
+
+    if (!preloaderBar || !preloaderPercentage || !preloader) return;
+
+    let progress = 0;
+
+    const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 8) + 4;
+        
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            
+            preloaderBar.style.width = `100%`;
+            preloaderPercentage.innerText = `100%`;
+            
+            setTimeout(() => {
+                preloader.classList.add('loaded');
+                document.body.classList.add('start-anim');
+
+                // 2. Lógica para revelar letras de a 2 aleatoriamente
+                const revealInterval = setInterval(() => {
+                    for(let i = 0; i < 1; i++) {
+                        if(allLetters.length === 0) {
+                            clearInterval(revealInterval);
+                            break;
+                        }
+                        // Selecciona un índice al azar, lo extrae del array y lo revela
+                        const randomIndex = Math.floor(Math.random() * allLetters.length);
+                        const letter = allLetters.splice(randomIndex, 1)[0];
+                        letter.classList.add('revealed');
+                    }
+                }, 35); // Velocidad: Aparecen 2 letras cada 35 milisegundos
+
+                setTimeout(() => {
+                    document.body.classList.remove('loading');
+                    preloader.remove();
+                }, 3000);
+            }, 400);
+        } else {
+            preloaderBar.style.width = `${progress}%`;
+            preloaderPercentage.innerText = `${progress}%`;
+        }
+    }, 120);
+});
+/**
  * 1. SMOOTH SCROLL & PARALLAX
  */
 const body = document.body;
@@ -179,4 +256,49 @@ faqItems.forEach(item => {
             this.querySelector('.icon').textContent = '-';
         }
     });
+});
+
+/**
+ * 7. COUNTER ANIMATION (STATS)
+ */
+const statCounters = document.querySelectorAll('.stat-number');
+const animationDuration = 2000; // 2 segundos de animación
+
+const counterObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const counterElement = entry.target;
+            const targetValue = parseInt(counterElement.getAttribute('data-target'));
+            
+            let startTimestamp = null;
+            
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                // Calculamos el progreso (de 0 a 1)
+                const progress = Math.min((timestamp - startTimestamp) / animationDuration, 1);
+                
+                // Función de aceleración/desaceleración (ease-out) para que el final sea suave
+                const easeOutProgress = 1 - Math.pow(1 - progress, 4);
+                
+                // Actualizamos el número en el HTML
+                counterElement.innerText = Math.floor(easeOutProgress * targetValue);
+                
+                // Si no hemos terminado, pedimos el siguiente frame
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    counterElement.innerText = targetValue; // Aseguramos el número final exacto
+                }
+            };
+            
+            window.requestAnimationFrame(step);
+            
+            // Dejamos de observar para que la animación solo ocurra la primera vez que se hace scroll
+            observer.unobserve(counterElement); 
+        }
+    });
+}, { threshold: 0.5 }); // El 50% del contenedor debe estar visible para que inicie
+
+statCounters.forEach(counter => {
+    counterObserver.observe(counter);
 });
