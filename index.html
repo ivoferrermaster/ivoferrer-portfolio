@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ivo Ferrer | Creative Developer</title>
+    <title>Ivo Ferrer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Moul&family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">   
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
 </head>
 <body class="loading">
     <!-- PRELOADER -->
@@ -25,7 +26,9 @@
     <div id="trail-container"></div>
 
     <header class="site-header">
-        <a href="#inicio" class="logo">IF</a>
+        <a href="#inicio" class="logo-wrapper" aria-label="Inicio">
+            <img src="assets/logos/logo.png" alt="Ivo Ferrer Logo" class="logo-img">
+        </a>
         <nav class="nav" aria-label="Principal">
             <a href="#servicios">Servicios</a>
             <a href="#trabajo">Trabajo</a>
@@ -225,12 +228,12 @@
             </div>
         </section>
 
-        <!-- STATS EXTRAVAGANTES -->
+        <!-- STATS -->
         <section class="extravagant-stats">
             <div class="stat-row">
                 <span class="stat-label">Años de experiencia</span>
                 <div class="stat-value">
-                    <span class="stat-number" data-target="5">0</span>
+                    <span class="stat-number" data-target="2">0</span>
                     <span class="stat-suffix">+</span>
                 </div>
             </div>
@@ -238,7 +241,7 @@
             <div class="stat-row">
                 <span class="stat-label">Proyectos entregados</span>
                 <div class="stat-value">
-                    <span class="stat-number" data-target="80">0</span>
+                    <span class="stat-number" data-target="8">0</span>
                     <span class="stat-suffix">+</span>
                 </div>
             </div>
@@ -254,7 +257,7 @@
             <div class="stat-row">
                 <span class="stat-label">Países alcanzados</span>
                 <div class="stat-value">
-                    <span class="stat-number" data-target="14">0</span>
+                    <span class="stat-number" data-target="3">0</span>
                 </div>
             </div>
         </section>
@@ -332,7 +335,7 @@
         <footer class="footer" id="contacto">
             <div class="footer-cta hidden-element">
                 <p class="footer-cta__lead">¿Tienes un proyecto en mente?</p>
-                <a href="mailto:hello@ivoferrer.com" class="footer-cta__link">HABLEMOS</a>
+                <a href="mailto:hello@ivoferrer.com" class="footer-cta__link" style="text-decoration: none;">HABLEMOS</a>
             </div>
 
             <div class="container footer-grid">
@@ -366,7 +369,7 @@
         </footer>
 
     </main>
-
+    <script src="components/fuzzytext/FuzzyText.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

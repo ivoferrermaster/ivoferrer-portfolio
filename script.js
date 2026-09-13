@@ -302,3 +302,15 @@ const counterObserver = new IntersectionObserver((entries, observer) => {
 statCounters.forEach(counter => {
     counterObserver.observe(counter);
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    // Retrasamos la ejecución 500ms para asegurar que el DOM, las fuentes (Moul/Work Sans) 
+    // y los estilos responsivos estén completamente cargados antes de capturarlos en Canvas.
+    setTimeout(() => {
+        const leadText = document.querySelector('.footer-cta__lead');
+        const linkText = document.querySelector('.footer-cta__link');
+        
+        if (leadText) new FuzzyText(leadText, { baseIntensity: 0.1, hoverIntensity: 0.4 });
+        if (linkText) new FuzzyText(linkText, { baseIntensity: 0.15, hoverIntensity: 0.6 });
+    }, 500);
+});

@@ -1,0 +1,5 @@
+.fuzzy-text-canvas {
+    display: inline-block;
+    vertical-align: middle;
+    pointer-events: none; 
+}

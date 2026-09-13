@@ -108,10 +108,19 @@ button {
     color: var(--white);
 }
 
-.logo {
-    font-weight: 800;
-    font-size: 1.35rem;
-    letter-spacing: -0.04em;
+.logo-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-decoration: none;
+}
+
+.logo-img {
+    height: 62px; 
+    width: auto; 
+    max-width: 100%;
+    display: block;
+    object-fit: contain; 
 }
 
 .nav {
@@ -166,7 +175,7 @@ button {
     font-weight: 500;
     letter-spacing: 4px;
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
 .text-image {
@@ -478,11 +487,17 @@ button {
     margin-top: -1px;
 }
 
+/* 
+  Añadimos transición al max-width y height del contenedor. 
+  Esto permite que la caja se expanda suavemente al hacer hover, 
+  dando espacio físico para que las tarjetas se alineen.
+*/
 .testimonial-fan {
     position: relative;
     height: 340px;
     margin: 0 auto 5rem;
     max-width: 720px;
+    transition: max-width 0.6s cubic-bezier(0.16, 1, 0.3, 1), height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .testimonial-card {
@@ -492,6 +507,8 @@ button {
     background: var(--mint);
     border-radius: 22px;
     box-shadow: 0 18px 50px rgba(0,0,0,0.08);
+    /* Transición en 'all' para que el movimiento (left, top, transform) sea sedoso */
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .testimonial-card p {
@@ -507,26 +524,81 @@ button {
     color: #4a4a4a;
 }
 
+/* --- ESTADO 1: APILADAS (POR DEFECTO) --- */
 .testimonial-card--1 {
-    left: 8%;
-    top: 18%;
-    transform: rotate(-8deg);
+    left: 8%; 
+    top: 18%; 
+    transform: rotate(-8deg); 
     z-index: 1;
 }
 
 .testimonial-card--2 {
-    left: 50%;
-    top: 0;
-    transform: translateX(-50%) rotate(2deg);
-    z-index: 3;
+    left: 50%; 
+    top: 0; 
+    transform: translateX(-50%) rotate(2deg); 
+    z-index: 3; 
     background: #cfeee8;
 }
 
 .testimonial-card--3 {
-    right: 6%;
-    top: 22%;
-    transform: rotate(9deg);
+    right: 6%; 
+    top: 22%; 
+    transform: rotate(9deg); 
     z-index: 2;
+}
+
+/* --- ESTADO 2: DESPLEGADAS (AL PASAR EL MOUSE) --- */
+
+/* Comportamiento en Computadoras: Expansión Horizontal */
+@media (min-width: 981px) {
+    .testimonial-fan:hover {
+        max-width: 1200px; /* Ancha el contenedor para que quepan las 3 */
+    }
+    
+    .testimonial-fan:hover .testimonial-card {
+        top: 0; /* Las alinea verticalmente */
+        width: 32%; /* Les da el mismo tamaño a todas */
+    }
+    
+    .testimonial-fan:hover .testimonial-card--1 {
+        left: 0; 
+        transform: rotate(0deg); 
+    }
+    
+    .testimonial-fan:hover .testimonial-card--2 {
+        left: 50%; 
+        transform: translateX(-50%) rotate(0deg); 
+    }
+    
+    .testimonial-fan:hover .testimonial-card--3 {
+        right: 0; 
+        transform: rotate(0deg); 
+    }
+}
+
+/* Comportamiento en Tablets y Móviles: Expansión Vertical */
+@media (max-width: 980px) {
+    .testimonial-fan:hover {
+        height: 750px; /* Alarga el contenedor para apilarlas en columna */
+    }
+    
+    .testimonial-fan:hover .testimonial-card {
+        left: 50%; /* Centra todas las tarjetas */
+        transform: translateX(-50%) rotate(0deg); /* Endereza todas las tarjetas */
+        width: 90%; /* Ajusta el ancho para móviles */
+    }
+    
+    .testimonial-fan:hover .testimonial-card--1 {
+        top: 0; 
+    }
+    
+    .testimonial-fan:hover .testimonial-card--2 {
+        top: 250px; /* Empuja la segunda tarjeta hacia abajo */
+    }
+    
+    .testimonial-fan:hover .testimonial-card--3 {
+        top: 500px; /* Empuja la tercera tarjeta más abajo */
+    }
 }
 
 /* --- EXTRAVAGANT STATS --- */
@@ -751,14 +823,14 @@ button {
 }
 
 .footer-cta__lead {
-    font-size: clamp(2rem, 5vw, 4.4rem);
+    font-size: clamp(4rem, 7vw, 6.4rem);
     font-weight: 800;
     letter-spacing: -0.045em;
 }
 
 .footer-cta__link {
     display: inline-block;
-    font-size: clamp(2rem, 5vw, 4.4rem);
+    font-size: clamp(4rem, 7vw, 6.4rem);
     font-weight: 800;
     letter-spacing: -0.045em;
     text-decoration: underline;
