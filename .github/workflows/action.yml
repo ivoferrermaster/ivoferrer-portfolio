@@ -1,0 +1,17 @@
+name: Mi Primer Workflow
+
+# 1. ¿Cuándo se ejecuta? (Eventos)
+on:
+  push:
+    branches:
+      - main # O cambia a "master" si tu rama principal se llama así
+
+# 2. ¿Qué va a hacer? (Trabajos)
+jobs:
+  saludar:
+    runs-on: ubuntu-latest # El sistema operativo de la máquina virtual
+
+    # 3. Paso a paso de las tareas
+    steps:
+      - name: Imprimir un mensaje en consola
+        run: echo "¡Hola GitHub Actions! Este es mi primer flujo de trabajo automatizado."
