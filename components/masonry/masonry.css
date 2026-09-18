@@ -1,33 +1,22 @@
 /* components/masonry/masonry.css */
 .masonry-container {
   display: grid;
-  /* Por defecto: 3 columnas fluidas que ocupan todo el ancho disponible */
   grid-template-columns: repeat(3, 1fr); 
   justify-content: center;
-  gap: 15px; /* Separación entre las tarjetas */
+  gap: 15px;
   width: 100%;
-  
-  /* CRUCIAL: 5px de margen a la izquierda y derecha de la pantalla */
   padding: 0 5px; 
   box-sizing: border-box;
-  
-  margin-bottom: 60px; /* Compensa el desplazamiento del sube y baja */
+  margin-bottom: 60px;
   position: relative;
 }
 
-/* Si el JS detecta pantallas grandes (4 columnas) */
-.masonry-container[data-cols="4"] {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-/* Si el JS detecta pantallas móviles (2 columnas) */
-.masonry-container[data-cols="2"] {
-  grid-template-columns: repeat(2, 1fr);
-}
+.masonry-container[data-cols="4"] { grid-template-columns: repeat(4, 1fr); }
+.masonry-container[data-cols="2"] { grid-template-columns: repeat(2, 1fr); }
 
 .masonry-item {
-  width: 100%; /* Ocupa el 100% del espacio que le da su columna */
-  height: 350px; /* Altura grande y profesional */
+  width: 100%; 
+  height: 350px; 
   position: relative;
   border-radius: 12px;
   overflow: hidden;
@@ -37,22 +26,12 @@
   filter: blur(10px);
 }
 
-/* EFECTO SUBE Y BAJA PARA 3 COLUMNAS */
-.masonry-container[data-cols="3"] .masonry-item:nth-child(3n + 2) {
-    transform: translateY(40px);
-}
-
-/* EFECTO SUBE Y BAJA PARA 4 COLUMNAS */
+.masonry-container[data-cols="3"] .masonry-item:nth-child(3n + 2) { transform: translateY(40px); }
 .masonry-container[data-cols="4"] .masonry-item:nth-child(4n + 2),
-.masonry-container[data-cols="4"] .masonry-item:nth-child(4n + 4) {
-    transform: translateY(40px);
-}
+.masonry-container[data-cols="4"] .masonry-item:nth-child(4n + 4) { transform: translateY(40px); }
+.masonry-container[data-cols="2"] .masonry-item:nth-child(2n + 2) { transform: translateY(30px); }
 
-/* EFECTO SUBE Y BAJA PARA 2 COLUMNAS (MÓVILES) */
-.masonry-container[data-cols="2"] .masonry-item:nth-child(2n + 2) {
-    transform: translateY(30px);
-}
-
+/* La captura de pantalla de fondo (Nivel 0) */
 .masonry-item__bg {
   position: absolute;
   top: 0; left: 0;
@@ -63,13 +42,35 @@
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Sombra degradada para que el título destaque sobre cualquier foto */
+/* La cubierta gris oscuro (Nivel 1) */
+.masonry-item__cover {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: #1a1a1a; /* Gris muy oscuro tirando a negro */
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease; /* Transición para desvanecerse */
+}
+
+/* El logo centrado dentro de la cubierta gris */
+.masonry-item__logo {
+  max-width: 50%; /* Controla que el logo no sea gigantesco */
+  max-height: 40%;
+  object-fit: contain;
+  opacity: 0.8; /* Lo hacemos sutilmente opaco para que se funda bien */
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+/* Sombra oscura inferior fija (Nivel 2) para que el título siempre se lea */
 .masonry-item::after {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
-  z-index: 1;
+  background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 40%);
+  z-index: 2;
   pointer-events: none;
 }
 
@@ -78,11 +79,28 @@
   bottom: 20px; 
   left: 20px;
   font-family: 'Work Sans', sans-serif;
-  font-size: 1.4rem; /* Texto de tamaño normal/grande */
+  font-size: 1.4rem;
   font-weight: 600;
   color: #fff;
   margin: 0;
-  z-index: 2;
+  z-index: 3; /* Por encima de todas las sombras y capas */
   line-height: 1.2;
   letter-spacing: -0.02em;
+  pointer-events: none;
+}
+
+/* 1. La cubierta gris se desvanece suavemente sin afectar el fondo */
+.masonry-item:hover .masonry-item__cover {
+  opacity: 0;
+}
+
+/* 2. El logo se eleva sutilmente mientras desaparece, dando el efecto de "descubrir" lo que hay debajo */
+.masonry-item:hover .masonry-item__logo {
+  transform: translateY(-15px);
+  opacity: 0;
+}
+
+/* 3. Anulamos cualquier zoom: la imagen revelada se mantiene anclada y estática */
+.masonry-item:hover .masonry-item__bg {
+  transform: scale(1);
 }

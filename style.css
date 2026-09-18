@@ -223,6 +223,8 @@ button {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    justify-content: flex-start; /* Alinea los elementos uno al lado del otro */
+    gap: 1.5rem;
     position: relative;
     z-index: 2;
 }
@@ -236,6 +238,7 @@ button {
 .service-row__number {
     font-size: 1.4rem;
     font-weight: 700;
+    
     opacity: 0.4;
     transition: opacity 1s var(--fluid-ease);
 }
@@ -405,7 +408,11 @@ button {
 
 .projects .container {
     max-width: 100%;
-    padding: 0;
+    padding: 0 1.5rem;
+}
+
+.projects .section-title {
+    margin-bottom: 4.5rem;
 }
 
 .section-title {
@@ -413,6 +420,7 @@ button {
     font-weight: 800;
     letter-spacing: -0.045em;
     line-height: 0.95;
+    padding: 0 5rem;
     margin-bottom: 3.5rem;
 }
 
@@ -420,19 +428,6 @@ button {
     color: var(--white);
 }
 
-.btn-outline {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 170px;
-    padding: 1rem 2.2rem;
-    border: 1px solid rgba(255,255,255,0.55);
-    border-radius: 999px;
-    color: var(--white);
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-}
 
 /* --- TRUST / TESTIMONIOS --- */
 .trust {

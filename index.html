@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
     <link rel="stylesheet" href="components/masonry/masonry.css">
+    <link rel="stylesheet" href="components/staggeredmenu/staggered-menu.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 <body class="loading">
@@ -28,20 +29,56 @@
     <div id="cursor"></div>
     <div id="trail-container"></div>
 
+    <!-- 1. HEADER (Totalmente independiente y afuera del menú) -->
     <header class="site-header">
-        <a href="#inicio" class="logo-wrapper" aria-label="Inicio">
-            <img src="assets/logos/logo2.png" alt="Ivo Ferrer Logo" class="logo-img">
+        <a href="#inicio" class="sm-logo" aria-label="Inicio">
+            <img src="assets/logos/logo2.png" alt="Ivo Ferrer Logo" class="sm-logo-img">
         </a>
-        <nav class="nav" aria-label="Principal">
-            <a href="#servicios">Servicios</a>
-            <a href="#trabajo">Trabajo</a>
-            <a href="#sobre-mi">Sobre mí</a>
-            <a href="#contacto">Contacto</a>
-        </nav>
-        <a href="#contacto" class="btn-pill magnetic-btn">
-            <span class="btn-text">PONTE EN CONTACTO</span>
-        </a>
+        
+        <button class="sm-toggle" type="button" aria-label="Abrir Menú">
+            <span class="sm-toggle-textWrap" aria-hidden="true">
+                <span class="sm-toggle-textInner">
+                    <span class="sm-toggle-line">Menu</span>
+                    <span class="sm-toggle-line">Cerrar</span>
+                    <span class="sm-toggle-line">Menu</span>
+                    <span class="sm-toggle-line">Cerrar</span>
+                </span>
+            </span>
+            <span class="sm-icon" aria-hidden="true">
+                <span class="sm-icon-line" id="sm-plus-h"></span>
+                <span class="sm-icon-line" id="sm-plus-v"></span>
+            </span>
+        </button>
     </header>
+
+    <!-- 2. WRAPPER DEL MENÚ DESPLEGABLE -->
+    <div class="staggered-menu-wrapper" id="main-menu">
+        <div class="sm-prelayers" aria-hidden="true">
+            <div class="sm-prelayer" style="background: #2a2a2a;"></div>
+            <div class="sm-prelayer" style="background: #7628b6;"></div>
+        </div>
+
+        <aside class="staggered-menu-panel" aria-hidden="true">
+            <div class="sm-panel-inner">
+                <ul class="sm-panel-list" role="list" data-numbering="true">
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#inicio"><span class="sm-panel-itemLabel">Inicio</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#servicios"><span class="sm-panel-itemLabel">Servicios</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#trabajo"><span class="sm-panel-itemLabel">Trabajo</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#sobre-mi"><span class="sm-panel-itemLabel">Sobre mí</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#contacto"><span class="sm-panel-itemLabel">Contacto</span></a></li>
+                </ul>
+                
+                <div class="sm-socials">
+                    <h3 class="sm-socials-title">Socials</h3>
+                    <ul class="sm-socials-list" role="list">
+                        <li><a href="#" class="sm-socials-link">Instagram</a></li>
+                        <li><a href="#" class="sm-socials-link">LinkedIn</a></li>
+                        <li><a href="#" class="sm-socials-link">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </div>
 
     <main id="scroll-wrapper">
         
@@ -144,62 +181,104 @@
             <div class="container">
                 <h2 class="section-title light-text hidden-element">Trabajo seleccionado</h2>
                 <div class="masonry-container" id="masonry-projects">
-                    <!-- Iteración 1 -->
                     <article class="masonry-item" data-key="1">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Liquid Network</h3>
-                    </article>
-                    <article class="masonry-item" data-key="2">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Nexus Platform</h3>
-                    </article>
-                    <article class="masonry-item" data-key="3">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Vortex Banking</h3>
-                    </article>
-                    <article class="masonry-item" data-key="4">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Quantum Labs</h3>
-                    </article>
-                    <article class="masonry-item" data-key="5">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Stellar Dynamics</h3>
-                    </article>
-                    <article class="masonry-item" data-key="6">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Zelt</h3>
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-ascanellib.png" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
                     </article>
                     <article class="masonry-item" data-key="1">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Liquid Network</h3>
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-montecitos.png" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
                     </article>
-                    <article class="masonry-item" data-key="2">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Nexus Platform</h3>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-enterlab.webp" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
                     </article>
-                    <article class="masonry-item" data-key="3">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Vortex Banking</h3>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-cpd.png" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
                     </article>
-                    <article class="masonry-item" data-key="4">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Quantum Labs</h3>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-cpd.png" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
                     </article>
-                    <article class="masonry-item" data-key="5">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Stellar Dynamics</h3>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-enterlab.webp" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
                     </article>
-                    <article class="masonry-item" data-key="6">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80');"></div>
-                        <h3>Zelt</h3>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-ascanellib.png" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
+                    </article>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-enterlab.webp" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
+                    </article>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-ascanellib.png" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
+                    </article>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-montecitos.png" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
+                    </article>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-cpd.png" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
+                    </article>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
+                        
+                        <div class="masonry-item__cover">
+                            <img src="assets/logos/logo-montecitos.png" alt="Logo Cliente" class="masonry-item__logo">
+                        </div>
+                        
                     </article>
                     
                     <!-- REPETIR ESTOS 6 BLOQUES <article> DOS VECES MÁS PARA TENER TUS 18 TARJETAS -->
-                </div>
-                <div class="projects-cta">
-                    <a href="#" class="btn-outline magnetic-btn">
-                        <span class="btn-text">VER TODO</span>
-                    </a>
                 </div>
             </div>
         </section>
@@ -383,15 +462,15 @@
     </main>
     <script src="components/fuzzytext/FuzzyText.js"></script>
     <script src="components/masonry/Masonry.js"></script>
+    <script src="components/staggeredmenu/StaggeredMenu.js"></script>
     <script src="script.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // Inicializa la grilla de proyectos
-            new Masonry('#masonry-projects', {
-                animateFrom: 'bottom',
-                stagger: 0.08,
-                hoverScale: 1.2
-            });
+            // Inicializa la grilla
+            new Masonry('#masonry-projects', { animateFrom: 'bottom', stagger: 0.08 });
+            
+            // Inicializa el Menú
+            new StaggeredMenu('#main-menu');
         });
     </script>
 </body>

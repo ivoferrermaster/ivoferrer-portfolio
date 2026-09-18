@@ -65,28 +65,6 @@ class Masonry {
     }
 
     bindEvents() {
-        this.items.forEach(item => {
-            const bg = item.querySelector('.masonry-item__bg');
-            
-            item.addEventListener('mouseenter', () => {
-                if (bg) {
-                    gsap.to(bg, {
-                        scale: this.options.hoverScale,
-                        duration: 0.4,
-                        ease: 'power2.out'
-                    });
-                }
-            });
-
-            item.addEventListener('mouseleave', () => {
-                if (bg) {
-                    gsap.to(bg, {
-                        scale: 1,
-                        duration: 0.4,
-                        ease: 'power2.out'
-                    });
-                }
-            });
-        });
+        
     }
 }

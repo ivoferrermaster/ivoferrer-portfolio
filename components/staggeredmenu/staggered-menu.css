@@ -1,0 +1,122 @@
+/* --- HEADER SUPERIOR --- */
+.site-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  z-index: 9000 !important; /* Siempre arriba del menú */
+  pointer-events: none; /* Permite que el scroll pase a través del espacio vacío */
+}
+
+.site-header > * {
+  pointer-events: auto; /* Reactiva el clic en el logo y el botón */
+}
+
+/* --- CONTENEDOR DEL MENÚ --- */
+.staggered-menu-wrapper {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 8000; /* Pasa por debajo del header para que el mix-blend-mode lo vuelva negro */
+  pointer-events: none; /* Deja pasar los clics cuando está cerrado */
+}
+
+.sm-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-decoration: none;
+  user-select: none;
+}
+
+.sm-logo-img { display: block; height: 50px; width: auto; object-fit: contain; }
+
+.sm-toggle {
+  position: relative; display: inline-flex; align-items: center; gap: 0.5rem;
+  background: transparent; cursor: none !important; color: var(--white);
+  font-weight: 700; font-size: 0.78rem; letter-spacing: 0.06em; line-height: 1;
+  overflow: visible; padding: 0.78rem 1.35rem; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.sm-toggle-textWrap { position: relative; display: inline-block; height: 1em; overflow: hidden; white-space: nowrap; }
+.sm-toggle-textInner { display: flex; flex-direction: column; line-height: 1; }
+.sm-toggle-line { display: block; height: 1em; line-height: 1; text-transform: uppercase; }
+
+.sm-icon { position: relative; width: 14px; height: 14px; flex: 0 0 14px; display: inline-flex; align-items: center; justify-content: center; will-change: transform; }
+.sm-icon-line { position: absolute; left: 50%; top: 50%; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transform: translate(-50%, -50%); will-change: transform; }
+
+/* Capas y Panel Lateral */
+.sm-prelayers { position: absolute; top: 0; right: 0; bottom: 0; width: clamp(300px, 45vw, 550px); pointer-events: none; z-index: 5; opacity: 0; }
+.sm-prelayer { position: absolute; top: 0; right: 0; height: 100%; width: 100%; }
+
+.staggered-menu-panel {
+  position: absolute; top: 0; right: 0;
+  width: clamp(300px, 45vw, 550px); height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  display: flex; flex-direction: column;
+  padding: 8em 4vw 4vw 4vw; overflow-y: auto;
+  z-index: 10; pointer-events: auto;
+}
+
+.sm-panel-inner { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.sm-panel-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.sm-panel-itemWrap { position: relative; overflow: hidden; line-height: 1.1; padding: 5px 0; }
+
+.sm-panel-item {
+  position: relative; 
+  color: var(--black); 
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 700; 
+  font-size: clamp(2.5rem, 5vw, 4.5rem); 
+  cursor: none !important;
+  line-height: 1; 
+  letter-spacing: -0.04em; 
+  text-transform: uppercase;
+  transition: color 0.3s ease; 
+  
+  /* 1. Cambiamos de inline-block a flex para controlar el número */
+  display: inline-flex; 
+  align-items: flex-start; /* Alinea el número hacia arriba respecto al título */
+  text-decoration: none; 
+  padding-right: 0; /* 2. Quitamos el espacio derecho sobrante */
+}
+
+.sm-panel-itemLabel { 
+  display: inline-block; 
+  will-change: transform; 
+  transform-origin: 50% 100%; 
+}
+
+.sm-panel-item:hover { 
+  color: var(--cyan); 
+}
+
+.sm-panel-list[data-numbering] { 
+  counter-reset: smItem; 
+}
+
+.sm-panel-list[data-numbering] .sm-panel-item::after {
+  counter-increment: smItem; 
+  content: "0" counter(smItem); 
+  
+  /* 3. Cambiamos a relative para que acompañe el flujo natural del texto */
+  position: relative; 
+  top: 5px; /* Puedes ajustar esto para subir o bajar el número milimétricamente */
+  right: auto;
+  margin-left: 12px; /* Esta es la separación exacta entre el título y el número */
+  
+  font-size: clamp(1rem, 1.5vw, 1.4rem); 
+  font-weight: 500; 
+  color: var(--cyan); 
+  pointer-events: none; 
+  opacity: var(--sm-num-opacity, 0);
+}
+
+.sm-socials { margin-top: auto; padding-top: 3rem; display: flex; flex-direction: column; gap: 1rem; }
+.sm-socials-title { margin: 0; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+.sm-socials-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+.sm-socials-link { font-size: 1.1rem; font-weight: 500; color: var(--black); text-decoration: none; transition: opacity 0.3s ease, color 0.3s ease; cursor: none !important; }
+.sm-socials-list:hover .sm-socials-link { opacity: 0.4; }
+.sm-socials-list:hover .sm-socials-link:hover { opacity: 1; color: var(--cyan); }
+
+@media (max-width: 980px) { .staggered-menu-panel, .sm-prelayers { width: 100%; } }
