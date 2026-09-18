@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Moul&family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">   
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
+    <link rel="stylesheet" href="components/masonry/masonry.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 <body class="loading">
     <!-- PRELOADER -->
@@ -141,49 +143,58 @@
         <section class="projects" id="trabajo">
             <div class="container">
                 <h2 class="section-title light-text hidden-element">Trabajo seleccionado</h2>
-                <div class="projects-grid">
-                    <article class="project-card hidden-element">
-                        <div class="project-card__media">
-                            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=1200&q=80" alt="Liquid Network">
-                        </div>
-                        <h3 class="light-text">Liquid Network</h3>
-                        <p>Estrategia y diseño de producto</p>
+                <div class="masonry-container" id="masonry-projects">
+                    <!-- Iteración 1 -->
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Liquid Network</h3>
                     </article>
-                    <article class="project-card project-card--offset hidden-element">
-                        <div class="project-card__media">
-                            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80" alt="Nexus Platform">
-                        </div>
-                        <h3 class="light-text">Nexus Platform</h3>
-                        <p>Presencia digital para un líder nacional</p>
+                    <article class="masonry-item" data-key="2">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Nexus Platform</h3>
                     </article>
-                    <article class="project-card hidden-element">
-                        <div class="project-card__media">
-                            <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1200&q=80" alt="Vortex Banking">
-                        </div>
-                        <h3 class="light-text">Vortex Banking</h3>
-                        <p>App móvil y sistema de diseño</p>
+                    <article class="masonry-item" data-key="3">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Vortex Banking</h3>
                     </article>
-                    <article class="project-card project-card--offset hidden-element">
-                        <div class="project-card__media">
-                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80" alt="Quantum Labs">
-                        </div>
-                        <h3 class="light-text">Quantum Labs</h3>
-                        <p>Dashboard y experiencia de datos</p>
+                    <article class="masonry-item" data-key="4">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Quantum Labs</h3>
                     </article>
-                    <article class="project-card hidden-element">
-                        <div class="project-card__media">
-                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80" alt="Stellar Dynamics">
-                        </div>
-                        <h3 class="light-text">Stellar Dynamics</h3>
-                        <p>Identidad, motion y web inmersiva</p>
+                    <article class="masonry-item" data-key="5">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Stellar Dynamics</h3>
                     </article>
-                    <article class="project-card project-card--offset hidden-element">
-                        <div class="project-card__media">
-                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80" alt="Zelt">
-                        </div>
-                        <h3 class="light-text">Zelt</h3>
-                        <p>Producto que une payroll, HR e IT</p>
+                    <article class="masonry-item" data-key="6">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Zelt</h3>
                     </article>
+                    <article class="masonry-item" data-key="1">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Liquid Network</h3>
+                    </article>
+                    <article class="masonry-item" data-key="2">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Nexus Platform</h3>
+                    </article>
+                    <article class="masonry-item" data-key="3">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Vortex Banking</h3>
+                    </article>
+                    <article class="masonry-item" data-key="4">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Quantum Labs</h3>
+                    </article>
+                    <article class="masonry-item" data-key="5">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Stellar Dynamics</h3>
+                    </article>
+                    <article class="masonry-item" data-key="6">
+                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80');"></div>
+                        <h3>Zelt</h3>
+                    </article>
+                    
+                    <!-- REPETIR ESTOS 6 BLOQUES <article> DOS VECES MÁS PARA TENER TUS 18 TARJETAS -->
                 </div>
                 <div class="projects-cta">
                     <a href="#" class="btn-outline magnetic-btn">
@@ -371,6 +382,17 @@
 
     </main>
     <script src="components/fuzzytext/FuzzyText.js"></script>
+    <script src="components/masonry/Masonry.js"></script>
     <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Inicializa la grilla de proyectos
+            new Masonry('#masonry-projects', {
+                animateFrom: 'bottom',
+                stagger: 0.08,
+                hoverScale: 1.2
+            });
+        });
+    </script>
 </body>
 </html>
