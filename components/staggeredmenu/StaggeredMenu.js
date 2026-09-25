@@ -28,8 +28,8 @@ class StaggeredMenu {
 
     init() {
         gsap.set(this.preContainer, { opacity: 1 });
-        gsap.set(this.preLayers, { xPercent: 100 }); 
-        gsap.set(this.panel, { xPercent: 100 });     
+        gsap.set(this.preLayers, { xPercent: 100 });
+        gsap.set(this.panel, { xPercent: 100, visibility: 'visible' });
 
         gsap.set(this.plusH, { transformOrigin: '50% 50%', rotate: 0 });
         gsap.set(this.plusV, { transformOrigin: '50% 50%', rotate: 90 });

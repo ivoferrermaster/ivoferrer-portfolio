@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ivo Ferrer</title>
-    <link rel="icon" type="image/png" href="assets/logos/logo2.png">
+    <link rel="icon" type="image/svg+xml" href="assets/logos/logoivo.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Moul&family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">   
@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
     <link rel="stylesheet" href="components/masonry/masonry.css">
     <link rel="stylesheet" href="components/staggeredmenu/staggered-menu.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="components/logo-wall/logo-wall.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 </head>
 <body class="loading">
     <!-- PRELOADER -->
@@ -32,7 +33,7 @@
     <!-- 1. HEADER (Totalmente independiente y afuera del menú) -->
     <header class="site-header">
         <a href="#inicio" class="sm-logo" aria-label="Inicio">
-            <img src="assets/logos/logo2.png" alt="Ivo Ferrer Logo" class="sm-logo-img">
+            <img src="assets/logos/logoivo.svg" alt="Ivo Ferrer Logo" class="sm-logo-img">
         </a>
         
         <button class="sm-toggle" type="button" aria-label="Abrir Menú">
@@ -74,6 +75,7 @@
                         <li><a href="#" class="sm-socials-link">Instagram</a></li>
                         <li><a href="#" class="sm-socials-link">LinkedIn</a></li>
                         <li><a href="#" class="sm-socials-link">Twitter</a></li>
+                        <li><a href="#" class="sm-socials-link">WhatsApp</a></li>
                     </ul>
                 </div>
             </div>
@@ -156,22 +158,36 @@
         </section>
 
         <!-- CLIENTES -->
-        <section class="clients">
+        <section class="logo-wall">
+            <div class="logo-wall__texture" aria-hidden="true"></div>
+            <div class="logo-wall__glow" aria-hidden="true"></div>
             <div class="container">
-                <p class="clients-heading hidden-element">Compañías que han confiado en mi trabajo</p>
-                <div class="logo-grid hidden-element">
-                    <span>Apple</span>
-                    <span>Google</span>
-                    <span>Nike</span>
-                    <span>Ferrari</span>
-                    <span>Sony</span>
-                    <span>Adobe</span>
-                    <span>Mercedes</span>
-                    <span>Samsung</span>
-                    <span>IBM</span>
-                    <span>Airbnb</span>
-                    <span>Spotify</span>
-                    <span>Tesla</span>
+                <p class="logo-wall__heading hidden-element">Compañías que han confiado en mi trabajo</p>
+                <div class="logo-wall__grid">
+                    <div class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
+                        <img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" loading="lazy">
+                    </div>
+                    <div class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Apple</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
+                        <img src="assets/logos/logo-montecitos.png" alt="Montecitos Country &amp; Golf" class="logo-wall__logo--montecitos" loading="lazy">
+                    </div>
+                    <div class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Google</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Nike</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand">
+                        <img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="logo-wall__logo--enterlab" loading="lazy">
+                    </div>
+                    <div class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Ferrari</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Sony</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
+                        <img src="assets/logos/logo-cpd.png" alt="Centro Privado del Diagnóstico" class="logo-wall__logo--cpd" loading="lazy">
+                    </div>
+                    <div class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Adobe</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Mercedes</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Samsung</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">IBM</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Airbnb</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Spotify</span></div>
+                    <div class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Tesla</span></div>
                 </div>
             </div>
         </section>
@@ -185,7 +201,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-ascanellib.png" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-ascanellib.png" alt="Logo Ascanelli" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -193,7 +209,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-montecitos.png" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-montecitos.png" alt="Logo Montecitos" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -201,7 +217,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-enterlab.webp" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-enterlab.webp" alt="Logo Enterlab" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -209,7 +225,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-cpd.png" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-cpd.png" alt="Logo CPD" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -217,7 +233,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-cpd.png" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-cpd.png" alt="Logo CPD" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -225,7 +241,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-enterlab.webp" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-enterlab.webp" alt="Logo Enterlab" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -233,7 +249,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-ascanellib.png" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-ascanellib.png" alt="Logo Ascanelli" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -241,7 +257,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-enterlab.webp" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-enterlab.webp" alt="Logo Enterlab" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -249,7 +265,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-ascanellib.png" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-ascanellib.png" alt="Logo Ascanelli" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -257,7 +273,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-montecitos.png" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-montecitos.png" alt="Logo Montecitos" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -265,7 +281,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-cpd.png" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-cpd.png" alt="Logo CPD" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -273,7 +289,7 @@
                         <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
                         
                         <div class="masonry-item__cover">
-                            <img src="assets/logos/logo-montecitos.png" alt="Logo Cliente" class="masonry-item__logo">
+                            <img src="assets/logos/logo-montecitos.png" alt="Logo Montecitos" class="masonry-item__logo">
                         </div>
                         
                     </article>
@@ -298,7 +314,7 @@
         </section>
 
         <!-- TESTIMONIOS -->
-        <section class="trust">
+        <section class="trust" id="sobre-mi">
             <div class="container">
                 <h2 class="section-title hidden-element">La confianza de<br>mis clientes</h2>
 
@@ -314,6 +330,18 @@
                     <article class="testimonial-card testimonial-card--3">
                         <p>Me impresionó el enfoque de Ivo. El resultado final es exactamente lo que necesitábamos para escalar nuestro producto a un nuevo nivel.</p>
                         <span>Founder, Vortex</span>
+                    </article>
+                    <article class="testimonial-card testimonial-card--4">
+                        <p>Entendió nuestra marca desde la primera reunión. Cada entrega llegó a tiempo y con un nivel de detalle que pocas veces vimos en un freelancer.</p>
+                        <span>Directora de Marketing, Nimbo</span>
+                    </article>
+                    <article class="testimonial-card testimonial-card--5">
+                        <p>El nuevo sitio duplicó las consultas en el primer mes. Ivo no solo diseña bonito: piensa en el negocio y en cómo convertir visitas en clientes.</p>
+                        <span>Product Lead, Lumen</span>
+                    </article>
+                    <article class="testimonial-card testimonial-card--6">
+                        <p>Comunicación clara, cero vueltas y un proceso transparente de principio a fin. Ya estamos planificando el próximo proyecto juntos.</p>
+                        <span>Co-founder, Orbital</span>
                     </article>
                 </div>
             </div>
@@ -357,30 +385,29 @@
         <section class="insights-faq">
             <div class="container">
                 <div class="insights-head">
-                    <h2 class="section-title light-text hidden-element">Insights</h2>
-                    <a href="#" class="link-all">VER TODO</a>
+                    <h2 class="section-title light-text hidden-element">Cómo trabajo</h2>
                 </div>
                 <div class="insights-grid">
                     <article class="insight-card hidden-element">
                         <div class="insight-card__media">
-                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80" alt="Artículo de rediseño">
+                            <img src="assets/img/cap-montecitos.png" alt="Captura del proyecto Montecitos">
                         </div>
-                        <p class="insight-card__tag">Rediseño web</p>
-                        <h3>RFP de rediseño: lo que los freelancers realmente necesitan de ti</h3>
+                        <p class="insight-card__tag">Caso de estudio</p>
+                        <h3>Montecitos: de brief a producción en 6 semanas</h3>
                     </article>
                     <article class="insight-card hidden-element">
                         <div class="insight-card__media">
-                            <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=900&q=80" alt="Proceso de rediseño">
+                            <img src="assets/img/cap-ascanelli.png" alt="Captura del proyecto Ascanelli">
                         </div>
-                        <p class="insight-card__tag">Rediseño web</p>
-                        <h3>Mi proceso de rediseño: fases, timeline y checklist</h3>
+                        <p class="insight-card__tag">Cómo trabajo</p>
+                        <h3>De la primera llamada al lanzamiento: mi proceso en 5 etapas</h3>
                     </article>
                     <article class="insight-card hidden-element">
                         <div class="insight-card__media">
-                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80" alt="Coste de rediseño">
+                            <img src="assets/img/cap-enterlab.png" alt="Captura del proyecto Enterlab">
                         </div>
-                        <p class="insight-card__tag">Rediseño web</p>
-                        <h3>¿Cuánto cuesta rediseñar un sitio web inmersivo en 2026?</h3>
+                        <p class="insight-card__tag">Precios y timelines</p>
+                        <h3>¿Cuánto cuesta y cuánto tarda un sitio a medida?</h3>
                     </article>
                 </div>
 
@@ -436,6 +463,7 @@
                     <a href="#">LinkedIn</a>
                     <a href="#">Twitter</a>
                     <a href="#">Behance</a>
+                    <a href="#">WhatsApp</a>
                 </div>
                 <div class="footer-col">
                     <p class="footer-label">Ubicación</p>
@@ -455,23 +483,16 @@
                     <a href="#" aria-label="LinkedIn" class="social-circle">In</a>
                     <a href="#" aria-label="Twitter" class="social-circle">X</a>
                     <a href="#" aria-label="Behance" class="social-circle">Be</a>
+                    <a href="#" aria-label="WhatsApp" class="social-circle">Wa</a>
                 </div>
             </div>
         </footer>
 
     </main>
-    <script src="components/fuzzytext/FuzzyText.js"></script>
-    <script src="components/masonry/Masonry.js"></script>
-    <script src="components/staggeredmenu/StaggeredMenu.js"></script>
-    <script src="script.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Inicializa la grilla
-            new Masonry('#masonry-projects', { animateFrom: 'bottom', stagger: 0.08 });
-            
-            // Inicializa el Menú
-            new StaggeredMenu('#main-menu');
-        });
-    </script>
+    <script src="components/fuzzytext/FuzzyText.js" defer></script>
+    <script src="components/masonry/Masonry.js" defer></script>
+    <script src="components/staggeredmenu/StaggeredMenu.js" defer></script>
+    <script src="components/logo-wall/LogoWall.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

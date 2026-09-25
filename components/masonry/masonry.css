@@ -31,15 +31,42 @@
 .masonry-container[data-cols="4"] .masonry-item:nth-child(4n + 4) { transform: translateY(40px); }
 .masonry-container[data-cols="2"] .masonry-item:nth-child(2n + 2) { transform: translateY(30px); }
 
-/* La captura de pantalla de fondo (Nivel 0) */
+/* La captura de pantalla de fondo (Nivel 0).
+   Las capturas son apaisadas (~2.2:1) y las tarjetas son verticales, así que con
+   background-size: cover se recortaban ambos laterales. Ahora la captura se
+   muestra completa (contain, en ::after) y el espacio sobrante arriba/abajo se
+   rellena con una copia desenfocada de la misma imagen (::before). Ambos
+   pseudo-elementos heredan el background-image del style inline del HTML. */
 .masonry-item__bg {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background-size: cover;
-  background-position: center;
+  background-size: 0 0; /* la imagen se pinta en los pseudo-elementos */
+  background-repeat: no-repeat;
+  background-color: #111;
+  overflow: hidden;
   z-index: 0;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.masonry-item__bg::before,
+.masonry-item__bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: inherit;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.masonry-item__bg::before {
+  background-size: cover;
+  filter: blur(18px) brightness(0.45);
+  transform: scale(1.15); /* evita los bordes claros que deja el blur */
+}
+
+.masonry-item__bg::after {
+  background-size: contain;
 }
 
 /* La cubierta gris oscuro (Nivel 1) */

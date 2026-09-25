@@ -244,16 +244,19 @@ document.querySelectorAll('.magnetic-btn').forEach(magBtn => {
  */
 const faqItems = document.querySelectorAll('.faq-question');
 faqItems.forEach(item => {
+    item.setAttribute('aria-expanded', 'false');
     item.addEventListener('click', function() {
         const answer = this.nextElementSibling;
         const isOpen = answer.style.maxHeight;
 
         document.querySelectorAll('.faq-answer').forEach(ans => ans.style.maxHeight = null);
         document.querySelectorAll('.faq-question .icon').forEach(icon => icon.textContent = '+');
+        document.querySelectorAll('.faq-question').forEach(q => q.setAttribute('aria-expanded', 'false'));
 
         if (!isOpen) {
             answer.style.maxHeight = answer.scrollHeight + "px";
             this.querySelector('.icon').textContent = '-';
+            this.setAttribute('aria-expanded', 'true');
         }
     });
 });
@@ -313,4 +316,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (leadText) new FuzzyText(leadText, { baseIntensity: 0.1, hoverIntensity: 0.4 });
         if (linkText) new FuzzyText(linkText, { baseIntensity: 0.15, hoverIntensity: 0.6 });
     }, 500);
+});
+
+/**
+ * 9. INIT DE COMPONENTES (Masonry, Menú, Logo Wall)
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    new Masonry('#masonry-projects', { animateFrom: 'bottom', stagger: 0.08 });
+    new StaggeredMenu('#main-menu');
+    new LogoWall('.logo-wall');
 });

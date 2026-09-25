@@ -1,0 +1,170 @@
+/* components/logo-wall/logo-wall.css */
+
+.logo-wall {
+    position: relative;
+    overflow: hidden;
+    background: var(--ink);
+    padding: 6rem 0;
+    /* Arranca el bloque oscuro que sigue con .projects (misma técnica que usa
+       .insights-faq): esquinas redondeadas arriba para la transición prolija
+       desde la sección clara de arriba; abajo queda a nivel con .projects,
+       que ahora es plana, para que ambas se vean como un único bloque negro
+       sin el hueco blanco que quedaba entre las dos. */
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.logo-wall .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Textura de puntos, mismo recurso que .video-break__overlay */
+.logo-wall__texture {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(var(--black) 1px, transparent 2px);
+    background-size: 4px 4px;
+    opacity: 0.4;
+    /* Sin mix-blend-mode: puntos negros/transparentes en multiply dan el mismo
+       resultado que el blending normal, y el blend obligaba a recomponer toda
+       la sección en cada frame del scroll virtual. */
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Halo que sigue al cursor */
+.logo-wall__glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(420px circle at var(--lw-mx, 50%) var(--lw-my, 50%), rgba(71, 210, 245, 0.16), transparent 65%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 1;
+}
+
+.logo-wall.is-active .logo-wall__glow {
+    opacity: 1;
+}
+
+.logo-wall__heading {
+    text-align: center;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 3rem;
+}
+
+.logo-wall__grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: 96px;
+    grid-auto-flow: dense;
+    gap: 0.85rem;
+}
+
+.logo-wall__chip {
+    --reveal: 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1.4rem;
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, calc(0.05 + var(--reveal) * 0.07));
+    border: 1px solid rgba(255, 255, 255, calc(0.14 + var(--reveal) * 0.28));
+    /* Sin backdrop-filter: el fondo detrás de las chips es casi liso, así que el
+       blur no se notaba, pero como #scroll-wrapper se mueve con transform en cada
+       frame el navegador tenía que re-desenfocar 16 capas constantemente (era la
+       causa principal del lag de la sección). */
+    /* Entrada propia (ver LogoWall.js observeEntrance), no la clase global
+       .hidden-element/.visible-element: en esta página el scroll no es nativo
+       (hay un #scroll-wrapper con position:fixed + transform simulándolo), y
+       el IntersectionObserver global podía no disparar para alguna chip
+       puntual dejándola invisible para siempre. */
+    opacity: 0;
+    transition: opacity 1s var(--ease);
+    transition-delay: calc(var(--i, 0) * 40ms);
+}
+
+.logo-wall__chip.is-visible {
+    opacity: 1;
+}
+
+.logo-wall__chip--lg { grid-column: span 4; }
+.logo-wall__chip--md { grid-column: span 3; }
+.logo-wall__chip--sm { grid-column: span 2; }
+
+/* Logos reales: sin placa de fondo, integrados directo sobre el vidrio oscuro. */
+.logo-wall__chip--brand img {
+    height: 28px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    opacity: calc(0.55 + var(--reveal) * 0.45);
+}
+
+/* Logos con fondo transparente y colores pensados para fondo claro (no
+   garantizan contraste sobre el vidrio oscuro de la sección): se les sube
+   brillo/contraste para que se lean manteniendo su color real, sin caja ni
+   placa de fondo. El isotipo de Enterlab ya trae su propia placa oscura
+   incorporada, así que queda fuera de este ajuste. */
+.logo-wall__chip--boost img {
+    filter: brightness(1.6) saturate(1.15) contrast(1.05) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
+}
+
+/* Ajustes ópticos por logo: cada archivo tiene proporciones y márgenes
+   internos distintos, así que a la misma altura no pesan igual. */
+.logo-wall__chip--brand .logo-wall__logo--montecitos { height: 90px; } /* logo apilado con mucho aire transparente */
+.logo-wall__chip--brand .logo-wall__logo--enterlab { height: 34px; }
+.logo-wall__chip--brand .logo-wall__logo--cpd { height: 44px; }
+
+.logo-wall__word {
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    font-size: clamp(1rem, 1.4vw, 1.4rem);
+    color: var(--white);
+    opacity: calc(0.32 + var(--reveal) * 0.68);
+    text-shadow: 0 0 calc(var(--reveal) * 22px) rgba(71, 210, 245, calc(var(--reveal) * 0.85));
+    white-space: nowrap;
+}
+
+/* Sin JS de interacción (reduced-motion / táctil): todo visible y estático */
+.logo-wall.is-static .logo-wall__chip {
+    --reveal: 1;
+}
+
+@media (max-width: 980px) {
+    .logo-wall__grid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: 84px;
+    }
+
+    .logo-wall__chip--lg { grid-column: span 3; }
+    .logo-wall__chip--md,
+    .logo-wall__chip--sm { grid-column: span 2; }
+}
+
+@media (max-width: 680px) {
+    .logo-wall {
+        padding: 4rem 0;
+    }
+
+    .logo-wall__grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-rows: 76px;
+        gap: 0.6rem;
+    }
+
+    .logo-wall__chip--lg,
+    .logo-wall__chip--md,
+    .logo-wall__chip--sm {
+        grid-column: span 1;
+    }
+
+    .logo-wall__chip--brand img { height: 22px; }
+    .logo-wall__chip--brand .logo-wall__logo--montecitos { height: 70px; }
+    .logo-wall__chip--brand .logo-wall__logo--enterlab { height: 26px; }
+    .logo-wall__chip--brand .logo-wall__logo--cpd { height: 30px; }
+    .logo-wall__word { font-size: 0.95rem; }
+}
