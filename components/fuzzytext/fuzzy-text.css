@@ -1,5 +1,8 @@
 .fuzzy-text-canvas {
     display: inline-block;
     vertical-align: middle;
-    pointer-events: none; 
+    pointer-events: none;
+    /* El canvas se escala hacia abajo si el texto no entra en pantallas angostas */
+    max-width: 100%;
+    height: auto;
 }

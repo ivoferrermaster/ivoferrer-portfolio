@@ -1,64 +1,44 @@
 /* components/masonry/masonry.css */
 .masonry-container {
   display: grid;
-  /* Por defecto: 3 columnas fluidas que ocupan todo el ancho disponible */
-  grid-template-columns: repeat(3, 1fr); 
+  /* 1920 · 1768 · 1440: 4 columnas fluidas que ocupan todo el ancho disponible */
+  grid-template-columns: repeat(4, 1fr);
   justify-content: center;
   gap: 15px; /* Separación entre las tarjetas */
   width: 100%;
-  
+
   /* CRUCIAL: 5px de margen a la izquierda y derecha de la pantalla */
-  padding: 0 5px; 
+  padding: 0 5px;
   box-sizing: border-box;
-  
+
   margin-bottom: 60px; /* Compensa el desplazamiento del sube y baja */
   position: relative;
 }
 
-/* Si el JS detecta pantallas grandes (4 columnas) */
-.masonry-container[data-cols="4"] {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-/* Si el JS detecta pantallas móviles (2 columnas) */
-.masonry-container[data-cols="2"] {
-  grid-template-columns: repeat(2, 1fr);
-}
-
 .masonry-item {
   width: 100%; /* Ocupa el 100% del espacio que le da su columna */
-  height: 350px; /* Altura grande y profesional */
+  height: 350px;
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  cursor: pointer;
   will-change: transform, opacity, filter;
   opacity: 0;
   filter: blur(10px);
 }
 
-/* EFECTO SUBE Y BAJA PARA 3 COLUMNAS */
-.masonry-container[data-cols="3"] .masonry-item:nth-child(3n + 2) {
-    transform: translateY(40px);
-}
-
 /* EFECTO SUBE Y BAJA PARA 4 COLUMNAS */
-.masonry-container[data-cols="4"] .masonry-item:nth-child(4n + 2),
-.masonry-container[data-cols="4"] .masonry-item:nth-child(4n + 4) {
-    transform: translateY(40px);
-}
-
-/* EFECTO SUBE Y BAJA PARA 2 COLUMNAS (MÓVILES) */
-.masonry-container[data-cols="2"] .masonry-item:nth-child(2n + 2) {
-    transform: translateY(30px);
+.masonry-item:nth-child(4n + 2),
+.masonry-item:nth-child(4n + 4) {
+  transform: translateY(40px);
 }
 
 .masonry-item__bg {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background-size: cover;
-  background-position: center;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
   z-index: 0;
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -75,14 +55,75 @@
 
 .masonry-item h3 {
   position: absolute;
-  bottom: 20px; 
+  bottom: 20px;
   left: 20px;
+  right: 20px;
   font-family: 'Work Sans', sans-serif;
-  font-size: 1.4rem; /* Texto de tamaño normal/grande */
+  font-size: clamp(1.1rem, 1.4vw, 1.4rem);
   font-weight: 600;
   color: #fff;
   margin: 0;
   z-index: 2;
   line-height: 1.2;
   letter-spacing: -0.02em;
+}
+
+@media (max-width: 1440px) {
+  .masonry-item {
+    height: 320px;
+  }
+}
+
+/* 1200: 3 columnas */
+@media (max-width: 1200px) {
+  .masonry-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .masonry-item {
+    height: 300px;
+  }
+
+  .masonry-item:nth-child(4n + 2),
+  .masonry-item:nth-child(4n + 4) {
+    transform: none;
+  }
+
+  .masonry-item:nth-child(3n + 2) {
+    transform: translateY(40px);
+  }
+}
+
+/* 768: 2 columnas */
+@media (max-width: 768px) {
+  .masonry-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 50px;
+  }
+
+  .masonry-item {
+    height: 240px;
+  }
+
+  .masonry-item h3 {
+    bottom: 14px;
+    left: 14px;
+    right: 14px;
+  }
+
+  .masonry-item:nth-child(3n + 2) {
+    transform: none;
+  }
+
+  .masonry-item:nth-child(2n + 2) {
+    transform: translateY(30px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .masonry-item {
+    opacity: 1;
+    filter: none;
+  }
 }

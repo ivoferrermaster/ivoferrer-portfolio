@@ -14,38 +14,34 @@ class Masonry {
         };
 
         this.items = Array.from(this.container.querySelectorAll('.masonry-item'));
+        this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         this.init();
     }
 
+    // Las columnas (4 / 3 / 2) y el efecto sube y baja se resuelven en masonry.css por breakpoint
     init() {
-        this.updateColumns();
-        window.addEventListener('resize', () => this.updateColumns());
+        if (this.reduceMotion || typeof gsap === 'undefined') {
+            this.items.forEach(item => {
+                item.style.opacity = 1;
+                item.style.filter = 'none';
+            });
+            return;
+        }
         this.bindEvents();
         this.animateIn();
-    }
-
-    // Actualiza un atributo en el contenedor para que CSS sepa cuántas columnas hay y aplique el sube/baja
-    updateColumns() {
-        const width = window.innerWidth;
-        let cols = 3; // Por defecto en tu diseño anterior
-        if (width >= 1000) cols = 4; // Amplía a 4 en pantallas más grandes si lo deseas
-        if (width < 600) cols = 2; // Reduce en móviles
-        
-        this.container.setAttribute('data-cols', cols);
     }
 
     animateIn() {
         // Configuramos la posición inicial basada en la dirección elegida
         const startY = this.options.animateFrom === 'bottom' ? 100 : (this.options.animateFrom === 'top' ? -100 : 0);
-        
+
         gsap.set(this.items, {
             y: startY,
             opacity: 0,
             filter: this.options.blurToFocus ? 'blur(10px)' : 'none'
         });
 
-        // Revelación en cascada usando ScrollTrigger o IntersectionObserver. 
-        // Aquí usamos un Observer básico de JS puro para disparar la animación de GSAP.
+        // Un Observer básico de JS puro dispara la animación de GSAP.
         const observer = new IntersectionObserver((entries) => {
             if (entries[0].isIntersecting) {
                 gsap.to(this.items, {
@@ -67,7 +63,7 @@ class Masonry {
     bindEvents() {
         this.items.forEach(item => {
             const bg = item.querySelector('.masonry-item__bg');
-            
+
             item.addEventListener('mouseenter', () => {
                 if (bg) {
                     gsap.to(bg, {

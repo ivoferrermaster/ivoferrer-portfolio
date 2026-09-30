@@ -1,7 +1,9 @@
 class FuzzyText {
     constructor(el, options = {}) {
         this.el = el;
+        // innerText respeta text-transform (lo que se dibuja); textContent es lo que se lee
         this.text = el.innerText.trim();
+        this.label = el.textContent.trim();
         
         // Configuraciones predeterminadas (imitando los props del JSX)
         this.options = {
@@ -13,11 +15,15 @@ class FuzzyText {
         };
         
         // Esconde el texto original de forma accesible (SR only)
-        this.el.innerHTML = `<span style="position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0,0,0,0);">${this.text}</span>`;
-        
-        // Crea y añade el Canvas
+        const srText = document.createElement('span');
+        srText.className = 'visually-hidden';
+        srText.textContent = this.label;
+        this.el.replaceChildren(srText);
+
+        // Crea y añade el Canvas (decorativo: el texto real está en srText)
         this.canvas = document.createElement('canvas');
         this.canvas.className = 'fuzzy-text-canvas';
+        this.canvas.setAttribute('aria-hidden', 'true');
         this.el.appendChild(this.canvas);
         
         // 'willReadFrequently' optimiza el rendimiento cuando leemos/escribimos píxeles constantemente
@@ -106,6 +112,9 @@ class FuzzyText {
     bindEvents() {
         this.el.addEventListener('mouseenter', () => this.isHovering = true);
         this.el.addEventListener('mouseleave', () => this.isHovering = false);
+        // Mismo efecto al navegar con teclado
+        this.el.addEventListener('focus', () => this.isHovering = true);
+        this.el.addEventListener('blur', () => this.isHovering = false);
         
         // Ajusta el tamaño de la fuente dinámicamente al redimensionar la ventana (Clamp)
         window.addEventListener('resize', () => {

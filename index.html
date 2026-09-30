@@ -3,384 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio de Ivo Ferrer, Creative Developer &amp; Designer: diseño web, desarrollo, apps móviles, motion graphics e identidad de marca.">
     <title>Ivo Ferrer</title>
     <link rel="icon" type="image/png" href="assets/logos/logo2.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Moul&family=Work+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">   
+    <link rel="preload" href="assets/fonts/WorkSans-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preload" href="assets/fonts/Moul-Regular.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
     <link rel="stylesheet" href="components/masonry/masonry.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 </head>
 <body class="loading">
-    <!-- PRELOADER -->
-    <div id="preloader" class="preloader">
-        <div class="preloader-content">
+    <a class="skip-link" href="#contenido">Saltar al contenido principal</a>
+
+    <!-- PRELOADER (decorativo) -->
+    <div id="preloader" class="preloader" aria-hidden="true">
+        <p class="preloader-content">
             <span class="preloader-name">Ivo Ferrer</span>
-            <div class="preloader-bar-container">
-                <div class="preloader-bar" id="preloader-bar"></div>
-            </div>
+            <span class="preloader-bar-container"><span class="preloader-bar" id="preloader-bar"></span></span>
             <span class="preloader-percentage" id="preloader-percentage">0%</span>
-        </div>
+        </p>
     </div>
 
-    <div id="cursor"></div>
-    <div id="trail-container"></div>
+    <div id="cursor" aria-hidden="true"></div>
+    <div id="trail-container" aria-hidden="true"></div>
 
     <header class="site-header">
-        <a href="#inicio" class="logo-wrapper" aria-label="Inicio">
-            <img src="assets/logos/logo2.png" alt="Ivo Ferrer Logo" class="logo-img">
+        <a href="#inicio" class="logo-wrapper">
+            <img src="assets/logos/logo2.png" alt="Ivo Ferrer, ir al inicio" class="logo-img" width="62" height="50">
         </a>
-        <nav class="nav" aria-label="Principal">
-            <a href="#servicios">Servicios</a>
-            <a href="#trabajo">Trabajo</a>
-            <a href="#sobre-mi">Sobre mí</a>
-            <a href="#contacto">Contacto</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+            <span class="menu-toggle__icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Menú</span>
+        </button>
+        <nav class="nav" id="menu-principal" aria-label="Principal">
+            <ul>
+                <li><a href="#servicios">Servicios</a></li>
+                <li><a href="#trabajo">Trabajo</a></li>
+                <li><a href="#sobre-mi">Sobre mí</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
         </nav>
         <a href="#contacto" class="btn-pill magnetic-btn">
-            <span class="btn-text">PONTE EN CONTACTO</span>
+            <span class="btn-text">Ponte en contacto</span>
         </a>
     </header>
 
-    <main id="scroll-wrapper">
-        
-        <section class="hero" id="inicio">
-            <div class="hero-content">
-                <p class="subtitle parallax" data-speed="-0.2">PORTFOLIO PROFESIONAL</p>
-                <h1 class="text-image parallax" data-speed="0.1">IVO<br>FERRER</h1>
-                <p class="role parallax" data-speed="0.3">Creative Developer &amp; Designer</p>
-            </div>
-        </section>
+    <div id="scroll-wrapper">
+        <main id="contenido" tabindex="-1">
 
-        <!-- SERVICIOS -->
-        <section class="services" id="servicios">
-            <div class="container">
-                <div class="service-row hidden-element">
-                    <div class="service-row__header">
-                        <span class="service-row__title">Diseño web &amp; estrategia</span>
-                        <span class="service-row__number">01</span>
-                    </div>
-                    <div class="service-row__content">
-                        <div class="service-row__content-inner">
+            <section class="hero" id="inicio">
+                <hgroup class="hero-content">
+                    <p class="subtitle parallax" data-speed="-0.2">Portfolio profesional</p>
+                    <h1 class="text-image parallax" data-speed="0.1">Ivo<br>Ferrer</h1>
+                    <p class="role parallax" data-speed="0.3">Creative Developer &amp; Designer</p>
+                </hgroup>
+            </section>
+
+            <!-- SERVICIOS -->
+            <section class="services wrap" id="servicios" aria-labelledby="servicios-titulo">
+                <h2 id="servicios-titulo" class="visually-hidden">Servicios</h2>
+                <ol class="services-list">
+                    <li class="service-row hidden-element">
+                        <h3 class="service-row__header">
+                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-1">
+                                <span class="service-row__title">Diseño web &amp; estrategia</span>
+                                <span class="service-row__number" aria-hidden="true">01</span>
+                            </button>
+                        </h3>
+                        <div class="service-row__content" id="servicio-1">
                             <p>Analizo tu mercado y a tus usuarios para definir una arquitectura sólida. A partir de ahí, diseño interfaces que no solo lucen increíbles, sino que convierten y cumplen objetivos concretos de tu negocio.</p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="service-row hidden-element">
-                    <div class="service-row__header">
-                        <span class="service-row__title">Desarrollo web</span>
-                        <span class="service-row__number">02</span>
-                    </div>
-                    <div class="service-row__content">
-                        <div class="service-row__content-inner">
+                    </li>
+                    <li class="service-row hidden-element">
+                        <h3 class="service-row__header">
+                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-2">
+                                <span class="service-row__title">Desarrollo web</span>
+                                <span class="service-row__number" aria-hidden="true">02</span>
+                            </button>
+                        </h3>
+                        <div class="service-row__content" id="servicio-2">
                             <p>Construyo plataformas rápidas, seguras y escalables utilizando las últimas tecnologías nativas. Mi código es limpio, optimizado para SEO y preparado para animaciones fluidas a 60fps.</p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="service-row hidden-element">
-                    <div class="service-row__header">
-                        <span class="service-row__title">Apps móviles</span>
-                        <span class="service-row__number">03</span>
-                    </div>
-                    <div class="service-row__content">
-                        <div class="service-row__content-inner">
+                    </li>
+                    <li class="service-row hidden-element">
+                        <h3 class="service-row__header">
+                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-3">
+                                <span class="service-row__title">Apps móviles</span>
+                                <span class="service-row__number" aria-hidden="true">03</span>
+                            </button>
+                        </h3>
+                        <div class="service-row__content" id="servicio-3">
                             <p>Llevo la experiencia de tu marca al bolsillo de tus usuarios. Diseño y desarrollo aplicaciones móviles nativas y multiplataforma con interfaces intuitivas y un rendimiento impecable.</p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="service-row hidden-element">
-                    <div class="service-row__header">
-                        <span class="service-row__title">Motion graphics</span>
-                        <span class="service-row__number">04</span>
-                    </div>
-                    <div class="service-row__content">
-                        <div class="service-row__content-inner">
+                    </li>
+                    <li class="service-row hidden-element">
+                        <h3 class="service-row__header">
+                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-4">
+                                <span class="service-row__title">Motion graphics</span>
+                                <span class="service-row__number" aria-hidden="true">04</span>
+                            </button>
+                        </h3>
+                        <div class="service-row__content" id="servicio-4">
                             <p>Doy vida a tu marca a través del movimiento. Creo animaciones sutiles, microinteracciones y videos inmersivos que capturan la atención y explican conceptos complejos de forma visual.</p>
                         </div>
-                    </div>
-                </div>
-
-                <div class="service-row hidden-element">
-                    <div class="service-row__header">
-                        <span class="service-row__title">Identidad de marca</span>
-                        <span class="service-row__number">05</span>
-                    </div>
-                    <div class="service-row__content">
-                        <div class="service-row__content-inner">
+                    </li>
+                    <li class="service-row hidden-element">
+                        <h3 class="service-row__header">
+                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-5">
+                                <span class="service-row__title">Identidad de marca</span>
+                                <span class="service-row__number" aria-hidden="true">05</span>
+                            </button>
+                        </h3>
+                        <div class="service-row__content" id="servicio-5">
                             <p>Creo sistemas visuales memorables y coherentes. Desde el logotipo hasta la paleta de colores y la tipografía, construyo marcas con personalidad que destacan en el competitivo entorno digital.</p>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+                    </li>
+                </ol>
+            </section>
 
-        <!-- CLIENTES -->
-        <section class="clients">
-            <div class="container">
-                <p class="clients-heading hidden-element">Compañías que han confiado en mi trabajo</p>
-                <div class="logo-grid hidden-element">
-                    <span>Apple</span>
-                    <span>Google</span>
-                    <span>Nike</span>
-                    <span>Ferrari</span>
-                    <span>Sony</span>
-                    <span>Adobe</span>
-                    <span>Mercedes</span>
-                    <span>Samsung</span>
-                    <span>IBM</span>
-                    <span>Airbnb</span>
-                    <span>Spotify</span>
-                    <span>Tesla</span>
-                </div>
-            </div>
-        </section>
+            <!-- CLIENTES -->
+            <section class="clients wrap" aria-labelledby="clientes-titulo">
+                <h2 id="clientes-titulo" class="clients-heading hidden-element">Compañías que han confiado en mi trabajo</h2>
+                <ul class="logo-grid hidden-element">
+                    <li>Apple</li>
+                    <li>Google</li>
+                    <li>Nike</li>
+                    <li>Ferrari</li>
+                    <li>Sony</li>
+                    <li>Adobe</li>
+                    <li>Mercedes</li>
+                    <li>Samsung</li>
+                    <li>IBM</li>
+                    <li>Airbnb</li>
+                    <li>Spotify</li>
+                    <li>Tesla</li>
+                </ul>
+            </section>
 
-        <!-- TRABAJO SELECCIONADO -->
-        <section class="projects" id="trabajo">
-            <div class="container">
-                <h2 class="section-title light-text hidden-element">Trabajo seleccionado</h2>
-                <div class="masonry-container" id="masonry-projects">
+            <!-- TRABAJO SELECCIONADO -->
+            <section class="projects" id="trabajo" aria-labelledby="trabajo-titulo">
+                <h2 id="trabajo-titulo" class="section-title light-text wrap hidden-element">Trabajo seleccionado</h2>
+                <ul class="masonry-container" id="masonry-projects">
                     <!-- Iteración 1 -->
-                    <article class="masonry-item" data-key="1">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=300&q=80');"></div>
+                    <li class="masonry-item" data-key="1">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Liquid Network</h3>
-                    </article>
-                    <article class="masonry-item" data-key="2">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="2">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Nexus Platform</h3>
-                    </article>
-                    <article class="masonry-item" data-key="3">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="3">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Vortex Banking</h3>
-                    </article>
-                    <article class="masonry-item" data-key="4">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="4">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Quantum Labs</h3>
-                    </article>
-                    <article class="masonry-item" data-key="5">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="5">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Stellar Dynamics</h3>
-                    </article>
-                    <article class="masonry-item" data-key="6">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="6">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Zelt</h3>
-                    </article>
-                    <article class="masonry-item" data-key="1">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="1">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Liquid Network</h3>
-                    </article>
-                    <article class="masonry-item" data-key="2">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="2">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Nexus Platform</h3>
-                    </article>
-                    <article class="masonry-item" data-key="3">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="3">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Vortex Banking</h3>
-                    </article>
-                    <article class="masonry-item" data-key="4">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="4">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Quantum Labs</h3>
-                    </article>
-                    <article class="masonry-item" data-key="5">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="5">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Stellar Dynamics</h3>
-                    </article>
-                    <article class="masonry-item" data-key="6">
-                        <div class="masonry-item__bg" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80');"></div>
+                    </li>
+                    <li class="masonry-item" data-key="6">
+                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
                         <h3>Zelt</h3>
-                    </article>
-                    
-                    <!-- REPETIR ESTOS 6 BLOQUES <article> DOS VECES MÁS PARA TENER TUS 18 TARJETAS -->
-                </div>
-                <div class="projects-cta">
-                    <a href="#" class="btn-outline magnetic-btn">
-                        <span class="btn-text">VER TODO</span>
-                    </a>
-                </div>
-            </div>
-        </section>
+                    </li>
 
-        <!-- PIXELATED VIDEO BREAK -->
-        <section class="video-break">
-            <div class="video-break__overlay"></div>
-            <video class="video-break__media" autoplay loop muted playsinline>
-                <source src="asd3.mp4" type="video/mp4">
-            </video>
-            <div class="container relative-z video-break__content">
-                <h3 class="video-break__title hidden-element">¿QUE ES LO<br>QUE HAGO?</h3>
+                    <!-- REPETIR ESTOS 6 BLOQUES <li> DOS VECES MÁS PARA TENER TUS 18 TARJETAS -->
+                </ul>
+                <p class="projects-cta">
+                    <a href="#" class="btn-outline magnetic-btn">
+                        <span class="btn-text">Ver todo<span class="visually-hidden"> el trabajo</span></span>
+                    </a>
+                </p>
+            </section>
+
+            <!-- PIXELATED VIDEO BREAK -->
+            <section class="video-break wrap" id="sobre-mi" aria-labelledby="sobre-mi-titulo">
+                <video class="video-break__media" autoplay loop muted playsinline aria-hidden="true">
+                    <source src="asd3.mp4" type="video/mp4">
+                </video>
+                <h2 id="sobre-mi-titulo" class="video-break__title hidden-element">¿Qué es lo<br>que hago?</h2>
                 <p class="video-break__text hidden-element">
                     Lo que hago son páginas web totalmente dedicadas y exclusivamente de código puro, originalidad, funciones extraordinarias, hiperenfoque en el diseño y sobre todo buscar la satisfacción del cliente mediante su confianza y un paso a paso de la creación de la página web en conjunto.
                 </p>
-            </div>
-        </section>
+                <button class="video-break__toggle" type="button">Pausar video de fondo</button>
+            </section>
 
-        <!-- TESTIMONIOS -->
-        <section class="trust">
-            <div class="container">
-                <h2 class="section-title hidden-element">La confianza de<br>mis clientes</h2>
+            <!-- TESTIMONIOS -->
+            <section class="trust wrap" aria-labelledby="testimonios-titulo">
+                <h2 id="testimonios-titulo" class="section-title hidden-element">La confianza de<br>mis clientes</h2>
 
-                <div class="testimonial-fan hidden-element">
-                    <article class="testimonial-card testimonial-card--1">
-                        <p>Ivo completó el rebranding de nuestro sitio. La calidad superó nuestras expectativas y desde entonces ganamos varios premios internacionales.</p>
-                        <span>CEO, Zelt</span>
-                    </article>
-                    <article class="testimonial-card testimonial-card--2">
-                        <p>Trabajé varios meses junto a Ivo en un rediseño completo: copy, diseño y código. Destacó su rigor, su talento y su forma impecable de colaborar.</p>
-                        <span>CMO, Range</span>
-                    </article>
-                    <article class="testimonial-card testimonial-card--3">
-                        <p>Me impresionó el enfoque de Ivo. El resultado final es exactamente lo que necesitábamos para escalar nuestro producto a un nuevo nivel.</p>
-                        <span>Founder, Vortex</span>
-                    </article>
-                </div>
-            </div>
-        </section>
+                <ul class="testimonial-fan hidden-element" tabindex="0" aria-label="Testimonios de clientes">
+                    <li class="testimonial-card testimonial-card--1">
+                        <figure>
+                            <blockquote>
+                                <p>Ivo completó el rebranding de nuestro sitio. La calidad superó nuestras expectativas y desde entonces ganamos varios premios internacionales.</p>
+                            </blockquote>
+                            <figcaption>CEO, Zelt</figcaption>
+                        </figure>
+                    </li>
+                    <li class="testimonial-card testimonial-card--2">
+                        <figure>
+                            <blockquote>
+                                <p>Trabajé varios meses junto a Ivo en un rediseño completo: copy, diseño y código. Destacó su rigor, su talento y su forma impecable de colaborar.</p>
+                            </blockquote>
+                            <figcaption>CMO, Range</figcaption>
+                        </figure>
+                    </li>
+                    <li class="testimonial-card testimonial-card--3">
+                        <figure>
+                            <blockquote>
+                                <p>Me impresionó el enfoque de Ivo. El resultado final es exactamente lo que necesitábamos para escalar nuestro producto a un nuevo nivel.</p>
+                            </blockquote>
+                            <figcaption>Founder, Vortex</figcaption>
+                        </figure>
+                    </li>
+                </ul>
+            </section>
 
-        <!-- STATS -->
-        <section class="extravagant-stats">
-            <div class="stat-row">
-                <span class="stat-label">Años de experiencia</span>
-                <div class="stat-value">
-                    <span class="stat-number" data-target="2">0</span>
-                    <span class="stat-suffix">+</span>
-                </div>
-            </div>
-            
-            <div class="stat-row">
-                <span class="stat-label">Proyectos entregados</span>
-                <div class="stat-value">
-                    <span class="stat-number" data-target="8">0</span>
-                    <span class="stat-suffix">+</span>
-                </div>
-            </div>
-            
-            <div class="stat-row">
-                <span class="stat-label">Clientes satisfechos</span>
-                <div class="stat-value">
-                    <span class="stat-number" data-target="99">0</span>
-                    <span class="stat-suffix">%</span>
-                </div>
-            </div>
-            
-            <div class="stat-row">
-                <span class="stat-label">Países alcanzados</span>
-                <div class="stat-value">
-                    <span class="stat-number" data-target="3">0</span>
-                </div>
-            </div>
-        </section>
+            <!-- STATS -->
+            <section class="extravagant-stats" aria-labelledby="cifras-titulo">
+                <h2 id="cifras-titulo" class="visually-hidden">Cifras</h2>
+                <dl class="stats-list">
+                    <div class="stat-row">
+                        <dt class="stat-label">Años de experiencia</dt>
+                        <dd class="stat-value">
+                            <span class="stat-number" data-target="2" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">+</span>
+                            <span class="visually-hidden">Más de 2</span>
+                        </dd>
+                    </div>
+                    <div class="stat-row">
+                        <dt class="stat-label">Proyectos entregados</dt>
+                        <dd class="stat-value">
+                            <span class="stat-number" data-target="8" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">+</span>
+                            <span class="visually-hidden">Más de 8</span>
+                        </dd>
+                    </div>
+                    <div class="stat-row">
+                        <dt class="stat-label">Clientes satisfechos</dt>
+                        <dd class="stat-value">
+                            <span class="stat-number" data-target="99" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">%</span>
+                            <span class="visually-hidden">99 %</span>
+                        </dd>
+                    </div>
+                    <div class="stat-row">
+                        <dt class="stat-label">Países alcanzados</dt>
+                        <dd class="stat-value">
+                            <span class="stat-number" data-target="3" aria-hidden="true">0</span>
+                            <span class="visually-hidden">3</span>
+                        </dd>
+                    </div>
+                </dl>
+            </section>
 
-        <!-- INSIGHTS + FAQ -->
-        <section class="insights-faq">
-            <div class="container">
-                <div class="insights-head">
-                    <h2 class="section-title light-text hidden-element">Insights</h2>
-                    <a href="#" class="link-all">VER TODO</a>
-                </div>
-                <div class="insights-grid">
-                    <article class="insight-card hidden-element">
-                        <div class="insight-card__media">
-                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=900&q=80" alt="Artículo de rediseño">
-                        </div>
+            <!-- INSIGHTS + FAQ -->
+            <section class="insights-faq wrap" aria-labelledby="insights-titulo">
+                <header class="insights-head">
+                    <h2 id="insights-titulo" class="section-title light-text hidden-element">Insights</h2>
+                    <a href="#" class="link-all">Ver todo<span class="visually-hidden"> el blog</span></a>
+                </header>
+                <ul class="insights-grid">
+                    <li class="insight-card hidden-element">
+                        <img class="insight-card__media" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="lazy">
                         <p class="insight-card__tag">Rediseño web</p>
                         <h3>RFP de rediseño: lo que los freelancers realmente necesitan de ti</h3>
-                    </article>
-                    <article class="insight-card hidden-element">
-                        <div class="insight-card__media">
-                            <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&fit=crop&w=900&q=80" alt="Proceso de rediseño">
-                        </div>
+                    </li>
+                    <li class="insight-card hidden-element">
+                        <img class="insight-card__media" src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="lazy">
                         <p class="insight-card__tag">Rediseño web</p>
                         <h3>Mi proceso de rediseño: fases, timeline y checklist</h3>
-                    </article>
-                    <article class="insight-card hidden-element">
-                        <div class="insight-card__media">
-                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80" alt="Coste de rediseño">
-                        </div>
+                    </li>
+                    <li class="insight-card hidden-element">
+                        <img class="insight-card__media" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="lazy">
                         <p class="insight-card__tag">Rediseño web</p>
                         <h3>¿Cuánto cuesta rediseñar un sitio web inmersivo en 2026?</h3>
-                    </article>
-                </div>
+                    </li>
+                </ul>
 
-                <div class="faq-section hidden-element">
-                    <h2 class="section-title light-text">FAQ</h2>
-                    <div class="faq-list">
-                        <div class="faq-item">
-                            <button class="faq-question" type="button">¿Cómo es mi proceso típico de rediseño o renovación? <span class="icon">+</span></button>
-                            <div class="faq-answer">
-                                <div class="faq-answer-content">Cada proyecto empieza por entender tu negocio, tus usuarios y tus objetivos. Antes de diseñar, analizo el sitio actual, identifico fricciones y defino oportunidades. El proceso incluye discovery, investigación UX, arquitectura, wireframes, UI, prototipos, desarrollo, QA y lanzamiento.</div>
+                <section class="faq-section hidden-element" aria-labelledby="faq-titulo">
+                    <h2 id="faq-titulo" class="section-title light-text">FAQ</h2>
+                    <ul class="faq-list">
+                        <li class="faq-item">
+                            <h3 class="faq-question">
+                                <button type="button" aria-expanded="false" aria-controls="faq-1">¿Cómo es mi proceso típico de rediseño o renovación? <span class="icon" aria-hidden="true">+</span></button>
+                            </h3>
+                            <div class="faq-answer" id="faq-1">
+                                <p class="faq-answer-content">Cada proyecto empieza por entender tu negocio, tus usuarios y tus objetivos. Antes de diseñar, analizo el sitio actual, identifico fricciones y defino oportunidades. El proceso incluye discovery, investigación UX, arquitectura, wireframes, UI, prototipos, desarrollo, QA y lanzamiento.</p>
                             </div>
-                        </div>
-                        <div class="faq-item">
-                            <button class="faq-question" type="button">¿Qué servicios ofrezco exactamente? <span class="icon">+</span></button>
-                            <div class="faq-answer">
-                                <div class="faq-answer-content">Ofrezco diseño y desarrollo digital de extremo a extremo: identidad, investigación UX, estrategia de producto, interfaz, motion, frontend, backend, CMS y soporte continuo. Algunos clientes llegan por una landing page; otros me confían productos complejos completos.</div>
+                        </li>
+                        <li class="faq-item">
+                            <h3 class="faq-question">
+                                <button type="button" aria-expanded="false" aria-controls="faq-2">¿Qué servicios ofrezco exactamente? <span class="icon" aria-hidden="true">+</span></button>
+                            </h3>
+                            <div class="faq-answer" id="faq-2">
+                                <p class="faq-answer-content">Ofrezco diseño y desarrollo digital de extremo a extremo: identidad, investigación UX, estrategia de producto, interfaz, motion, frontend, backend, CMS y soporte continuo. Algunos clientes llegan por una landing page; otros me confían productos complejos completos.</p>
                             </div>
-                        </div>
-                        <div class="faq-item">
-                            <button class="faq-question" type="button">¿Construyes con Webflow o con código a medida? <span class="icon">+</span></button>
-                            <div class="faq-answer">
-                                <div class="faq-answer-content">Ambos. Elijo la tecnología según el objetivo de tu negocio. Webflow encaja perfecto en sitios de marketing con gestión ágil; para productos complejos, animaciones avanzadas (como este portfolio) o plataformas escalables, construyo totalmente a medida.</div>
+                        </li>
+                        <li class="faq-item">
+                            <h3 class="faq-question">
+                                <button type="button" aria-expanded="false" aria-controls="faq-3">¿Construyes con Webflow o con código a medida? <span class="icon" aria-hidden="true">+</span></button>
+                            </h3>
+                            <div class="faq-answer" id="faq-3">
+                                <p class="faq-answer-content">Ambos. Elijo la tecnología según el objetivo de tu negocio. Webflow encaja perfecto en sitios de marketing con gestión ágil; para productos complejos, animaciones avanzadas (como este portfolio) o plataformas escalables, construyo totalmente a medida.</p>
                             </div>
-                        </div>
-                        <div class="faq-item">
-                            <button class="faq-question" type="button">¿Puedes ayudarme a lanzar un MVP rápido? <span class="icon">+</span></button>
-                            <div class="faq-answer">
-                                <div class="faq-answer-content">Sí. Ayudo a startups y fundadores a lanzar MVPs funcionales en pocos meses, priorizando lo esencial para validar la idea en el mercado. El producto puede evolucionar después sin tener que empezar de cero.</div>
+                        </li>
+                        <li class="faq-item">
+                            <h3 class="faq-question">
+                                <button type="button" aria-expanded="false" aria-controls="faq-4">¿Puedes ayudarme a lanzar un MVP rápido? <span class="icon" aria-hidden="true">+</span></button>
+                            </h3>
+                            <div class="faq-answer" id="faq-4">
+                                <p class="faq-answer-content">Sí. Ayudo a startups y fundadores a lanzar MVPs funcionales en pocos meses, priorizando lo esencial para validar la idea en el mercado. El producto puede evolucionar después sin tener que empezar de cero.</p>
                             </div>
-                        </div>
-                        <div class="faq-item">
-                            <button class="faq-question" type="button">¿Cuánto tarda un proyecto promedio contigo? <span class="icon">+</span></button>
-                            <div class="faq-answer">
-                                <div class="faq-answer-content">Un sitio web inmersivo suele tomarme entre 4 y 8 semanas desde el concepto inicial hasta su paso a producción. Los productos más complejos los planifico por fases con hitos de entrega claros.</div>
+                        </li>
+                        <li class="faq-item">
+                            <h3 class="faq-question">
+                                <button type="button" aria-expanded="false" aria-controls="faq-5">¿Cuánto tarda un proyecto promedio contigo? <span class="icon" aria-hidden="true">+</span></button>
+                            </h3>
+                            <div class="faq-answer" id="faq-5">
+                                <p class="faq-answer-content">Un sitio web inmersivo suele tomarme entre 4 y 8 semanas desde el concepto inicial hasta su paso a producción. Los productos más complejos los planifico por fases con hitos de entrega claros.</p>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+                        </li>
+                    </ul>
+                </section>
+            </section>
+
+        </main>
 
         <!-- FOOTER -->
-        <footer class="footer" id="contacto">
-            <div class="footer-cta hidden-element">
-                <p class="footer-cta__lead">¿Tienes un proyecto en mente?</p>
-                <a href="mailto:hello@ivoferrer.com" class="footer-cta__link" style="text-decoration: none;">HABLEMOS</a>
-            </div>
+        <footer class="footer wrap" id="contacto">
+            <p class="footer-cta__lead hidden-element">¿Tienes un proyecto en mente?</p>
+            <a href="mailto:hello@ivoferrer.com" class="footer-cta__link hidden-element">Hablemos</a>
 
-            <div class="container footer-grid">
-                <div class="footer-col">
-                    <p class="footer-label">Social</p>
-                    <a href="#">Instagram</a>
-                    <a href="#">LinkedIn</a>
-                    <a href="#">Twitter</a>
-                    <a href="#">Behance</a>
-                </div>
-                <div class="footer-col">
-                    <p class="footer-label">Ubicación</p>
-                    <p>Río Tercero</p>
-                    <p>Córdoba, Argentina</p>
-                    <p>Trabajo Remoto</p>
-                    <p>Global</p>
-                </div>
-                <div class="footer-col">
-                    <p class="footer-label">Legal</p>
-                    <a href="#">Privacidad</a>
-                    <a href="#">Términos</a>
-                    <p class="footer-copy">© 2026 Ivo Ferrer</p>
-                </div>
-                <div class="footer-socials">
-                    <a href="#" aria-label="Instagram" class="social-circle">Ig</a>
-                    <a href="#" aria-label="LinkedIn" class="social-circle">In</a>
-                    <a href="#" aria-label="Twitter" class="social-circle">X</a>
-                    <a href="#" aria-label="Behance" class="social-circle">Be</a>
-                </div>
-            </div>
+            <section class="footer-col" aria-labelledby="footer-social">
+                <h2 id="footer-social" class="footer-label">Social</h2>
+                <ul>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Behance</a></li>
+                </ul>
+            </section>
+            <section class="footer-col" aria-labelledby="footer-ubicacion">
+                <h2 id="footer-ubicacion" class="footer-label">Ubicación</h2>
+                <address>
+                    Río Tercero<br>
+                    Córdoba, Argentina<br>
+                    Trabajo Remoto<br>
+                    Global
+                </address>
+            </section>
+            <section class="footer-col" aria-labelledby="footer-legal">
+                <h2 id="footer-legal" class="footer-label">Legal</h2>
+                <ul>
+                    <li><a href="#">Privacidad</a></li>
+                    <li><a href="#">Términos</a></li>
+                </ul>
+                <p class="footer-copy"><small>© 2026 Ivo Ferrer</small></p>
+            </section>
+            <ul class="footer-socials">
+                <li><a href="#" class="social-circle" aria-label="Instagram">Ig</a></li>
+                <li><a href="#" class="social-circle" aria-label="LinkedIn">In</a></li>
+                <li><a href="#" class="social-circle" aria-label="Twitter">X</a></li>
+                <li><a href="#" class="social-circle" aria-label="Behance">Be</a></li>
+            </ul>
         </footer>
+    </div>
 
-    </main>
     <script src="components/fuzzytext/FuzzyText.js"></script>
     <script src="components/masonry/Masonry.js"></script>
     <script src="script.js"></script>

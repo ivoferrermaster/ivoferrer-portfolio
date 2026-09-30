@@ -1,36 +1,52 @@
 /**
+ * PREFERENCIA DE MOVIMIENTO REDUCIDO
+ */
+const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+let reduceMotion = reduceMotionQuery.matches;
+reduceMotionQuery.addEventListener('change', (e) => reduceMotion = e.matches);
+
+/**
  * 0. PRELOADER & ENTRANCE ANIMATION
  */
 document.addEventListener("DOMContentLoaded", () => {
     const preloaderBar = document.getElementById('preloader-bar');
     const preloaderPercentage = document.getElementById('preloader-percentage');
     const preloader = document.getElementById('preloader');
-    
-    // 1. Preparar las letras del Hero dividiéndolas en spans
+
+    // 1. Preparar las letras del Hero dividiéndolas en spans.
+    //    El texto completo queda en un span oculto para lectores de pantalla
+    //    y las letras sueltas se marcan aria-hidden para que no se lean de a una.
     const heroTexts = document.querySelectorAll('.hero-content > *');
-    let allLetters = [];
-    
+
     heroTexts.forEach(el => {
-        let newHtml = '';
+        const srText = document.createElement('span');
+        srText.className = 'visually-hidden';
+        const visual = document.createElement('span');
+        visual.setAttribute('aria-hidden', 'true');
+
         el.childNodes.forEach(node => {
-            if(node.nodeType === 3) { // Si es texto puro
-                const text = node.textContent;
-                for(let i=0; i<text.length; i++) {
-                    if(text[i].trim() === '') {
-                        newHtml += text[i]; // Mantiene espacios
+            if (node.nodeType === Node.TEXT_NODE) {
+                srText.append(node.textContent);
+                for (const char of node.textContent) {
+                    if (char.trim() === '') {
+                        visual.append(char); // Mantiene espacios
                     } else {
-                        newHtml += `<span class="rand-letter">${text[i]}</span>`;
+                        const letter = document.createElement('span');
+                        letter.className = 'rand-letter';
+                        letter.textContent = char;
+                        visual.append(letter);
                     }
                 }
             } else {
-                newHtml += node.outerHTML || ''; // Mantiene etiquetas como <br>
+                srText.append(' ');
+                visual.append(node.cloneNode(true)); // Mantiene etiquetas como <br>
             }
         });
-        el.innerHTML = newHtml;
+        el.replaceChildren(srText, visual);
     });
-    
+
     // Guardamos todas las letras ocultas en un array
-    allLetters = Array.from(document.querySelectorAll('.rand-letter'));
+    const allLetters = Array.from(document.querySelectorAll('.rand-letter'));
 
     if (!preloaderBar || !preloaderPercentage || !preloader) return;
 
@@ -38,35 +54,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const interval = setInterval(() => {
         progress += Math.floor(Math.random() * 8) + 4;
-        
+
         if (progress >= 100) {
             progress = 100;
             clearInterval(interval);
-            
+
             preloaderBar.style.width = `100%`;
             preloaderPercentage.innerText = `100%`;
-            
+
             setTimeout(() => {
                 preloader.classList.add('loaded');
                 document.body.classList.add('start-anim');
 
-                // 2. Lógica para revelar letras de a 2 aleatoriamente
+                // 2. Revela las letras de a una, en orden aleatorio
                 const revealInterval = setInterval(() => {
-                    for(let i = 0; i < 1; i++) {
-                        if(allLetters.length === 0) {
-                            clearInterval(revealInterval);
-                            break;
-                        }
-                        // Selecciona un índice al azar, lo extrae del array y lo revela
-                        const randomIndex = Math.floor(Math.random() * allLetters.length);
-                        const letter = allLetters.splice(randomIndex, 1)[0];
-                        letter.classList.add('revealed');
+                    if (allLetters.length === 0) {
+                        clearInterval(revealInterval);
+                        return;
                     }
-                }, 35); // Velocidad: Aparecen 2 letras cada 35 milisegundos
+                    const randomIndex = Math.floor(Math.random() * allLetters.length);
+                    const letter = allLetters.splice(randomIndex, 1)[0];
+                    letter.classList.add('revealed');
+                }, 35);
 
                 setTimeout(() => {
                     document.body.classList.remove('loading');
                     preloader.remove();
+
+                    // Si se entró con un #ancla en la URL, se respeta ahora que se puede hacer scroll
+                    const initialTarget = location.hash && document.getElementById(location.hash.slice(1));
+                    if (initialTarget) scrollToElement(initialTarget);
                 }, 3000);
             }, 400);
         } else {
@@ -75,16 +92,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }, 120);
 });
+
 /**
  * 1. SMOOTH SCROLL & PARALLAX
  */
 const body = document.body;
 const scrollWrapper = document.getElementById('scroll-wrapper');
+const siteHeader = document.querySelector('.site-header');
 const parallaxElements = document.querySelectorAll('.parallax');
 
 let currentScrollY = 0;
 let targetScrollY = 0;
-const ease = 0.08; 
+const ease = 0.08;
 
 function setBodyHeight() {
     body.style.height = `${scrollWrapper.getBoundingClientRect().height}px`;
@@ -103,11 +122,12 @@ window.addEventListener('scroll', () => {
 });
 
 function updateScroll() {
-    currentScrollY += (targetScrollY - currentScrollY) * ease;
+    // Con movimiento reducido el desplazamiento es inmediato y sin parallax
+    currentScrollY += (targetScrollY - currentScrollY) * (reduceMotion ? 1 : ease);
     scrollWrapper.style.transform = `translate3d(0, -${currentScrollY}px, 0)`;
 
     parallaxElements.forEach(el => {
-        const speed = parseFloat(el.getAttribute('data-speed'));
+        const speed = reduceMotion ? 0 : parseFloat(el.getAttribute('data-speed'));
         const yPos = currentScrollY * speed;
         el.style.transform = `translate3d(0, ${yPos}px, 0)`;
     });
@@ -117,6 +137,59 @@ function updateScroll() {
 
 updateScroll();
 
+/**
+ * 1.1 NAVEGACIÓN ACCESIBLE CON EL SCROLL VIRTUAL
+ * Como #scroll-wrapper es fijo, el navegador no puede desplazarse solo hacia
+ * los #anclas ni hacia el elemento enfocado con Tab: lo resolvemos a mano.
+ */
+let skipFocusScroll = false;
+
+// Posición del elemento dentro del documento (independiente del scroll actual)
+function getDocumentTop(el) {
+    return el.getBoundingClientRect().top + currentScrollY;
+}
+
+function scrollToElement(el, offset = 0) {
+    const top = Math.max(0, getDocumentTop(el) - offset);
+    window.scrollTo(0, top);
+    targetScrollY = window.scrollY;
+}
+
+document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+
+    const id = link.getAttribute('href').slice(1);
+    const target = id && document.getElementById(id);
+    if (!target) return;
+
+    e.preventDefault();
+    setMenu(false);
+    scrollToElement(target);
+
+    // Movemos el foco al destino para que Tab continúe desde ahí
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    skipFocusScroll = true;
+    target.focus({ preventScroll: true });
+    skipFocusScroll = false;
+
+    history.pushState(null, '', `#${id}`);
+});
+
+// Mantiene visible el elemento que recibe el foco al tabular
+document.addEventListener('focusin', (e) => {
+    if (skipFocusScroll || !scrollWrapper.contains(e.target)) return;
+
+    const rect = e.target.getBoundingClientRect();
+    const docTop = rect.top + currentScrollY;
+    const viewTop = docTop - window.scrollY;
+    const headerHeight = siteHeader ? siteHeader.offsetHeight : 0;
+
+    if (viewTop < headerHeight || viewTop + rect.height > window.innerHeight) {
+        window.scrollTo(0, Math.max(0, docTop - window.innerHeight / 3));
+        targetScrollY = window.scrollY;
+    }
+});
 
 /**
  * 2. CUSTOM CURSOR & DYNAMIC UPDATES
@@ -138,7 +211,7 @@ function updateCursor() {
 }
 updateCursor();
 
-document.querySelectorAll('button, a, .project-card, .service-row, .insight-card').forEach(el => {
+document.querySelectorAll('button, a, .masonry-item, .service-row, .insight-card, .testimonial-fan').forEach(el => {
     el.addEventListener('mouseenter', () => {
         cursor.classList.add('hover-active');
     });
@@ -146,7 +219,6 @@ document.querySelectorAll('button, a, .project-card, .service-row, .insight-card
         cursor.classList.remove('hover-active');
     });
 });
-
 
 /**
  * 3. IMAGE TRAIL EFFECT (FOOTER)
@@ -170,7 +242,7 @@ footer.addEventListener('mouseenter', () => isMouseInFooter = true);
 footer.addEventListener('mouseleave', () => isMouseInFooter = false);
 
 window.addEventListener('mousemove', (e) => {
-    if (!isMouseInFooter) return;
+    if (!isMouseInFooter || reduceMotion) return;
 
     const distance = Math.hypot(e.clientX - lastMouseX, e.clientY - lastMouseY);
     if (distance > 100) {
@@ -183,6 +255,7 @@ window.addEventListener('mousemove', (e) => {
 function createTrailImage(x, y) {
     const img = document.createElement('img');
     img.src = images[imageIndex % images.length];
+    img.alt = '';
     img.classList.add('trail-img');
     img.style.left = `${x}px`;
     img.style.top = `${y}px`;
@@ -192,10 +265,9 @@ function createTrailImage(x, y) {
     setTimeout(() => {
         img.style.opacity = '0';
         img.style.transform = 'translate(-50%, -50%) scale(0.5)';
-        setTimeout(() => { img.remove(); }, 800); 
+        setTimeout(() => { img.remove(); }, 800);
     }, 100);
 }
-
 
 /**
  * 4. INTERSECTION OBSERVER ANIMATIONS
@@ -205,7 +277,7 @@ const observer = new IntersectionObserver((entries, obs) => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible-element');
             entry.target.classList.remove('hidden-element');
-            obs.unobserve(entry.target); 
+            obs.unobserve(entry.target);
         }
     });
 }, { threshold: 0.15 });
@@ -214,7 +286,6 @@ document.querySelectorAll('.hidden-element').forEach(el => {
     observer.observe(el);
 });
 
-
 /**
  * 5. MAGNETIC BUTTONS
  */
@@ -222,6 +293,7 @@ document.querySelectorAll('.magnetic-btn').forEach(magBtn => {
     const magText = magBtn.querySelector('.btn-text');
 
     magBtn.addEventListener('mousemove', (e) => {
+        if (reduceMotion) return;
         const rect = magBtn.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
@@ -238,28 +310,77 @@ document.querySelectorAll('.magnetic-btn').forEach(magBtn => {
     });
 });
 
+/**
+ * 6. MENÚ MÓVIL
+ */
+const menuToggle = document.querySelector('.menu-toggle');
+
+function setMenu(open) {
+    if (!menuToggle) return;
+    menuToggle.setAttribute('aria-expanded', String(open));
+    siteHeader.classList.toggle('is-menu-open', open);
+    body.classList.toggle('menu-open', open);
+}
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+        setMenu(menuToggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Escape cierra el menú y devuelve el foco al botón
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') {
+            setMenu(false);
+            menuToggle.focus();
+        }
+    });
+
+    // Si el foco sale del header (Tab fuera del panel), el menú se cierra
+    siteHeader.addEventListener('focusout', (e) => {
+        if (!siteHeader.contains(e.relatedTarget)) setMenu(false);
+    });
+
+    // Al pasar a escritorio el panel deja de existir
+    window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => {
+        if (e.matches) setMenu(false);
+    });
+}
 
 /**
- * 6. FAQ ACCORDION
+ * 7. SERVICIOS (desplegables con teclado, click o tap)
  */
-const faqItems = document.querySelectorAll('.faq-question');
-faqItems.forEach(item => {
-    item.addEventListener('click', function() {
-        const answer = this.nextElementSibling;
-        const isOpen = answer.style.maxHeight;
-
-        document.querySelectorAll('.faq-answer').forEach(ans => ans.style.maxHeight = null);
-        document.querySelectorAll('.faq-question .icon').forEach(icon => icon.textContent = '+');
-
-        if (!isOpen) {
-            answer.style.maxHeight = answer.scrollHeight + "px";
-            this.querySelector('.icon').textContent = '-';
-        }
+document.querySelectorAll('.service-row__toggle').forEach(toggle => {
+    toggle.addEventListener('click', () => {
+        const isOpen = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!isOpen));
+        toggle.closest('.service-row').classList.toggle('is-open', !isOpen);
     });
 });
 
 /**
- * 7. COUNTER ANIMATION (STATS)
+ * 8. FAQ ACCORDION
+ */
+const faqButtons = document.querySelectorAll('.faq-question button');
+
+function setFaq(button, open) {
+    const answer = document.getElementById(button.getAttribute('aria-controls'));
+    button.setAttribute('aria-expanded', String(open));
+    button.querySelector('.icon').textContent = open ? '-' : '+';
+    answer.classList.toggle('is-open', open);
+    answer.style.maxHeight = open ? `${answer.scrollHeight}px` : null;
+}
+
+faqButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        const isOpen = button.getAttribute('aria-expanded') === 'true';
+        faqButtons.forEach(other => setFaq(other, false));
+        if (!isOpen) setFaq(button, true);
+    });
+});
+
+/**
+ * 9. COUNTER ANIMATION (STATS)
+ * Los números animados son aria-hidden: el valor real está en un texto oculto.
  */
 const statCounters = document.querySelectorAll('.stat-number');
 const animationDuration = 2000; // 2 segundos de animación
@@ -269,48 +390,82 @@ const counterObserver = new IntersectionObserver((entries, observer) => {
         if (entry.isIntersecting) {
             const counterElement = entry.target;
             const targetValue = parseInt(counterElement.getAttribute('data-target'));
-            
+
+            if (reduceMotion) {
+                counterElement.innerText = targetValue;
+                observer.unobserve(counterElement);
+                return;
+            }
+
             let startTimestamp = null;
-            
+
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
-                // Calculamos el progreso (de 0 a 1)
+                // Progreso de 0 a 1 con ease-out para que el final sea suave
                 const progress = Math.min((timestamp - startTimestamp) / animationDuration, 1);
-                
-                // Función de aceleración/desaceleración (ease-out) para que el final sea suave
                 const easeOutProgress = 1 - Math.pow(1 - progress, 4);
-                
-                // Actualizamos el número en el HTML
+
                 counterElement.innerText = Math.floor(easeOutProgress * targetValue);
-                
-                // Si no hemos terminado, pedimos el siguiente frame
+
                 if (progress < 1) {
                     window.requestAnimationFrame(step);
                 } else {
                     counterElement.innerText = targetValue; // Aseguramos el número final exacto
                 }
             };
-            
+
             window.requestAnimationFrame(step);
-            
-            // Dejamos de observar para que la animación solo ocurra la primera vez que se hace scroll
-            observer.unobserve(counterElement); 
+
+            // La animación solo ocurre la primera vez que se hace scroll
+            observer.unobserve(counterElement);
         }
     });
-}, { threshold: 0.5 }); // El 50% del contenedor debe estar visible para que inicie
+}, { threshold: 0.5 });
 
 statCounters.forEach(counter => {
     counterObserver.observe(counter);
 });
 
+/**
+ * 10. VIDEO DE FONDO: control de pausa (WCAG 2.2.2)
+ */
+const bgVideo = document.querySelector('.video-break__media');
+const videoToggle = document.querySelector('.video-break__toggle');
+
+function updateVideoToggle() {
+    videoToggle.textContent = bgVideo.paused ? 'Reproducir video de fondo' : 'Pausar video de fondo';
+}
+
+if (bgVideo && videoToggle) {
+    if (reduceMotion) {
+        bgVideo.removeAttribute('autoplay');
+        bgVideo.pause();
+    }
+    updateVideoToggle();
+
+    videoToggle.addEventListener('click', () => {
+        if (bgVideo.paused) {
+            bgVideo.play();
+        } else {
+            bgVideo.pause();
+        }
+    });
+    bgVideo.addEventListener('play', updateVideoToggle);
+    bgVideo.addEventListener('pause', updateVideoToggle);
+}
+
+/**
+ * 11. FUZZY TEXT (FOOTER)
+ */
 document.addEventListener("DOMContentLoaded", () => {
-    // Retrasamos la ejecución 500ms para asegurar que el DOM, las fuentes (Moul/Work Sans) 
-    // y los estilos responsivos estén completamente cargados antes de capturarlos en Canvas.
+    // Retrasamos 500ms para asegurar que el DOM, las fuentes (Moul/Work Sans)
+    // y los estilos responsivos estén cargados antes de capturarlos en Canvas.
     setTimeout(() => {
         const leadText = document.querySelector('.footer-cta__lead');
         const linkText = document.querySelector('.footer-cta__link');
-        
-        if (leadText) new FuzzyText(leadText, { baseIntensity: 0.1, hoverIntensity: 0.4 });
-        if (linkText) new FuzzyText(linkText, { baseIntensity: 0.15, hoverIntensity: 0.6 });
+        const still = reduceMotion ? { baseIntensity: 0, hoverIntensity: 0 } : null;
+
+        if (leadText) new FuzzyText(leadText, still || { baseIntensity: 0.1, hoverIntensity: 0.4 });
+        if (linkText) new FuzzyText(linkText, still || { baseIntensity: 0.15, hoverIntensity: 0.6 });
     }, 500);
 });
