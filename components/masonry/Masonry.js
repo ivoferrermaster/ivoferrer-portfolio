@@ -8,7 +8,6 @@ class Masonry {
             duration: 0.8,
             stagger: 0.05,
             animateFrom: 'bottom', // 'bottom', 'top', 'random'
-            hoverScale: 1.15,
             blurToFocus: true,
             ...options
         };
@@ -18,7 +17,8 @@ class Masonry {
         this.init();
     }
 
-    // Las columnas (4 / 3 / 2) y el efecto sube y baja se resuelven en masonry.css por breakpoint
+    // Las columnas (4 / 3 / 2), el efecto sube y baja y el hover de la
+    // cubierta se resuelven en masonry.css
     init() {
         if (this.reduceMotion || typeof gsap === 'undefined') {
             this.items.forEach(item => {
@@ -27,7 +27,6 @@ class Masonry {
             });
             return;
         }
-        this.bindEvents();
         this.animateIn();
     }
 
@@ -58,31 +57,5 @@ class Masonry {
         }, { threshold: 0.1 });
 
         observer.observe(this.container);
-    }
-
-    bindEvents() {
-        this.items.forEach(item => {
-            const bg = item.querySelector('.masonry-item__bg');
-
-            item.addEventListener('mouseenter', () => {
-                if (bg) {
-                    gsap.to(bg, {
-                        scale: this.options.hoverScale,
-                        duration: 0.4,
-                        ease: 'power2.out'
-                    });
-                }
-            });
-
-            item.addEventListener('mouseleave', () => {
-                if (bg) {
-                    gsap.to(bg, {
-                        scale: 1,
-                        duration: 0.4,
-                        ease: 'power2.out'
-                    });
-                }
-            });
-        });
     }
 }

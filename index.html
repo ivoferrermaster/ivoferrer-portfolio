@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Portfolio de Ivo Ferrer, Creative Developer &amp; Designer: diseño web, desarrollo, apps móviles, motion graphics e identidad de marca.">
     <title>Ivo Ferrer</title>
-    <link rel="icon" type="image/png" href="assets/logos/logo2.png">
+    <link rel="icon" type="image/svg+xml" href="assets/logos/logoivo.svg">
     <link rel="preload" href="assets/fonts/WorkSans-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="preload" href="assets/fonts/Moul-Regular.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
     <link rel="stylesheet" href="components/masonry/masonry.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="components/staggeredmenu/staggered-menu.css">
+    <link rel="stylesheet" href="components/logo-wall/logo-wall.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 </head>
 <body class="loading">
     <a class="skip-link" href="#contenido">Saltar al contenido principal</a>
@@ -28,26 +30,56 @@
     <div id="cursor" aria-hidden="true"></div>
     <div id="trail-container" aria-hidden="true"></div>
 
+    <!-- 1. HEADER (Totalmente independiente y afuera del menú) -->
     <header class="site-header">
-        <a href="#inicio" class="logo-wrapper">
-            <img src="assets/logos/logo2.png" alt="Ivo Ferrer, ir al inicio" class="logo-img" width="62" height="50">
+        <a href="#inicio" class="sm-logo">
+            <img src="assets/logos/logoivo.svg" alt="Ivo Ferrer, ir al inicio" class="sm-logo-img">
         </a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
-            <span class="menu-toggle__icon" aria-hidden="true"></span>
+
+        <button class="sm-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
+            <span class="sm-toggle-textWrap" aria-hidden="true">
+                <span class="sm-toggle-textInner">
+                    <span class="sm-toggle-line">Menu</span>
+                    <span class="sm-toggle-line">Cerrar</span>
+                    <span class="sm-toggle-line">Menu</span>
+                    <span class="sm-toggle-line">Cerrar</span>
+                </span>
+            </span>
+            <span class="sm-icon" aria-hidden="true">
+                <span class="sm-icon-line" id="sm-plus-h"></span>
+                <span class="sm-icon-line" id="sm-plus-v"></span>
+            </span>
             <span class="visually-hidden">Menú</span>
         </button>
-        <nav class="nav" id="menu-principal" aria-label="Principal">
-            <ul>
-                <li><a href="#servicios">Servicios</a></li>
-                <li><a href="#trabajo">Trabajo</a></li>
-                <li><a href="#sobre-mi">Sobre mí</a></li>
-                <li><a href="#contacto">Contacto</a></li>
-            </ul>
-        </nav>
-        <a href="#contacto" class="btn-pill magnetic-btn">
-            <span class="btn-text">Ponte en contacto</span>
-        </a>
     </header>
+
+    <!-- 2. WRAPPER DEL MENÚ DESPLEGABLE (inert mientras está cerrado) -->
+    <div class="staggered-menu-wrapper" id="main-menu" inert>
+        <div class="sm-prelayers" aria-hidden="true">
+            <div class="sm-prelayer" style="background: #2a2a2a;"></div>
+            <div class="sm-prelayer" style="background: #7628b6;"></div>
+        </div>
+
+        <nav class="staggered-menu-panel" aria-label="Principal">
+            <div class="sm-panel-inner">
+                <ul class="sm-panel-list" data-numbering="true">
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#inicio"><span class="sm-panel-itemLabel">Inicio</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#servicios"><span class="sm-panel-itemLabel">Servicios</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#trabajo"><span class="sm-panel-itemLabel">Trabajo</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#sobre-mi"><span class="sm-panel-itemLabel">Sobre mí</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#contacto"><span class="sm-panel-itemLabel">Contacto</span></a></li>
+                </ul>
+
+                <p class="sm-socials-title" id="sm-socials-title">Socials</p>
+                <ul class="sm-socials-list" aria-labelledby="sm-socials-title">
+                    <li><a href="#" class="sm-socials-link">Instagram</a></li>
+                    <li><a href="#" class="sm-socials-link">LinkedIn</a></li>
+                    <li><a href="#" class="sm-socials-link">Twitter</a></li>
+                    <li><a href="#" class="sm-socials-link">WhatsApp</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
 
     <div id="scroll-wrapper">
         <main id="contenido" tabindex="-1">
@@ -123,93 +155,99 @@
             </section>
 
             <!-- CLIENTES -->
-            <section class="clients wrap" aria-labelledby="clientes-titulo">
-                <h2 id="clientes-titulo" class="clients-heading hidden-element">Compañías que han confiado en mi trabajo</h2>
-                <ul class="logo-grid hidden-element">
-                    <li>Apple</li>
-                    <li>Google</li>
-                    <li>Nike</li>
-                    <li>Ferrari</li>
-                    <li>Sony</li>
-                    <li>Adobe</li>
-                    <li>Mercedes</li>
-                    <li>Samsung</li>
-                    <li>IBM</li>
-                    <li>Airbnb</li>
-                    <li>Spotify</li>
-                    <li>Tesla</li>
+            <section class="logo-wall wrap" aria-labelledby="clientes-titulo">
+                <h2 id="clientes-titulo" class="logo-wall__heading hidden-element">Compañías que han confiado en mi trabajo</h2>
+                <ul class="logo-wall__grid">
+                    <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
+                        <img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" loading="lazy">
+                    </li>
+                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Apple</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
+                        <img src="assets/logos/logo-montecitos.png" alt="Montecitos Country &amp; Golf" class="logo-wall__logo--montecitos" loading="lazy">
+                    </li>
+                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Google</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Nike</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand">
+                        <img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="logo-wall__logo--enterlab" loading="lazy">
+                    </li>
+                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Ferrari</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Sony</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
+                        <img src="assets/logos/logo-cpd.png" alt="Centro Privado del Diagnóstico" class="logo-wall__logo--cpd" loading="lazy">
+                    </li>
+                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Adobe</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Mercedes</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Samsung</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">IBM</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Airbnb</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Spotify</span></li>
+                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Tesla</span></li>
                 </ul>
             </section>
 
             <!-- TRABAJO SELECCIONADO -->
             <section class="projects" id="trabajo" aria-labelledby="trabajo-titulo">
-                <h2 id="trabajo-titulo" class="section-title light-text wrap hidden-element">Trabajo seleccionado</h2>
+                <h2 id="trabajo-titulo" class="section-title light-text hidden-element">Trabajo seleccionado</h2>
                 <ul class="masonry-container" id="masonry-projects">
-                    <!-- Iteración 1 -->
-                    <li class="masonry-item" data-key="1">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Liquid Network</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="2">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Nexus Platform</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-montecitos.png" alt="Montecitos" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="3">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Vortex Banking</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="4">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Quantum Labs</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-cpd.png" alt="CPD" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="5">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Stellar Dynamics</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-cpd.png" alt="CPD" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="6">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Zelt</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="1">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Liquid Network</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="2">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Nexus Platform</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="3">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Vortex Banking</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="4">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Quantum Labs</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-montecitos.png" alt="Montecitos" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="5">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Stellar Dynamics</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-cpd.png" alt="CPD" class="masonry-item__logo"></h3>
                     </li>
-                    <li class="masonry-item" data-key="6">
-                        <img class="masonry-item__bg" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=600&amp;q=80" alt="" loading="lazy">
-                        <h3>Zelt</h3>
+                    <li class="masonry-item">
+                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
+                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-montecitos.png" alt="Montecitos" class="masonry-item__logo"></h3>
                     </li>
 
                     <!-- REPETIR ESTOS 6 BLOQUES <li> DOS VECES MÁS PARA TENER TUS 18 TARJETAS -->
                 </ul>
-                <p class="projects-cta">
-                    <a href="#" class="btn-outline magnetic-btn">
-                        <span class="btn-text">Ver todo<span class="visually-hidden"> el trabajo</span></span>
-                    </a>
-                </p>
             </section>
 
             <!-- PIXELATED VIDEO BREAK -->
-            <section class="video-break wrap" id="sobre-mi" aria-labelledby="sobre-mi-titulo">
+            <section class="video-break wrap" aria-labelledby="que-hago-titulo">
                 <video class="video-break__media" autoplay loop muted playsinline aria-hidden="true">
                     <source src="asd3.mp4" type="video/mp4">
                 </video>
-                <h2 id="sobre-mi-titulo" class="video-break__title hidden-element">¿Qué es lo<br>que hago?</h2>
+                <h2 id="que-hago-titulo" class="video-break__title hidden-element">¿Qué es lo<br>que hago?</h2>
                 <p class="video-break__text hidden-element">
                     Lo que hago son páginas web totalmente dedicadas y exclusivamente de código puro, originalidad, funciones extraordinarias, hiperenfoque en el diseño y sobre todo buscar la satisfacción del cliente mediante su confianza y un paso a paso de la creación de la página web en conjunto.
                 </p>
@@ -217,32 +255,44 @@
             </section>
 
             <!-- TESTIMONIOS -->
-            <section class="trust wrap" aria-labelledby="testimonios-titulo">
+            <section class="trust wrap" id="sobre-mi" aria-labelledby="testimonios-titulo">
                 <h2 id="testimonios-titulo" class="section-title hidden-element">La confianza de<br>mis clientes</h2>
 
                 <ul class="testimonial-fan hidden-element" tabindex="0" aria-label="Testimonios de clientes">
                     <li class="testimonial-card testimonial-card--1">
                         <figure>
-                            <blockquote>
-                                <p>Ivo completó el rebranding de nuestro sitio. La calidad superó nuestras expectativas y desde entonces ganamos varios premios internacionales.</p>
-                            </blockquote>
+                            <blockquote><p>Ivo completó el rebranding de nuestro sitio. La calidad superó nuestras expectativas y desde entonces ganamos varios premios internacionales.</p></blockquote>
                             <figcaption>CEO, Zelt</figcaption>
                         </figure>
                     </li>
                     <li class="testimonial-card testimonial-card--2">
                         <figure>
-                            <blockquote>
-                                <p>Trabajé varios meses junto a Ivo en un rediseño completo: copy, diseño y código. Destacó su rigor, su talento y su forma impecable de colaborar.</p>
-                            </blockquote>
+                            <blockquote><p>Trabajé varios meses junto a Ivo en un rediseño completo: copy, diseño y código. Destacó su rigor, su talento y su forma impecable de colaborar.</p></blockquote>
                             <figcaption>CMO, Range</figcaption>
                         </figure>
                     </li>
                     <li class="testimonial-card testimonial-card--3">
                         <figure>
-                            <blockquote>
-                                <p>Me impresionó el enfoque de Ivo. El resultado final es exactamente lo que necesitábamos para escalar nuestro producto a un nuevo nivel.</p>
-                            </blockquote>
+                            <blockquote><p>Me impresionó el enfoque de Ivo. El resultado final es exactamente lo que necesitábamos para escalar nuestro producto a un nuevo nivel.</p></blockquote>
                             <figcaption>Founder, Vortex</figcaption>
+                        </figure>
+                    </li>
+                    <li class="testimonial-card testimonial-card--4">
+                        <figure>
+                            <blockquote><p>Entendió nuestra marca desde la primera reunión. Cada entrega llegó a tiempo y con un nivel de detalle que pocas veces vimos en un freelancer.</p></blockquote>
+                            <figcaption>Directora de Marketing, Nimbo</figcaption>
+                        </figure>
+                    </li>
+                    <li class="testimonial-card testimonial-card--5">
+                        <figure>
+                            <blockquote><p>El nuevo sitio duplicó las consultas en el primer mes. Ivo no solo diseña bonito: piensa en el negocio y en cómo convertir visitas en clientes.</p></blockquote>
+                            <figcaption>Product Lead, Lumen</figcaption>
+                        </figure>
+                    </li>
+                    <li class="testimonial-card testimonial-card--6">
+                        <figure>
+                            <blockquote><p>Comunicación clara, cero vueltas y un proceso transparente de principio a fin. Ya estamos planificando el próximo proyecto juntos.</p></blockquote>
+                            <figcaption>Co-founder, Orbital</figcaption>
                         </figure>
                     </li>
                 </ul>
@@ -283,27 +333,24 @@
                 </dl>
             </section>
 
-            <!-- INSIGHTS + FAQ -->
+            <!-- CÓMO TRABAJO + FAQ -->
             <section class="insights-faq wrap" aria-labelledby="insights-titulo">
-                <header class="insights-head">
-                    <h2 id="insights-titulo" class="section-title light-text hidden-element">Insights</h2>
-                    <a href="#" class="link-all">Ver todo<span class="visually-hidden"> el blog</span></a>
-                </header>
+                <h2 id="insights-titulo" class="section-title light-text insights-head hidden-element">Cómo trabajo</h2>
                 <ul class="insights-grid">
                     <li class="insight-card hidden-element">
-                        <img class="insight-card__media" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="lazy">
-                        <p class="insight-card__tag">Rediseño web</p>
-                        <h3>RFP de rediseño: lo que los freelancers realmente necesitan de ti</h3>
+                        <img class="insight-card__media" src="assets/img/cap-montecitos.png" alt="Captura del proyecto Montecitos" loading="lazy">
+                        <p class="insight-card__tag">Caso de estudio</p>
+                        <h3>Montecitos: de brief a producción en 6 semanas</h3>
                     </li>
                     <li class="insight-card hidden-element">
-                        <img class="insight-card__media" src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="lazy">
-                        <p class="insight-card__tag">Rediseño web</p>
-                        <h3>Mi proceso de rediseño: fases, timeline y checklist</h3>
+                        <img class="insight-card__media" src="assets/img/cap-ascanelli.png" alt="Captura del proyecto Ascanelli" loading="lazy">
+                        <p class="insight-card__tag">Cómo trabajo</p>
+                        <h3>De la primera llamada al lanzamiento: mi proceso en 5 etapas</h3>
                     </li>
                     <li class="insight-card hidden-element">
-                        <img class="insight-card__media" src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&amp;fit=crop&amp;w=900&amp;q=80" alt="" loading="lazy">
-                        <p class="insight-card__tag">Rediseño web</p>
-                        <h3>¿Cuánto cuesta rediseñar un sitio web inmersivo en 2026?</h3>
+                        <img class="insight-card__media" src="assets/img/cap-enterlab.png" alt="Captura del proyecto Enterlab" loading="lazy">
+                        <p class="insight-card__tag">Precios y timelines</p>
+                        <h3>¿Cuánto cuesta y cuánto tarda un sitio a medida?</h3>
                     </li>
                 </ul>
 
@@ -368,6 +415,7 @@
                     <li><a href="#">LinkedIn</a></li>
                     <li><a href="#">Twitter</a></li>
                     <li><a href="#">Behance</a></li>
+                    <li><a href="#">WhatsApp</a></li>
                 </ul>
             </section>
             <section class="footer-col" aria-labelledby="footer-ubicacion">
@@ -392,22 +440,15 @@
                 <li><a href="#" class="social-circle" aria-label="LinkedIn">In</a></li>
                 <li><a href="#" class="social-circle" aria-label="Twitter">X</a></li>
                 <li><a href="#" class="social-circle" aria-label="Behance">Be</a></li>
+                <li><a href="#" class="social-circle" aria-label="WhatsApp">Wa</a></li>
             </ul>
         </footer>
     </div>
 
-    <script src="components/fuzzytext/FuzzyText.js"></script>
-    <script src="components/masonry/Masonry.js"></script>
-    <script src="script.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Inicializa la grilla de proyectos
-            new Masonry('#masonry-projects', {
-                animateFrom: 'bottom',
-                stagger: 0.08,
-                hoverScale: 1.2
-            });
-        });
-    </script>
+    <script src="components/fuzzytext/FuzzyText.js" defer></script>
+    <script src="components/masonry/Masonry.js" defer></script>
+    <script src="components/staggeredmenu/StaggeredMenu.js" defer></script>
+    <script src="components/logo-wall/LogoWall.js" defer></script>
+    <script src="script.js" defer></script>
 </body>
 </html>

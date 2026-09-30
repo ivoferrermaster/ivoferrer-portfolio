@@ -164,7 +164,6 @@ document.addEventListener('click', (e) => {
     if (!target) return;
 
     e.preventDefault();
-    setMenu(false);
     scrollToElement(target);
 
     // Movemos el foco al destino para que Tab continúe desde ahí
@@ -311,43 +310,7 @@ document.querySelectorAll('.magnetic-btn').forEach(magBtn => {
 });
 
 /**
- * 6. MENÚ MÓVIL
- */
-const menuToggle = document.querySelector('.menu-toggle');
-
-function setMenu(open) {
-    if (!menuToggle) return;
-    menuToggle.setAttribute('aria-expanded', String(open));
-    siteHeader.classList.toggle('is-menu-open', open);
-    body.classList.toggle('menu-open', open);
-}
-
-if (menuToggle) {
-    menuToggle.addEventListener('click', () => {
-        setMenu(menuToggle.getAttribute('aria-expanded') !== 'true');
-    });
-
-    // Escape cierra el menú y devuelve el foco al botón
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && menuToggle.getAttribute('aria-expanded') === 'true') {
-            setMenu(false);
-            menuToggle.focus();
-        }
-    });
-
-    // Si el foco sale del header (Tab fuera del panel), el menú se cierra
-    siteHeader.addEventListener('focusout', (e) => {
-        if (!siteHeader.contains(e.relatedTarget)) setMenu(false);
-    });
-
-    // Al pasar a escritorio el panel deja de existir
-    window.matchMedia('(min-width: 769px)').addEventListener('change', (e) => {
-        if (e.matches) setMenu(false);
-    });
-}
-
-/**
- * 7. SERVICIOS (desplegables con teclado, click o tap)
+ * 6. SERVICIOS (desplegables con teclado, click o tap)
  */
 document.querySelectorAll('.service-row__toggle').forEach(toggle => {
     toggle.addEventListener('click', () => {
@@ -358,7 +321,7 @@ document.querySelectorAll('.service-row__toggle').forEach(toggle => {
 });
 
 /**
- * 8. FAQ ACCORDION
+ * 7. FAQ ACCORDION
  */
 const faqButtons = document.querySelectorAll('.faq-question button');
 
@@ -379,7 +342,7 @@ faqButtons.forEach(button => {
 });
 
 /**
- * 9. COUNTER ANIMATION (STATS)
+ * 8. COUNTER ANIMATION (STATS)
  * Los números animados son aria-hidden: el valor real está en un texto oculto.
  */
 const statCounters = document.querySelectorAll('.stat-number');
@@ -427,7 +390,7 @@ statCounters.forEach(counter => {
 });
 
 /**
- * 10. VIDEO DE FONDO: control de pausa (WCAG 2.2.2)
+ * 9. VIDEO DE FONDO: control de pausa (WCAG 2.2.2)
  */
 const bgVideo = document.querySelector('.video-break__media');
 const videoToggle = document.querySelector('.video-break__toggle');
@@ -455,7 +418,7 @@ if (bgVideo && videoToggle) {
 }
 
 /**
- * 11. FUZZY TEXT (FOOTER)
+ * 10. FUZZY TEXT (FOOTER)
  */
 document.addEventListener("DOMContentLoaded", () => {
     // Retrasamos 500ms para asegurar que el DOM, las fuentes (Moul/Work Sans)
@@ -468,4 +431,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (leadText) new FuzzyText(leadText, still || { baseIntensity: 0.1, hoverIntensity: 0.4 });
         if (linkText) new FuzzyText(linkText, still || { baseIntensity: 0.15, hoverIntensity: 0.6 });
     }, 500);
+});
+
+/**
+ * 11. INIT DE COMPONENTES (Masonry, Menú, Logo Wall)
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    new Masonry('#masonry-projects', { animateFrom: 'bottom', stagger: 0.08 });
+    new StaggeredMenu('#main-menu');
+    new LogoWall('.logo-wall');
 });
