@@ -236,6 +236,10 @@ button {
     background-clip: text;
     color: white;
     letter-spacing: -0.1rem;
+    /* Cada letra es un <span> individual (ver script.js) para animarlas por
+       separado; sin nowrap el navegador puede envolver la línea entre esos
+       spans como si fueran palabras, cortando "FERRER" a la mitad. */
+    white-space: nowrap;
 }
 
 .role {
@@ -1096,9 +1100,11 @@ body.start-anim .site-header {
         padding: 1rem var(--gutter);
     }
 
-    /* Hero */
+    /* Hero: 20vw es el máximo que cabe en una sola línea (con nowrap) hasta
+       320px de ancho sin que "FERRER" se corte ni desborde. Como escala en vw,
+       si entra a 320px entra en cualquier ancho mayor dentro de este breakpoint. */
     .text-image {
-        font-size: 22vw;
+        font-size: 20vw;
     }
 
     .subtitle {
