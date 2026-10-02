@@ -9,58 +9,42 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     background-color: var(--bg);
-    /* "Astillas" oscuras de fondo, como la referencia */
-    background-image:
-        linear-gradient(112deg, transparent 0 18%, rgb(0 0 0 / 0.22) 18% 34%, transparent 34% 100%),
-        linear-gradient(68deg, transparent 0 62%, rgb(0 0 0 / 0.18) 62% 80%, transparent 80% 100%),
-        linear-gradient(160deg, transparent 0 40%, rgb(255 255 255 / 0.015) 40% 58%, transparent 58% 100%);
-    animation: work-view-in 0.6s var(--ease, ease) both;
+    /* Sin fill-mode: si la animación queda "aplicada", el transform hace que las letras
+       fijas del fondo se muevan con el scroll */
+    animation: work-view-in 0.6s var(--ease, ease);
 }
 
 .work-view[hidden] {
     display: none;
 }
 
-/* Marca de agua "IF": dos letras dibujadas con clip-path (sin imágenes), del mismo color
-   que las astillas de arriba. Fijas respecto a la pantalla, detrás del texto. */
+/* Fondo "IF": dos letras dibujadas con clip-path, del alto de la pantalla y fijas mientras
+   el contenido se desplaza. aspect-ratio mantiene la proporción, así no se deforman. */
 .work-view::before,
 .work-view::after {
     content: "";
-    position: absolute;
+    position: fixed;
     top: 50%;
     z-index: -1;
-    width: 11vw;
-    height: 48vh;
-    background-color: rgb(0 0 0 / 0.22);
+    /* Todo el alto; en pantallas angostas (verticales) se achica para que las dos entren a lo ancho */
+    height: min(100vh, 74vw);
+    height: min(100dvh, 74vw);
+    aspect-ratio: 0.62;
     transform: translateY(-50%);
+    background-color: rgb(0 0 0 / 0.22);
     pointer-events: none;
 }
 
 /* I: palito de arriba, palito de abajo y el del medio */
 .work-view::before {
-    left: 5vw;
-    clip-path: polygon(10% 0, 90% 0, 90% 15%, 65% 15%, 65% 85%, 90% 85%, 90% 100%, 10% 100%, 10% 85%, 35% 85%, 35% 15%, 10% 15%);
+    right: calc(50% + 1.5vh);
+    clip-path: polygon(0 0, 100% 0, 100% 16%, 68% 16%, 68% 84%, 100% 84%, 100% 100%, 0 100%, 0 84%, 32% 84%, 32% 16%, 0 16%);
 }
 
+/* F */
 .work-view::after {
-    right: 5vw;
-    width: 10vw;
-    height: 46vh;
-    clip-path: polygon(0 0, 100% 0, 100% 18%, 25% 18%, 25% 40%, 80% 40%, 80% 58%, 25% 58%, 25% 100%, 0 100%);
-}
-
-@media (max-width: 1200px) {
-    .work-view::before,
-    .work-view::after {
-        width: 8vw;
-    }
-}
-
-@media (max-width: 768px) {
-    .work-view::before,
-    .work-view::after {
-        display: none;
-    }
+    left: calc(50% + 1.5vh);
+    clip-path: polygon(0 0, 100% 0, 100% 16%, 36% 16%, 36% 42%, 82% 42%, 82% 58%, 36% 58%, 36% 100%, 0 100%);
 }
 
 @keyframes work-view-in {
