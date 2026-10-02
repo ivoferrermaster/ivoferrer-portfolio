@@ -11,14 +11,32 @@
     <link rel="stylesheet" href="components/work-carousel/work-carousel.css">
     <link rel="stylesheet" href="components/work-views/work-views.css">
     <link rel="stylesheet" href="trabajo.css">
+    <link rel="stylesheet" href="components/page-transition/page-transition.css">
+    <script>
+        // Si se llega navegando entre secciones (clic en un enlace o botón atrás/adelante),
+        // la página nace tapada y no corre el preloader completo (ver components/page-transition)
+        try {
+            var pt = sessionStorage.getItem("ivo:pt");
+            var nav = performance.getEntriesByType("navigation")[0];
+            if ((pt && Date.now() - Number(pt) < 10000) || (nav && nav.type === "back_forward")) {
+                document.documentElement.classList.add("pt-arriving");
+                // Red de seguridad: si PageTransition.js no carga, no se deja la página tapada
+                setTimeout(function () { document.documentElement.classList.remove("pt-arriving"); }, 6000);
+            }
+        } catch (e) {}
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
     <script src="components/staggeredmenu/StaggeredMenu.js" defer></script>
     <script src="components/work-carousel/WorkCarousel.js" defer></script>
     <script src="components/work-views/WorkViews.js" defer></script>
     <script src="data/proyectos.js" defer></script>
+    <script src="components/page-transition/PageTransition.js" defer></script>
     <script src="trabajo.js" defer></script>
 </head>
 <body class="work-page">
+    <div class="page-transition" aria-hidden="true">
+        <img class="page-transition__logo" src="assets/logos/logoivo.svg" alt="" draggable="false">
+    </div>
     <a class="skip-link" href="#trabajo">Saltar al carrusel de proyectos</a>
 
     <header class="site-header">

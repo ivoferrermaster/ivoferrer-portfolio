@@ -1,0 +1,70 @@
+/* components/preloader/preloader.css */
+
+/* Bloquea el scroll mientras dura la entrada (lo libera script.js) */
+body.loading {
+    overflow: hidden !important;
+}
+
+.preloader {
+    --preloader-track: rgba(255, 255, 255, 0.28);
+
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    pointer-events: none;
+    /* Tapa el sitio hasta que el canvas pinta su primer frame (también negro).
+       Después se vuelve transparente: la rendija recorta el canvas y deja ver
+       el hero que está debajo. */
+    background: var(--black);
+}
+
+.preloader.is-ready {
+    background: transparent;
+}
+
+.preloader__canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+}
+
+/* Contenido real (logo blanco + barra). Queda DEBAJO del canvas (z-index -1):
+   solo se ve a través de la rendija. overflow:hidden recorta el logo cuando
+   cae sobre la barra. Posición y tamaño los calcula Preloader.js. */
+.preloader__inner {
+    position: absolute;
+    overflow: hidden;
+    opacity: 0;
+    z-index: -1;
+}
+
+.preloader__logo {
+    position: absolute;
+    top: 0;
+    display: block;
+    user-select: none;
+}
+
+.preloader__bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+}
+
+.preloader__bar-track,
+.preloader__bar-fill {
+    position: absolute;
+    inset: 0;
+}
+
+.preloader__bar-track {
+    background: var(--preloader-track);
+}
+
+.preloader__bar-fill {
+    background: var(--white);
+    z-index: 1;
+}

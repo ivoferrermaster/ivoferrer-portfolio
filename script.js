@@ -9,10 +9,6 @@ reduceMotionQuery.addEventListener('change', (e) => reduceMotion = e.matches);
  * 0. PRELOADER & ENTRANCE ANIMATION
  */
 document.addEventListener("DOMContentLoaded", () => {
-    const preloaderBar = document.getElementById('preloader-bar');
-    const preloaderPercentage = document.getElementById('preloader-percentage');
-    const preloader = document.getElementById('preloader');
-
     // 1. Preparar las letras del Hero dividiéndolas en spans.
     //    El texto completo queda en un span oculto para lectores de pantalla
     //    y las letras sueltas se marcan aria-hidden para que no se lean de a una.
@@ -48,49 +44,56 @@ document.addEventListener("DOMContentLoaded", () => {
     // Guardamos todas las letras ocultas en un array
     const allLetters = Array.from(document.querySelectorAll('.rand-letter'));
 
-    if (!preloaderBar || !preloaderPercentage || !preloader) return;
+    // 2. Entrada del hero: arranca cuando el preloader empieza a cerrarse
+    //    (el logo cae sobre la barra), no cuando ya desapareció.
+    // arrivedAtAnchor: se llegó navegando directo a una sección (ya se saltó ahí
+    // mientras la cortina tapaba), así que no hay que volver a hacer scroll.
+    const startEntrance = (arrivedAtAnchor = false) => {
+        document.body.classList.add('start-anim');
 
-    let progress = 0;
+        // Revela las letras de a una, en orden aleatorio
+        const revealInterval = setInterval(() => {
+            if (allLetters.length === 0) {
+                clearInterval(revealInterval);
+                return;
+            }
+            const randomIndex = Math.floor(Math.random() * allLetters.length);
+            const letter = allLetters.splice(randomIndex, 1)[0];
+            letter.classList.add('revealed');
+        }, 35);
 
-    const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 8) + 4;
+        setTimeout(() => {
+            document.body.classList.remove('loading');
 
-        if (progress >= 100) {
-            progress = 100;
-            clearInterval(interval);
+            // Si se entró con un #ancla en la URL, se respeta ahora que se puede hacer scroll
+            if (arrivedAtAnchor) return;
+            const initialTarget = location.hash && document.getElementById(location.hash.slice(1));
+            if (initialTarget) scrollToElement(initialTarget);
+        }, arrivedAtAnchor ? 600 : 3000);
+    };
 
-            preloaderBar.style.width = `100%`;
-            preloaderPercentage.innerText = `100%`;
+    if (PageTransition.arrived) {
+        // Se llegó navegando desde otra sección: sin preloader completo. La
+        // cortina de page-transition hace de "sub-preloader" y el hero entra
+        // cuando esta empieza a abrirse.
+        document.getElementById('preloader')?.remove();
 
-            setTimeout(() => {
-                preloader.classList.add('loaded');
-                document.body.classList.add('start-anim');
-
-                // 2. Revela las letras de a una, en orden aleatorio
-                const revealInterval = setInterval(() => {
-                    if (allLetters.length === 0) {
-                        clearInterval(revealInterval);
-                        return;
-                    }
-                    const randomIndex = Math.floor(Math.random() * allLetters.length);
-                    const letter = allLetters.splice(randomIndex, 1)[0];
-                    letter.classList.add('revealed');
-                }, 35);
-
-                setTimeout(() => {
-                    document.body.classList.remove('loading');
-                    preloader.remove();
-
-                    // Si se entró con un #ancla en la URL, se respeta ahora que se puede hacer scroll
-                    const initialTarget = location.hash && document.getElementById(location.hash.slice(1));
-                    if (initialTarget) scrollToElement(initialTarget);
-                }, 3000);
-            }, 400);
-        } else {
-            preloaderBar.style.width = `${progress}%`;
-            preloaderPercentage.innerText = `${progress}%`;
+        // Si el destino es una sección de esta página (ej. #contacto), se salta
+        // ahí de golpe mientras la cortina aún tapa: el usuario no ve pasar por el hero.
+        const anchorTarget = location.hash && document.getElementById(location.hash.slice(1));
+        if (anchorTarget) {
+            const jump = () => {
+                scrollToElement(anchorTarget);
+                currentScrollY = targetScrollY; // sin deslizamiento suave
+            };
+            if (document.readyState === 'complete') jump();
+            else window.addEventListener('load', jump, { once: true });
         }
-    }, 120);
+        PageTransition.revealStart.then(() => startEntrance(Boolean(anchorTarget)));
+    } else {
+        // Entrada al sitio o recarga: preloader completo (components/preloader/Preloader.js)
+        new Preloader('#preloader', { onPreHidden: startEntrance });
+    }
 });
 
 /**

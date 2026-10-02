@@ -1050,72 +1050,7 @@ button {
     border-radius: 10px;
 }
 
-/* --- PRELOADER --- */
-body.loading {
-    overflow: hidden !important;
-}
-
-.preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 99999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
-    pointer-events: none;
-}
-
-.preloader-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    color: var(--white);
-    opacity: 1;
-    transition: opacity 0.4s ease;
-}
-
-/* Oculta la barra de carga cuando llega a 100% */
-.preloader.loaded .preloader-content {
-    opacity: 0;
-}
-
-.preloader-name {
-    font-family: 'Moul', sans-serif;
-    font-size: clamp(1.2rem, 2vw, 1.8rem);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.preloader-bar-container {
-    display: block;
-    width: 150px;
-    height: 2px;
-    background-color: rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.preloader-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0%;
-    background-color: var(--cyan);
-    transition: width 0.1s linear;
-}
-
-.preloader-percentage {
-    font-size: clamp(1rem, 1.5vw, 1.2rem);
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-}
+/* --- PRELOADER: ver components/preloader/preloader.css --- */
 
 /* --- COREOGRAFÍA DE ENTRADA (HERO & PANEL VIOLETA) --- */
 

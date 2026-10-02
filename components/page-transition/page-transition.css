@@ -1,0 +1,40 @@
+/* components/page-transition/page-transition.css */
+
+/* Mismo gris que la cortina del preloader. Por encima de todo, incluido el menú. */
+.page-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(35, 35, 35);
+    pointer-events: none;
+    visibility: hidden;
+    clip-path: inset(0% 50% 0% 50%);
+}
+
+.page-transition__logo {
+    display: block;
+    height: 40px;
+    width: auto;
+    aspect-ratio: 1202 / 938;
+    user-select: none;
+}
+
+/* La página nace tapada (clase puesta por un script inline en <head>,
+   antes del primer pintado) y PageTransition.js la abre al terminar de cargar. */
+html.pt-arriving .page-transition {
+    visibility: visible;
+    clip-path: inset(0% 0% 0% 0%);
+}
+
+html.pt-arriving .page-transition__logo {
+    opacity: 1;
+}
+
+@media (max-width: 767px) {
+    .page-transition__logo {
+        height: 30px;
+    }
+}

@@ -12,18 +12,38 @@
     <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
     <link rel="stylesheet" href="components/staggeredmenu/staggered-menu.css">
     <link rel="stylesheet" href="components/logo-wall/logo-wall.css">
+    <link rel="stylesheet" href="components/preloader/preloader.css">
+    <link rel="stylesheet" href="components/page-transition/page-transition.css">
+    <script>
+        // Si se llega navegando entre secciones (clic en un enlace o botón atrás/adelante),
+        // la página nace tapada y no corre el preloader completo (ver components/page-transition)
+        try {
+            var pt = sessionStorage.getItem("ivo:pt");
+            var nav = performance.getEntriesByType("navigation")[0];
+            if ((pt && Date.now() - Number(pt) < 10000) || (nav && nav.type === "back_forward")) {
+                document.documentElement.classList.add("pt-arriving");
+                // Red de seguridad: si PageTransition.js no carga, no se deja la página tapada
+                setTimeout(function () { document.documentElement.classList.remove("pt-arriving"); }, 6000);
+            }
+        } catch (e) {}
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 </head>
 <body class="loading">
+    <div class="page-transition" aria-hidden="true">
+        <img class="page-transition__logo" src="assets/logos/logoivo.svg" alt="" draggable="false">
+    </div>
     <a class="skip-link" href="#contenido">Saltar al contenido principal</a>
 
     <!-- PRELOADER (decorativo) -->
     <div id="preloader" class="preloader" aria-hidden="true">
-        <p class="preloader-content">
-            <span class="preloader-name">Ivo Ferrer</span>
-            <span class="preloader-bar-container"><span class="preloader-bar" id="preloader-bar"></span></span>
-            <span class="preloader-percentage" id="preloader-percentage">0%</span>
-        </p>
+        <div class="preloader__inner">
+            <img class="preloader__logo" src="assets/logos/logoivo.svg" alt="" draggable="false">
+            <div class="preloader__bar">
+                <div class="preloader__bar-track"></div>
+                <div class="preloader__bar-fill"></div>
+            </div>
+        </div>
     </div>
 
     <div id="cursor" aria-hidden="true"></div>
@@ -71,9 +91,7 @@
 
                 <p class="sm-socials-title" id="sm-socials-title">Socials</p>
                 <ul class="sm-socials-list" aria-labelledby="sm-socials-title">
-                    <li><a href="#" class="sm-socials-link">Instagram</a></li>
                     <li><a href="#" class="sm-socials-link">LinkedIn</a></li>
-                    <li><a href="#" class="sm-socials-link">Twitter</a></li>
                     <li><a href="#" class="sm-socials-link">WhatsApp</a></li>
                 </ul>
             </div>
@@ -391,17 +409,13 @@
             <section class="footer-col" aria-labelledby="footer-social">
                 <h2 id="footer-social" class="footer-label">Social</h2>
                 <ul>
-                    <li><a href="#">Instagram</a></li>
                     <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Behance</a></li>
                     <li><a href="#">WhatsApp</a></li>
                 </ul>
             </section>
             <section class="footer-col" aria-labelledby="footer-ubicacion">
                 <h2 id="footer-ubicacion" class="footer-label">Ubicación</h2>
                 <address>
-                    Río Tercero<br>
                     Córdoba, Argentina<br>
                     Trabajo Remoto<br>
                     Global
@@ -428,6 +442,8 @@
     <script src="components/fuzzytext/FuzzyText.js" defer></script>
     <script src="components/staggeredmenu/StaggeredMenu.js" defer></script>
     <script src="components/logo-wall/LogoWall.js" defer></script>
+    <script src="components/preloader/Preloader.js" defer></script>
+    <script src="components/page-transition/PageTransition.js" defer></script>
     <script src="script.js" defer></script>
 </body>
 </html>
