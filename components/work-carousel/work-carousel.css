@@ -39,6 +39,30 @@
     will-change: transform;
 }
 
+/* Al agarrar el carrusel el póster desaparece y reaparece al elegir un proyecto (clase is-away).
+   La opacidad va en la imagen y el velo, no en el figure, que ya tiene la animación de entrada. */
+.work-poster__img,
+.work-poster::after {
+    transition: opacity 0.7s 0.1s var(--ease, ease);
+}
+
+.work-poster {
+    transition: background-color 0.7s 0.1s var(--ease, ease);
+}
+
+.work-carousel.is-away .work-poster {
+    background-color: transparent;
+    transition-duration: 0.35s;
+    transition-delay: 0s;
+}
+
+.work-carousel.is-away .work-poster__img,
+.work-carousel.is-away .work-poster::after {
+    opacity: 0;
+    transition-duration: 0.35s;
+    transition-delay: 0s;
+}
+
 .work-poster__img {
     position: absolute;
     inset: 0;
@@ -306,6 +330,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .work-poster,
+    .work-poster__img,
+    .work-poster::after {
+        transition: none;
+    }
+
     .work-carousel.is-ready .work-poster,
     .work-carousel.is-ready .work-title,
     .work-carousel.is-ready .work-controls,

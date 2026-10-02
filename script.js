@@ -434,6 +434,40 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
+ * 10b. REVELACIÓN DEL CLIENTE EN LA LISTA DE PROYECTOS
+ *      Cada palabra se parte en letras para que suban una a una (ver .projects-list__client en style.css).
+ *      El texto completo queda en un span oculto para lectores de pantalla.
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll('.projects-list__client').forEach(el => {
+        const text = el.textContent.trim();
+        const srText = document.createElement('span');
+        srText.className = 'visually-hidden';
+        srText.textContent = text;
+
+        const visual = document.createElement('span');
+        visual.setAttribute('aria-hidden', 'true');
+
+        let i = 0;
+        text.split(' ').forEach((word, w, words) => {
+            const wordEl = document.createElement('span');
+            wordEl.className = 'reveal-word';
+            for (const char of word) {
+                const letter = document.createElement('span');
+                letter.className = 'reveal-char';
+                letter.style.setProperty('--i', i++);
+                letter.textContent = char;
+                wordEl.append(letter);
+            }
+            visual.append(wordEl);
+            if (w < words.length - 1) { visual.append(' '); i++; }
+        });
+
+        el.replaceChildren(srText, visual);
+    });
+});
+
+/**
  * 11. INIT DE COMPONENTES (Menú, Logo Wall)
  */
 document.addEventListener("DOMContentLoaded", () => {

@@ -521,6 +521,109 @@ button {
     color: rgb(255 255 255 / 0.6);
 }
 
+/* Revelación del cliente: una línea recorre la fila y luego las letras suben desde una máscara,
+   desenfocadas, una tras otra. Sin JS el texto simplemente queda visible. */
+.projects-list__client {
+    overflow: clip;
+    overflow-clip-margin: 0.2em;
+}
+
+.projects-list a::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: #fff;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease);
+}
+
+.projects-list__title {
+    transition: transform 0.9s var(--ease);
+}
+
+.reveal-word {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.reveal-char {
+    display: inline-block;
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(130%) rotate(6deg);
+    transform-origin: left bottom;
+    transition: opacity 0.3s ease, filter 0.3s ease, transform 0.35s var(--ease);
+}
+
+.projects-list a:focus-visible::before {
+    transform: scaleX(1);
+    transition-duration: 0.9s;
+}
+
+.projects-list a:focus-visible .projects-list__title {
+    transform: translateX(1rem);
+}
+
+.projects-list a:focus-visible .reveal-char {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition-duration: 0.5s, 0.5s, 0.9s;
+    transition-delay: calc(0.25s + var(--i) * 0.03s);
+}
+
+@media (hover: hover) {
+    .projects-list a:hover::before {
+        transform: scaleX(1);
+        transition-duration: 0.9s;
+    }
+
+    .projects-list a:hover .projects-list__title {
+        transform: translateX(1rem);
+    }
+
+    .projects-list a:hover .reveal-char {
+        opacity: 1;
+        filter: none;
+        transform: none;
+        transition-duration: 0.5s, 0.5s, 0.9s;
+        transition-delay: calc(0.25s + var(--i) * 0.03s);
+    }
+}
+
+/* Sin hover (táctil) o con movimiento reducido el cliente queda siempre visible */
+@media (hover: none) {
+    .reveal-char {
+        opacity: 1;
+        filter: none;
+        transform: none;
+        transition: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal-char {
+        opacity: 1;
+        filter: none;
+        transform: none;
+        transition: none;
+    }
+
+    .projects-list a::before,
+    .projects-list__title {
+        transition: none;
+    }
+
+    .projects-list a:hover .projects-list__title,
+    .projects-list a:focus-visible .projects-list__title {
+        transform: none;
+    }
+}
+
 /* Vista previa que aparece al pasar el mouse o enfocar con el teclado */
 .projects-list__thumb {
     position: absolute;

@@ -112,6 +112,7 @@
             // Estado del puntero
             this.pressed = false;
             this.dragging = false;
+            this.away = false;   // póster oculto mientras se arrastra y se desliza a la selección
             this.startX = 0;
             this.lastX = 0;
             this.lastMoveT = 0;
@@ -350,6 +351,12 @@
 
             this.render();
 
+            // El póster vuelve cuando se suelta y el proyecto elegido ya casi llegó al centro
+            if (this.away && !this.dragging && Math.abs(this.target - this.pos) < 0.04) {
+                this.away = false;
+                this.root.classList.remove('is-away');
+            }
+
             // Efecto de texto: proporcional a la velocidad (proyectos por segundo), con inercia al apagarse
             const speed = Math.abs(this.pos - before) / Math.max(1, dt) * 1000;
             const goal = this.reduceMotion.matches ? 0 : clamp(speed * 0.4, 0, 1);
@@ -399,7 +406,8 @@
                     if (!this.dragging && Math.abs(e.clientX - this.startX) > 4) {
                         this.dragging = true;
                         this.dragTarget = 1;
-                        root.classList.add('is-dragging');
+                        this.away = true;
+                        root.classList.add('is-dragging', 'is-away');
                     }
                     if (this.dragging) {
                         const now = performance.now();
