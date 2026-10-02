@@ -289,7 +289,10 @@
 
             // E = distancia del centro de pantalla al borde cercano del título vecino.
             // En reposo el vecino solo asoma por el borde; al arrastrar se acerca.
-            const E = lerp(vw / 2 - vw * this.opts.peek, vw * this.opts.dragReach, this.drag);
+            // Piso para el estado de arrastre: en pantallas angostas el título más ancho no debe pisar a su vecino.
+            const widest = Math.max(...this.widths);
+            const dragE = Math.max(vw * this.opts.dragReach, widest / 2 + 28);
+            const E = lerp(vw / 2 - vw * this.opts.peek, dragE, this.drag);
             const extra = vw * this.opts.gapExtra;
 
             for (let i = 0; i < n; i++) {

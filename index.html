@@ -10,7 +10,6 @@
     <link rel="preload" href="assets/fonts/Moul-Regular.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
-    <link rel="stylesheet" href="components/masonry/masonry.css">
     <link rel="stylesheet" href="components/staggeredmenu/staggered-menu.css">
     <link rel="stylesheet" href="components/logo-wall/logo-wall.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
@@ -65,7 +64,7 @@
                 <ul class="sm-panel-list" data-numbering="true">
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#inicio"><span class="sm-panel-itemLabel">Inicio</span></a></li>
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#servicios"><span class="sm-panel-itemLabel">Servicios</span></a></li>
-                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#trabajo"><span class="sm-panel-itemLabel">Trabajo</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="trabajo.html"><span class="sm-panel-itemLabel">Trabajo</span></a></li>
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#sobre-mi"><span class="sm-panel-itemLabel">Sobre mí</span></a></li>
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#contacto"><span class="sm-panel-itemLabel">Contacto</span></a></li>
                 </ul>
@@ -185,61 +184,42 @@
                 </ul>
             </section>
 
-            <!-- TRABAJO SELECCIONADO -->
+            <!-- TRABAJO SELECCIONADO: adelanto; la vista completa es trabajo.html (carrusel horizontal) -->
             <section class="projects" id="trabajo" aria-labelledby="trabajo-titulo">
                 <h2 id="trabajo-titulo" class="section-title light-text hidden-element">Trabajo seleccionado</h2>
-                <ul class="masonry-container" id="masonry-projects">
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" class="masonry-item__logo"></h3>
+                <ul class="projects-list">
+                    <li class="hidden-element">
+                        <a href="trabajo.html#/proyecto/ascanelli">
+                            <span class="projects-list__title">Ascanelli</span>
+                            <span class="projects-list__client">Ascanelli</span>
+                            <img class="projects-list__thumb" src="assets/img/webp/cap-ascanelli.webp" alt="" loading="lazy" decoding="async">
+                        </a>
                     </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-montecitos.png" alt="Montecitos" class="masonry-item__logo"></h3>
+                    <li class="hidden-element">
+                        <a href="trabajo.html#/proyecto/montecitos">
+                            <span class="projects-list__title">Montecitos</span>
+                            <span class="projects-list__client">Montecitos Country &amp; Golf</span>
+                            <img class="projects-list__thumb" src="assets/img/webp/cap-montecitos.webp" alt="" loading="lazy" decoding="async">
+                        </a>
                     </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="masonry-item__logo"></h3>
+                    <li class="hidden-element">
+                        <a href="trabajo.html#/proyecto/enterlab">
+                            <span class="projects-list__title">Enterlab</span>
+                            <span class="projects-list__client">Enterlab</span>
+                            <img class="projects-list__thumb" src="assets/img/webp/cap-enterlab.webp" alt="" loading="lazy" decoding="async">
+                        </a>
                     </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-cpd.png" alt="CPD" class="masonry-item__logo"></h3>
+                    <li class="hidden-element">
+                        <a href="trabajo.html#/proyecto/cpd">
+                            <span class="projects-list__title">CPD</span>
+                            <span class="projects-list__client">Centro Privado del Diagnóstico</span>
+                            <img class="projects-list__thumb" src="assets/img/webp/cap-cpd.webp" alt="" loading="lazy" decoding="async">
+                        </a>
                     </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-cpd.png" alt="CPD" class="masonry-item__logo"></h3>
-                    </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="masonry-item__logo"></h3>
-                    </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" class="masonry-item__logo"></h3>
-                    </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-enterlab.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="masonry-item__logo"></h3>
-                    </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-ascanelli.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" class="masonry-item__logo"></h3>
-                    </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-montecitos.png" alt="Montecitos" class="masonry-item__logo"></h3>
-                    </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-cpd.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-cpd.png" alt="CPD" class="masonry-item__logo"></h3>
-                    </li>
-                    <li class="masonry-item">
-                        <div class="masonry-item__bg" style="background-image: url('assets/img/cap-montecitos.png')"></div>
-                        <h3 class="masonry-item__cover"><img src="assets/logos/logo-montecitos.png" alt="Montecitos" class="masonry-item__logo"></h3>
-                    </li>
-
-                    <!-- REPETIR ESTOS 6 BLOQUES <li> DOS VECES MÁS PARA TENER TUS 18 TARJETAS -->
                 </ul>
+                <p class="projects-cta hidden-element">
+                    <a href="trabajo.html" class="btn-outline magnetic-btn"><span class="btn-text">Ver todo el trabajo</span></a>
+                </p>
             </section>
 
             <!-- PIXELATED VIDEO BREAK -->
@@ -446,7 +426,6 @@
     </div>
 
     <script src="components/fuzzytext/FuzzyText.js" defer></script>
-    <script src="components/masonry/Masonry.js" defer></script>
     <script src="components/staggeredmenu/StaggeredMenu.js" defer></script>
     <script src="components/logo-wall/LogoWall.js" defer></script>
     <script src="script.js" defer></script>

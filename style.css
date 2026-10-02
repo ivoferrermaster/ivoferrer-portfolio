@@ -473,13 +473,102 @@ button {
 
 /* --- PROJECTS --- */
 .projects {
-    padding: 8rem 1.5rem 7rem;
+    padding: 8rem 0 7rem;
     background: var(--black);
     color: var(--white);
 }
 
 .projects .section-title {
     margin-bottom: 4.5rem;
+}
+
+/* Adelanto del trabajo: títulos finos y grandes, en el mismo lenguaje que la vista /trabajo */
+.projects-list {
+    padding-inline: 5rem;
+}
+
+.projects-list li {
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+}
+
+.projects-list li:last-child {
+    border-bottom: 1px solid rgb(255 255 255 / 0.14);
+}
+
+.projects-list a {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2.2rem 0;
+    transition: opacity 0.4s var(--ease);
+}
+
+.projects-list__title {
+    font-size: clamp(2.6rem, 7.5vw, 8rem);
+    font-weight: 200;
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+.projects-list__client {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-align: right;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.6);
+}
+
+/* Vista previa que aparece al pasar el mouse o enfocar con el teclado */
+.projects-list__thumb {
+    position: absolute;
+    top: 50%;
+    right: 22%;
+    width: min(24vw, 420px);
+    aspect-ratio: 2.2 / 1;
+    object-fit: cover;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) scale(0.96);
+    transition: opacity 0.4s var(--ease), transform 0.6s var(--ease);
+}
+
+.projects-list a:focus-visible .projects-list__thumb {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+}
+
+@media (hover: hover) {
+    .projects-list:hover a:not(:hover) {
+        opacity: 0.3;
+    }
+
+    .projects-list a:hover .projects-list__thumb {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
+}
+
+.projects-cta {
+    margin-top: 4rem;
+    text-align: center;
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 170px;
+    padding: 1rem 2.2rem;
+    border: 1px solid rgb(255 255 255 / 0.55);
+    border-radius: 999px;
+    color: var(--white);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
 .section-title {
@@ -1127,7 +1216,26 @@ body.start-anim .site-header {
 
     /* Proyectos, testimonios, insights */
     .projects {
-        padding: 5rem 0.75rem 4.5rem;
+        padding: 5rem 0 4.5rem;
+    }
+
+    .projects-list {
+        padding-inline: var(--gutter);
+    }
+
+    .projects-list a {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+        padding: 1.6rem 0;
+    }
+
+    .projects-list__client {
+        text-align: left;
+    }
+
+    .projects-list__thumb {
+        display: none;
     }
 
     .trust,

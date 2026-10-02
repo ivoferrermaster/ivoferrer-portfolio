@@ -210,7 +210,7 @@ function updateCursor() {
 }
 updateCursor();
 
-document.querySelectorAll('button, a, .masonry-item, .service-row, .insight-card, .testimonial-fan').forEach(el => {
+document.querySelectorAll('button, a, .service-row, .insight-card, .testimonial-fan').forEach(el => {
     el.addEventListener('mouseenter', () => {
         cursor.classList.add('hover-active');
     });
@@ -434,10 +434,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 /**
- * 11. INIT DE COMPONENTES (Masonry, Menú, Logo Wall)
+ * 11. INIT DE COMPONENTES (Menú, Logo Wall)
  */
 document.addEventListener("DOMContentLoaded", () => {
-    new Masonry('#masonry-projects', { animateFrom: 'bottom', stagger: 0.08 });
     new StaggeredMenu('#main-menu');
     new LogoWall('.logo-wall');
 });

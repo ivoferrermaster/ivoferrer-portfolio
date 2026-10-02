@@ -172,7 +172,8 @@
     border: 0;
     background: none;
     color: #fff;
-    opacity: 0.2;
+    /* La referencia las deja al 20%; se sube para cumplir el contraste mínimo de controles (WCAG 1.4.11) */
+    opacity: 0.5;
     cursor: pointer;
     transition: opacity 0.4s var(--ease, ease);
 }
@@ -310,5 +311,49 @@
     .work-carousel.is-ready .work-controls,
     .work-carousel.is-ready .work-count {
         animation: none;
+    }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1200px) {
+    .work-poster {
+        width: min(84vw, 145vh);
+    }
+}
+
+@media (max-width: 768px) {
+    /* Con tan poco ancho el póster apaisado queda diminuto: se hace más alto y se recorta al centro */
+    .work-poster {
+        width: 92vw;
+        aspect-ratio: 1.45 / 1;
+    }
+
+    .work-title {
+        font-size: clamp(2.5rem, 11vw, 4rem);
+    }
+
+    .work-controls {
+        top: 86%;
+    }
+
+    .work-count {
+        bottom: 1.4rem;
+        left: 5vw;
+    }
+}
+
+/* Pantallas bajas (celular apaisado): se achica todo para que no se tape con los controles */
+@media (max-height: 520px) {
+    .work-poster {
+        width: min(70vw, 120vh);
+    }
+
+    .work-title {
+        font-size: clamp(1.75rem, 6vh, 3rem);
+    }
+
+    .work-controls {
+        top: 88%;
     }
 }

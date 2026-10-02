@@ -11,7 +11,7 @@ window.PROYECTOS = [
         cliente: 'Ascanelli',
         rol: 'Diseño y desarrollo web',
         descripcion: 'Sitio web de Ascanelli. Ordena su línea de productos (tolvas autodescargables, sembradoras, mixers, embolsadoras y más), las promociones y la red de ventas en una navegación clara y visual.',
-        poster: 'assets/img/cap-ascanelli.png',
+        poster: 'assets/img/webp/cap-ascanelli.webp',
         logo: 'assets/logos/logo-ascanellib.png'
         // anio: '2025',
         // url: 'https://...'
@@ -22,7 +22,7 @@ window.PROYECTOS = [
         cliente: 'Montecitos Country & Golf',
         rol: 'Diseño y desarrollo web',
         descripcion: 'Sitio web de Montecitos Country & Golf, el club de campo con cancha de golf de 9 hoyos en Río Tercero. Una portada inmersiva que transmite deporte y naturaleza desde el primer vistazo.',
-        poster: 'assets/img/cap-montecitos.png',
+        poster: 'assets/img/webp/cap-montecitos.webp',
         logo: 'assets/logos/logo-montecitos.png'
     },
     {
@@ -31,7 +31,7 @@ window.PROYECTOS = [
         cliente: 'Enterlab',
         rol: 'Diseño y desarrollo web',
         descripcion: 'Sitio web de Enterlab Tech Management, consultora de software que diseña infraestructuras resilientes y software escalable. Estética tecnológica, animada y disponible en español e inglés.',
-        poster: 'assets/img/cap-enterlab.png',
+        poster: 'assets/img/webp/cap-enterlab.webp',
         logo: 'assets/logos/logo-enterlab.webp'
     },
     {
@@ -40,7 +40,7 @@ window.PROYECTOS = [
         cliente: 'Centro Privado del Diagnóstico',
         rol: 'Diseño y desarrollo web',
         descripcion: 'Sitio web del Centro Privado del Diagnóstico. Una propuesta centrada en el confort y la seguridad de cada paciente, con acceso directo para sacar turno.',
-        poster: 'assets/img/cap-cpd.png',
+        poster: 'assets/img/webp/cap-cpd.webp',
         logo: 'assets/logos/logo-cpd.png'
     }
 ];
