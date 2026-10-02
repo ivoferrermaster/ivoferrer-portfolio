@@ -1,0 +1,286 @@
+/* components/work-views/work-views.css
+   Listado y ficha de proyecto. Medidas de la vista /work de resn.co.nz sobre 1920×1080:
+   columna de contenido de 1024px, título de 64px, texto de 36px, tarjetas de 548×306. */
+
+.work-view {
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background-color: var(--bg);
+    /* "Astillas" oscuras de fondo, como la referencia */
+    background-image:
+        linear-gradient(112deg, transparent 0 18%, rgb(0 0 0 / 0.22) 18% 34%, transparent 34% 100%),
+        linear-gradient(68deg, transparent 0 62%, rgb(0 0 0 / 0.18) 62% 80%, transparent 80% 100%),
+        linear-gradient(160deg, transparent 0 40%, rgb(255 255 255 / 0.015) 40% 58%, transparent 58% 100%);
+    animation: work-view-in 0.6s var(--ease, ease) both;
+}
+
+.work-view[hidden] {
+    display: none;
+}
+
+@keyframes work-view-in {
+    from { opacity: 0; transform: translateY(1.5rem); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* El carrusel queda debajo mientras hay una vista abierta */
+.work-carousel[inert],
+.work-all[inert] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+}
+
+/* ---------- Botón "Cerrar" del header ---------- */
+
+.work-close {
+    margin-left: auto;
+    margin-right: 1.5rem;
+    padding: 0.35rem 1.5rem 0.35rem 0;
+    border-right: 1px solid rgb(255 255 255 / 0.3);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: #fff;
+}
+
+.work-close[hidden] {
+    display: none;
+}
+
+/* ---------- Pieza común ---------- */
+
+.work-eyebrow {
+    margin-bottom: 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.3);
+}
+
+/* ---------- Listado ---------- */
+
+.work-overview {
+    padding: 18.5vh 0 14vh;
+}
+
+.work-overview__head,
+.work-overview__list {
+    width: min(70.5vw, 1354px);
+    margin-inline: auto;
+}
+
+.work-overview__head {
+    padding-left: 4.5%;
+    margin-bottom: 6.5vh;
+}
+
+.work-overview__title {
+    font-size: clamp(2.5rem, 3.33vw, 5rem);
+    font-weight: 200;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.work-overview__list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 6.67vw;
+    row-gap: 12vh;
+    padding-inline: 4.5%;
+}
+
+.work-card {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    transition: opacity 0.4s var(--ease, ease);
+}
+
+.work-card__img {
+    width: 100%;
+    aspect-ratio: 548 / 306;
+    object-fit: cover;
+    object-position: top;
+    background: #111;
+}
+
+.work-card__title {
+    margin-top: 2.2rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.work-card__client {
+    margin-top: 0.7rem;
+    font-size: 0.8125rem;
+    color: rgb(255 255 255 / 0.5);
+}
+
+@media (hover: hover) {
+    .work-overview__list:hover .work-card:not(:hover) {
+        opacity: 0.35;
+    }
+}
+
+/* ---------- Ficha ---------- */
+
+.work-detail {
+    display: grid;
+    grid-template-columns: 1fr min(53.33vw, 1024px) 1fr;
+    grid-auto-rows: min-content;
+    padding: 18.5vh 0 16vh;
+}
+
+.work-detail > :not(.work-pn) {
+    grid-column: 2;
+}
+
+.work-detail__title {
+    font-size: clamp(2.5rem, 3.33vw, 5rem);
+    font-weight: 200;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.work-detail__lead {
+    margin-top: 7.5vh;
+    font-size: clamp(1.4rem, 1.875vw, 3rem);
+    font-weight: 300;
+    line-height: 1.3;
+}
+
+.work-detail__meta {
+    grid-row: 3;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 9vh;
+}
+
+.work-detail__meta dt {
+    margin-bottom: 0.9rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.work-detail__meta dd {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: rgb(255 255 255 / 0.55);
+}
+
+/* El botón comparte fila con los metadatos y ocupa la cuarta columna */
+.work-detail__cta {
+    grid-row: 3;
+    justify-self: end;
+    align-self: start;
+    width: calc(25% - 1.125rem);
+    margin-top: 9vh;
+}
+
+.work-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3.125rem;
+    padding: 0 1rem;
+    border: 1px solid rgb(255 255 255 / 0.4);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #fff;
+    transition: background-color 0.4s var(--ease, ease), color 0.4s var(--ease, ease);
+}
+
+.work-btn::after {
+    content: "→";
+    font-size: 1.1rem;
+    font-weight: 400;
+}
+
+.work-btn:hover,
+.work-btn:focus-visible {
+    background-color: #fff;
+    color: var(--bg);
+}
+
+.work-detail__media {
+    grid-row: 4;
+    margin-top: 14vh;
+}
+
+.work-detail__media img {
+    width: 100%;
+    height: auto;
+}
+
+/* Anterior / siguiente: flechas verticales de 1px a los costados */
+.work-pn {
+    position: fixed;
+    top: 50%;
+    z-index: 5;
+    width: 2.75rem;
+    height: 5rem;
+    color: #fff;
+    opacity: 0.6;
+    transition: opacity 0.4s var(--ease, ease);
+}
+
+.work-pn:hover,
+.work-pn:focus-visible {
+    opacity: 1;
+}
+
+.work-pn--prev { left: 11.1vw; }
+.work-pn--next { right: 11.1vw; }
+
+.work-pn::before,
+.work-pn::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+}
+
+.work-pn::before {
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: currentColor;
+    transform: translateX(-50%);
+}
+
+.work-pn::after {
+    width: 12px;
+    height: 12px;
+    border-top: 1px solid currentColor;
+    border-left: 1px solid currentColor;
+}
+
+.work-pn--prev::after { top: 0.5rem; transform: translateX(-50%) translateY(2px) rotate(45deg); }
+.work-pn--next::after { bottom: 0.5rem; transform: translateX(-50%) translateY(-2px) rotate(225deg); }
+
+@media (prefers-reduced-motion: reduce) {
+    .work-view {
+        animation: none;
+    }
+
+    .work-carousel[inert],
+    .work-all[inert],
+    .work-card,
+    .work-btn,
+    .work-pn {
+        transition: none;
+    }
+}

@@ -9,8 +9,18 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Menú no disponible:', err.message);
     }
 
-    new WorkCarousel('#work-carousel', window.PROYECTOS, {
-        // Con el menú abierto las flechas del teclado no deben mover el carrusel
-        isBlocked: () => !menu.inert
+    const carouselEl = document.getElementById('work-carousel');
+
+    new WorkCarousel(carouselEl, window.PROYECTOS, {
+        // Con el menú abierto, o una vista (listado/ficha) encima, las flechas no deben mover el carrusel
+        isBlocked: () => !menu.inert || carouselEl.inert
+    });
+
+    new WorkViews({
+        projects: window.PROYECTOS,
+        carousel: carouselEl,
+        host: document.getElementById('trabajo'),
+        closeLink: document.querySelector('.work-close'),
+        allLink: document.querySelector('.work-all a')
     });
 });
