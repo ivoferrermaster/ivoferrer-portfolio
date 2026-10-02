@@ -21,6 +21,48 @@
     display: none;
 }
 
+/* Marca de agua "IF": dos letras dibujadas con clip-path (sin imágenes), del mismo color
+   que las astillas de arriba. Fijas respecto a la pantalla, detrás del texto. */
+.work-view::before,
+.work-view::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    z-index: -1;
+    width: 11vw;
+    height: 48vh;
+    background-color: rgb(0 0 0 / 0.22);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* I: palito de arriba, palito de abajo y el del medio */
+.work-view::before {
+    left: 5vw;
+    clip-path: polygon(10% 0, 90% 0, 90% 15%, 65% 15%, 65% 85%, 90% 85%, 90% 100%, 10% 100%, 10% 85%, 35% 85%, 35% 15%, 10% 15%);
+}
+
+.work-view::after {
+    right: 5vw;
+    width: 10vw;
+    height: 46vh;
+    clip-path: polygon(0 0, 100% 0, 100% 18%, 25% 18%, 25% 40%, 80% 40%, 80% 58%, 25% 58%, 25% 100%, 0 100%);
+}
+
+@media (max-width: 1200px) {
+    .work-view::before,
+    .work-view::after {
+        width: 8vw;
+    }
+}
+
+@media (max-width: 768px) {
+    .work-view::before,
+    .work-view::after {
+        display: none;
+    }
+}
+
 @keyframes work-view-in {
     from { opacity: 0; transform: translateY(1.5rem); }
     to   { opacity: 1; transform: none; }
