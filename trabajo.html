@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Trabajo seleccionado de Ivo Ferrer: sitios web a medida para marcas y empresas.">
+    <title>Trabajo seleccionado · Ivo Ferrer</title>
+    <link rel="icon" type="image/svg+xml" href="assets/logos/logoivo.svg">
+    <link rel="preload" href="assets/fonts/WorkSans-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="stylesheet" href="components/staggeredmenu/staggered-menu.css">
+    <link rel="stylesheet" href="components/work-carousel/work-carousel.css">
+    <link rel="stylesheet" href="trabajo.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+    <script src="components/staggeredmenu/StaggeredMenu.js" defer></script>
+    <script src="components/work-carousel/WorkCarousel.js" defer></script>
+    <script src="data/proyectos.js" defer></script>
+    <script src="trabajo.js" defer></script>
+</head>
+<body class="work-page">
+    <a class="skip-link" href="#trabajo">Saltar al carrusel de proyectos</a>
+
+    <header class="site-header">
+        <a href="index.html" class="sm-logo">
+            <img src="assets/logos/logoivo.svg" alt="Ivo Ferrer, ir al inicio" class="sm-logo-img">
+        </a>
+
+        <button class="sm-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
+            <span class="sm-toggle-textWrap" aria-hidden="true">
+                <span class="sm-toggle-textInner">
+                    <span class="sm-toggle-line">Menu</span>
+                    <span class="sm-toggle-line">Cerrar</span>
+                    <span class="sm-toggle-line">Menu</span>
+                    <span class="sm-toggle-line">Cerrar</span>
+                </span>
+            </span>
+            <span class="sm-icon" aria-hidden="true">
+                <span class="sm-icon-line" id="sm-plus-h"></span>
+                <span class="sm-icon-line" id="sm-plus-v"></span>
+            </span>
+            <span class="visually-hidden">Menú</span>
+        </button>
+    </header>
+
+    <div class="staggered-menu-wrapper" id="main-menu" inert>
+        <div class="sm-prelayers" aria-hidden="true">
+            <div class="sm-prelayer" style="background: #2a2a2a;"></div>
+            <div class="sm-prelayer" style="background: #7628b6;"></div>
+        </div>
+
+        <nav class="staggered-menu-panel" aria-label="Principal">
+            <div class="sm-panel-inner">
+                <ul class="sm-panel-list" data-numbering="true">
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#inicio"><span class="sm-panel-itemLabel">Inicio</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#servicios"><span class="sm-panel-itemLabel">Servicios</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="trabajo.html" aria-current="page"><span class="sm-panel-itemLabel">Trabajo</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#sobre-mi"><span class="sm-panel-itemLabel">Sobre mí</span></a></li>
+                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#contacto"><span class="sm-panel-itemLabel">Contacto</span></a></li>
+                </ul>
+
+                <p class="sm-socials-title" id="sm-socials-title">Socials</p>
+                <ul class="sm-socials-list" aria-labelledby="sm-socials-title">
+                    <li><a href="#" class="sm-socials-link">Instagram</a></li>
+                    <li><a href="#" class="sm-socials-link">LinkedIn</a></li>
+                    <li><a href="#" class="sm-socials-link">Twitter</a></li>
+                    <li><a href="#" class="sm-socials-link">WhatsApp</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <main id="trabajo" tabindex="-1">
+        <h1 class="visually-hidden">Trabajo seleccionado</h1>
+
+        <p class="work-all"><a href="#/proyectos">Ver todos los proyectos</a></p>
+
+        <!-- El carrusel lo construye components/work-carousel/WorkCarousel.js a partir de data/proyectos.js -->
+        <section class="work-carousel" id="work-carousel" aria-roledescription="carrusel" aria-label="Proyectos destacados">
+            <noscript>
+                <ul class="work-fallback">
+                    <li><a href="#/proyecto/ascanelli">Ascanelli</a></li>
+                    <li><a href="#/proyecto/montecitos">Montecitos</a></li>
+                    <li><a href="#/proyecto/enterlab">Enterlab</a></li>
+                    <li><a href="#/proyecto/cpd">CPD</a></li>
+                </ul>
+            </noscript>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,0 +1,258 @@
+/* components/work-carousel/work-carousel.css
+   Medidas tomadas de la vista /work de resn.co.nz sobre un lienzo de 1920×1080:
+   póster 1500×680 centrado, títulos de 65px, etiquetas de 11–12px, flechas de 62px. */
+
+.work-carousel {
+    --z: 0px;
+    --rx: 0deg;
+    --ry: 0deg;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    perspective: 500px;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y pinch-zoom;
+}
+
+.work-carousel.is-dragging {
+    cursor: grabbing;
+}
+
+/* ---------- Póster ---------- */
+
+.work-poster {
+    --scrim: 0.3;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: min(78.125vw, 145vh);
+    aspect-ratio: 2.2 / 1;
+    margin: 0;
+    background: #111;
+    outline: 1px solid transparent;
+    transform: translate(-50%, -50%) translateZ(var(--z)) rotateX(var(--rx)) rotateY(var(--ry));
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.work-poster__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    visibility: hidden;
+    pointer-events: none;
+    -webkit-user-drag: none;
+}
+
+.work-poster__img.is-active {
+    visibility: visible;
+}
+
+/* Velo adaptativo (ver sampleScrim en el JS): más oscuro cuanto más clara es la captura,
+   para que el título blanco y fino siempre se lea. */
+.work-poster::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / var(--scrim));
+    pointer-events: none;
+}
+
+/* ---------- Tira de títulos ---------- */
+
+.work-track {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    list-style: none;
+    pointer-events: none;
+}
+
+.work-carousel:not(.is-ready) .work-track {
+    visibility: hidden;
+}
+
+.work-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    padding: 3.125rem;
+    white-space: nowrap;
+    text-align: center;
+    cursor: pointer;
+    pointer-events: auto;
+    transform: translate3d(calc(-50% + var(--x, 0px)), -50%, 0);
+    will-change: transform, opacity;
+}
+
+/* El título activo no captura el mouse: el click cae en el póster y abre el proyecto */
+.work-item.is-active {
+    pointer-events: none;
+}
+
+.work-title {
+    padding: 0 0.1em;
+    font-size: clamp(2.5rem, 3.385vw, 7.5rem);
+    font-weight: 200;
+    line-height: 1.415;
+    letter-spacing: -0.02em;
+    transition: opacity 0.4s var(--ease, ease);
+}
+
+.work-title a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.work-client {
+    position: absolute;
+    right: 0;
+    bottom: 1.5rem;
+    left: 0;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.4s var(--ease, ease);
+    pointer-events: none;
+}
+
+/* Reposo: solo el título. Con el cursor encima (o el foco del teclado) aparece el cliente
+   y los títulos vecinos se atenúan. Mientras se arrastra se ve el cliente de todos, en gris. */
+@media (hover: hover) {
+    .work-carousel:hover:not(.is-dragging) .work-item:not(.is-active) .work-title {
+        opacity: 0.3;
+    }
+
+    .work-carousel:hover:not(.is-dragging) .work-item.is-active .work-client {
+        opacity: 1;
+    }
+}
+
+.work-carousel:focus-within:not(.is-dragging) .work-item.is-active .work-client {
+    opacity: 1;
+}
+
+.work-carousel.is-dragging .work-client {
+    opacity: 0.55;
+}
+
+/* En táctil no hay hover: el cliente del proyecto activo queda siempre visible */
+@media (hover: none) {
+    .work-item.is-active .work-client {
+        opacity: 1;
+    }
+}
+
+/* ---------- Flechas de arrastre (también son botones) ---------- */
+
+.work-controls {
+    position: absolute;
+    z-index: 3;
+    top: 90%;
+    left: 50%;
+    display: flex;
+    transform: translate(-50%, -50%);
+}
+
+.work-arrow {
+    position: relative;
+    width: 3rem;
+    height: 2.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #fff;
+    opacity: 0.2;
+    cursor: pointer;
+    transition: opacity 0.4s var(--ease, ease);
+}
+
+.work-arrow::before,
+.work-arrow::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+}
+
+/* línea de 1px (media flecha de 31px: juntas forman los 62px de la referencia) */
+.work-arrow::before {
+    width: 31px;
+    height: 1px;
+    background: currentColor;
+    transform: translateY(-50%);
+}
+
+/* punta de flecha */
+.work-arrow::after {
+    width: 9px;
+    height: 9px;
+    border-top: 1px solid currentColor;
+    border-left: 1px solid currentColor;
+}
+
+.work-arrow--prev::before {
+    right: 0;
+}
+
+.work-arrow--prev::after {
+    left: 18.9px;
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+.work-arrow--next::before {
+    left: 0;
+}
+
+.work-arrow--next::after {
+    left: 20.1px;
+    transform: translateY(-50%) rotate(135deg);
+}
+
+.work-arrow:hover,
+.work-arrow:focus-visible {
+    opacity: 1;
+}
+
+/* Al arrastrar solo queda la flecha del sentido en que se arrastra */
+.work-carousel.is-dragging .work-arrow {
+    opacity: 0;
+}
+
+.work-carousel.is-dragging[data-dir="left"] .work-arrow--prev,
+.work-carousel.is-dragging[data-dir="right"] .work-arrow--next {
+    opacity: 1;
+}
+
+/* ---------- Contador ---------- */
+
+.work-count {
+    position: absolute;
+    z-index: 3;
+    bottom: 2.2rem;
+    left: 3vw;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .work-title,
+    .work-client,
+    .work-arrow {
+        transition: none;
+    }
+}
