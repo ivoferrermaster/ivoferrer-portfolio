@@ -10,6 +10,74 @@
     const mod = (n, m) => ((n % m) + m) % m;
     const pad = (n) => String(n).padStart(2, '0');
 
+    /* Efecto de texto: mientras el carrusel se mueve, el título se dibuja en un canvas cortado en
+       franjas horizontales que se desplazan según la velocidad. El texto real sigue en el DOM
+       (se oculta solo mientras dura el efecto), así que lectores de pantalla y selección no cambian. */
+    class TitleFx {
+        constructor(h2, link) {
+            this.h2 = h2;
+            this.link = link;
+            this.on = false;
+            this.canvas = document.createElement("canvas");
+            this.canvas.className = "work-fx";
+            this.canvas.setAttribute("aria-hidden", "true");
+            this.ctx = this.canvas.getContext("2d");
+            this.src = document.createElement("canvas");
+            h2.append(this.canvas);
+        }
+
+        /* Dibuja el texto limpio una sola vez; después solo se recortan franjas de esta imagen. */
+        resize() {
+            const dpr = Math.min(2, window.devicePixelRatio || 1);
+            const w = this.h2.offsetWidth;
+            const h = this.h2.offsetHeight;
+            if (!w || !h) return;
+            Object.assign(this, { w, h, dpr });
+            this.canvas.width = this.src.width = Math.ceil(w * dpr);
+            this.canvas.height = this.src.height = Math.ceil(h * dpr);
+
+            const cs = getComputedStyle(this.link);
+            const s = this.src.getContext("2d");
+            s.setTransform(dpr, 0, 0, dpr, 0, 0);
+            s.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily;
+            if ("letterSpacing" in s) s.letterSpacing = cs.letterSpacing;
+            s.fillStyle = "#fff";
+            s.textBaseline = "alphabetic";
+            const m = s.measureText("Mg");
+            const asc = m.fontBoundingBoxAscent || parseFloat(cs.fontSize) * 0.9;
+            const desc = m.fontBoundingBoxDescent || parseFloat(cs.fontSize) * 0.25;
+            const padLeft = parseFloat(getComputedStyle(this.h2).paddingLeft) || 0;
+            s.fillText(this.link.textContent, padLeft, (h - (asc + desc)) / 2 + asc);
+        }
+
+        draw(level) {
+            if (!this.w) return;
+            if (!this.on) {
+                this.h2.classList.add("has-fx");
+                this.on = true;
+            }
+            const { ctx, w, h, dpr } = this;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, w, h);
+            const slice = 2;
+            const shift = level * h * 0.17;
+            const t = performance.now() / 90;
+            for (let y = 0; y < h; y += slice) {
+                // onda suave y continua: los trazos finos no se cortan, el título "se derrite" al moverse
+                const dx = Math.sin(y * 0.09 + t) * shift;
+                ctx.drawImage(this.src, 0, y * dpr, this.src.width, slice * dpr, dx, y, w, slice);
+            }
+        }
+
+        clear() {
+            if (!this.on) return;
+            this.h2.classList.remove("has-fx");
+            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.on = false;
+        }
+    }
+
     class WorkCarousel {
         constructor(root, projects, options = {}) {
             this.root = typeof root === 'string' ? document.querySelector(root) : root;
@@ -58,7 +126,11 @@
 
             this.tick = this.tick.bind(this);
 
+            this.fxLevel = 0;
+            this.prevPos = 0;
+
             this.build();
+            this.fx = this.items.map((it) => new TitleFx(it.h2, it.link));
             this.bind();
             this.measure();
             this.setActive(0, { silent: true });
@@ -161,6 +233,7 @@
         measure() {
             this.vw = window.innerWidth;
             this.widths = this.items.map((it) => it.h2.offsetWidth);
+            this.fx.forEach((f) => f.resize());
         }
 
         /* ---------- Estado ---------- */
@@ -243,6 +316,15 @@
             this.root.style.setProperty('--ry', `${this.tilt.y.toFixed(3)}deg`);
         }
 
+        applyFx() {
+            const visible = this.fxLevel >= 0.03;
+            this.items.forEach((it, i) => {
+                const onScreen = Math.abs(parseFloat(it.li.style.getPropertyValue("--x"))) < this.vw / 2 + this.widths[i];
+                if (visible && onScreen) this.fx[i].draw(this.fxLevel);
+                else this.fx[i].clear();
+            });
+        }
+
         kick() {
             if (this.raf === null) {
                 this.last = performance.now();
@@ -257,6 +339,7 @@
             // Suavizado independiente de los FPS (1 - e^(-dt/tau)); con movimiento reducido salta directo.
             const ease = (tau) => (this.reduceMotion.matches ? 1 : 1 - Math.exp(-dt / tau));
 
+            const before = this.pos;
             this.pos += (this.target - this.pos) * ease(this.dragging ? 70 : 150);
             this.drag += (this.dragTarget - this.drag) * ease(180);
             this.tilt.x += (this.tilt.tx - this.tilt.x) * ease(220);
@@ -264,7 +347,14 @@
 
             this.render();
 
+            // Efecto de texto: proporcional a la velocidad (proyectos por segundo), con inercia al apagarse
+            const speed = Math.abs(this.pos - before) / Math.max(1, dt) * 1000;
+            const goal = this.reduceMotion.matches ? 0 : clamp(speed * 0.4, 0, 1);
+            this.fxLevel += (goal - this.fxLevel) * ease(120);
+            this.applyFx();
+
             const settled =
+                this.fxLevel < 0.02 &&
                 Math.abs(this.target - this.pos) < 0.0005 &&
                 Math.abs(this.dragTarget - this.drag) < 0.001 &&
                 Math.abs(this.tilt.tx - this.tilt.x) < 0.01 &&

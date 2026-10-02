@@ -256,3 +256,59 @@
         transition: none;
     }
 }
+
+/* ---------- Efecto de texto (canvas) ---------- */
+
+.work-title {
+    position: relative;
+}
+
+.work-fx {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.work-title.has-fx a {
+    color: transparent;
+}
+
+/* ---------- Entrada ---------- */
+
+@keyframes work-poster-in {
+    from { clip-path: inset(0 0 100% 0); opacity: 0; }
+    to   { clip-path: inset(0 0 0 0); opacity: 1; }
+}
+
+@keyframes work-rise-in {
+    from { opacity: 0; transform: translateY(1.5rem); }
+    to   { opacity: 1; transform: none; }
+}
+
+@keyframes work-fade-in {
+    from { opacity: 0; }
+}
+
+.work-carousel.is-ready .work-poster {
+    animation: work-poster-in 1.1s var(--ease, ease) both;
+}
+
+.work-carousel.is-ready .work-title {
+    animation: work-rise-in 1s 0.35s var(--ease, ease) both;
+}
+
+.work-carousel.is-ready .work-controls,
+.work-carousel.is-ready .work-count {
+    animation: work-fade-in 1s 0.8s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .work-carousel.is-ready .work-poster,
+    .work-carousel.is-ready .work-title,
+    .work-carousel.is-ready .work-controls,
+    .work-carousel.is-ready .work-count {
+        animation: none;
+    }
+}

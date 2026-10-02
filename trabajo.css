@@ -68,10 +68,20 @@ main {
 }
 
 /* Grano de película por encima de todo (menos el header y el menú) */
+@keyframes grain {
+    0%   { transform: translate(0, 0); }
+    20%  { transform: translate(-3%, 2%); }
+    40%  { transform: translate(2%, -3%); }
+    60%  { transform: translate(-2%, -1%); }
+    80%  { transform: translate(3%, 3%); }
+    100% { transform: translate(0, 0); }
+}
+
 body::after {
     content: "";
     position: fixed;
-    inset: 0;
+    inset: -10%;
+    animation: grain 0.9s steps(1) infinite;
     z-index: 6;
     opacity: 0.07;
     pointer-events: none;
@@ -183,6 +193,10 @@ body::after {
 }
 
 @media (prefers-reduced-motion: reduce) {
+    body::after {
+        animation: none;
+    }
+
     .skip-link,
     .work-all a {
         transition: none;
