@@ -1,13 +1,12 @@
 /* components/preloader/preloader.css */
 
-/* Bloquea el scroll mientras dura la entrada (lo libera script.js) */
-body.loading {
+/* Bloquea el scroll mientras dura la entrada (script.js le saca la clase loading al body).
+   Va en <html> para que el scroll suave (Lenis) también se frene. */
+html:has(body.loading) {
     overflow: hidden !important;
 }
 
 .preloader {
-    --preloader-track: rgba(255, 255, 255, 0.28);
-
     position: fixed;
     inset: 0;
     z-index: 99999;
@@ -61,7 +60,7 @@ body.loading {
 }
 
 .preloader__bar-track {
-    background: var(--preloader-track);
+    background: rgba(255, 255, 255, 0.28);
 }
 
 .preloader__bar-fill {

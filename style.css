@@ -1,12 +1,6 @@
-/* --- FUENTES LOCALES (.ttf en assets/fonts) --- */
-@font-face {
-    font-family: 'Work Sans';
-    src: url('assets/fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-}
+/* style.css — página de inicio. Lo común a todas las páginas está en base.css */
 
+/* --- FUENTE LOCAL DEL INICIO (.ttf en assets/fonts) --- */
 @font-face {
     font-family: 'Moul';
     src: url('assets/fonts/Moul-Regular.ttf') format('truetype');
@@ -17,21 +11,13 @@
 
 /* --- VARIABLES Y RESET --- */
 :root {
-    --cyan: #47D2F5;
-    --white: #ffffff;
-    --black: #000000;
     --off-black: #0c0c0c;
     --violet: #7628b6;
     --ink: #111111;
-    --grey-bar: #1a1a1a;
-    --grey-bar-alt: #2a2a2a;
-    --ice: #f3f3f3;
-    --muted: #6b6b6b;
     --line: rgba(255, 255, 255, 0.14);
     --mint: #d7f4ef;
     --radius: 28px;
     --radius-lg: 40px;
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
     --fluid-ease: cubic-bezier(0.19, 1, 0.22, 1);
     --fast: 0.33s;
     --slow: 1s;
@@ -44,12 +30,6 @@
     --focus: var(--violet);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 /* El cursor nativo solo se oculta en dispositivos con puntero preciso (mouse) */
 @media (hover: hover) and (pointer: fine) {
     *,
@@ -59,44 +39,18 @@
     }
 }
 
-html {
-    scroll-behavior: auto;
-}
-
 body {
-    font: 400 1rem/1.5 'Work Sans', sans-serif;
     background-color: var(--white);
     color: var(--black);
     overflow-x: hidden;
 }
 
-h1, .text-image, .logo {
+h1 {
     font-family: 'Moul', sans-serif;
-}
-
-img,
-video {
-    max-width: 100%;
-    display: block;
-}
-
-ul,
-ol {
-    list-style: none;
 }
 
 address {
     font-style: normal;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-button {
-    font: inherit;
-    color: inherit;
 }
 
 /* Centra el contenido con el ancho máximo sin necesidad de un div contenedor */
@@ -104,46 +58,26 @@ button {
     padding-inline: max(var(--gutter), calc((100% - var(--max-width)) / 2 + var(--gutter)));
 }
 
-/* --- ACCESIBILIDAD --- */
-.visually-hidden {
-    position: absolute !important;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
+/* Título grande de sección (trabajo, testimonios, cómo trabajo, FAQ) */
+.section-title {
+    font-size: clamp(2.4rem, 5.2vw, 4.6rem);
+    font-weight: 800;
+    letter-spacing: -0.045em;
+    line-height: 0.95;
+    padding: 0 5rem;
+    margin-bottom: 3.5rem;
 }
 
+/* --- ACCESIBILIDAD (la base está en base.css) --- */
 .skip-link {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 100000;
-    padding: 0.8rem 1.4rem;
-    border-radius: 999px;
     background: var(--black);
     color: var(--white);
-    font-weight: 600;
-    transform: translateY(-200%);
-    transition: transform var(--fast) var(--ease);
     --focus: var(--cyan);
-}
-
-.skip-link:focus {
-    transform: translateY(0);
 }
 
 :focus-visible {
     outline: 3px solid var(--focus);
     outline-offset: 4px;
-}
-
-/* Destinos de enlaces internos: reciben foco por JS pero no muestran anillo */
-[tabindex="-1"]:focus {
-    outline: none;
 }
 
 .site-header,
@@ -182,30 +116,20 @@ button {
     }
 }
 
-/* --- VIRTUAL SMOOTH SCROLL --- */
-#scroll-wrapper {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    will-change: transform;
-    background: var(--white);
-}
+/* --- SCROLL SUAVE Y PARALLAX: ver components/smoothscroll/smooth-scroll.css --- */
 
-/* --- HEADER --- */
+/* --- HEADER (la base está en base.css y en components/staggeredmenu) --- */
 .site-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 9000;
-    align-items: center;
-    padding: 1.35rem 3vw;
-    mix-blend-mode: difference;
-    color: var(--white);
+    /* Entrada: aparece y baja suavemente después de que se va el panel violeta del hero */
+    opacity: 0;
+    margin-top: -20px;
+    transition: opacity 1s ease 1.8s, margin-top 1s ease 1.8s;
 }
 
-/* El layout del header y del menú está en components/staggeredmenu/staggered-menu.css */
+body.start-anim .site-header {
+    opacity: 1;
+    margin-top: 0;
+}
 
 /* --- HERO (text-image + parallax) --- */
 .hero {
@@ -233,8 +157,6 @@ button {
     font-size: 14vw;
     line-height: 0.85;
     text-transform: uppercase;
-    background-clip: text;
-    color: white;
     letter-spacing: -0.1rem;
     /* Cada letra es un <span> individual (ver script.js) para animarlas por
        separado; sin nowrap el navegador puede envolver la línea entre esos
@@ -248,8 +170,61 @@ button {
     font-weight: 300;
 }
 
-.parallax {
-    will-change: transform;
+/* Entrada del hero (la dispara script.js con body.start-anim) */
+
+/* Panel violeta que tapa el hero y se corre a la izquierda cuando ya se formaron las letras */
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-color: var(--violet);
+    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1) 1.6s;
+}
+
+body.start-anim .hero::before {
+    transform: translateX(-100%);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2; /* por encima del panel violeta */
+}
+
+/* Cada línea (subtítulo, título, rol) llega desenfocada desde abajo, en cascada.
+   Se usa top y no transform para no pisar el transform del parallax. */
+.hero-content > * {
+    position: relative;
+    top: 40px;
+    opacity: 0;
+    filter: blur(15px);
+    transition: opacity 1.5s ease, top 1.5s cubic-bezier(0.16, 1, 0.3, 1), filter 1.5s ease;
+}
+
+body.start-anim .hero-content > * {
+    opacity: 1;
+    top: 0;
+    filter: blur(0);
+}
+
+body.start-anim .hero-content .subtitle { transition-delay: 0.2s; }
+body.start-anim .hero-content .text-image { transition-delay: 0.4s; }
+body.start-anim .hero-content .role { transition-delay: 0.6s; }
+
+/* Letras sueltas (las arma script.js): se materializan de a una */
+.rand-letter {
+    position: relative;
+    top: 30px;
+    display: inline-block;
+    opacity: 0;
+    filter: blur(12px);
+    transition: opacity 0.6s ease, top 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+}
+
+.rand-letter.revealed {
+    opacity: 1;
+    top: 0;
+    filter: blur(0);
 }
 
 /* --- SERVICIOS --- */
@@ -282,7 +257,6 @@ button {
 .service-row__toggle {
     display: flex;
     align-items: center;
-    justify-content: flex-start; /* El número va al lado del título */
     gap: 1.5rem;
     width: 100%;
     padding: 0;
@@ -399,7 +373,6 @@ button {
     inset: 0;
     width: 100%;
     height: 100%;
-    max-width: none;
     object-fit: cover;
     /* Convierte el video a blanco y negro y sube el contraste */
     filter: grayscale(100%) contrast(180%) brightness(0.9);
@@ -418,20 +391,16 @@ button {
     pointer-events: none;
 }
 
-.video-break__title,
-.video-break__text,
-.video-break__toggle {
-    position: relative;
-    z-index: 3;
-}
-
+/* Título y texto por encima del video y de la trama */
 .video-break__title,
 .video-break__text {
-    margin-left: 25px; /* Lo separa 25px extras del margen izquierdo */
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.178);
+    position: relative;
+    z-index: 3;
+    margin-left: 25px;
 }
 
 .video-break__title {
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.178);
     font-family: 'Moul', sans-serif;
     font-size: clamp(3.5rem, 8vw, 7rem);
     line-height: 1.05;
@@ -454,11 +423,11 @@ button {
     backdrop-filter: blur(16px) saturate(120%);
     -webkit-backdrop-filter: blur(16px) saturate(120%);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-    text-shadow: none;
 }
 
 .video-break__toggle {
     position: absolute;
+    z-index: 3;
     right: var(--gutter);
     bottom: 2rem;
     padding: 0.6rem 1.2rem;
@@ -510,9 +479,14 @@ button {
     font-weight: 200;
     line-height: 1;
     letter-spacing: -0.03em;
+    transition: transform 0.9s var(--ease);
 }
 
+/* Revelación del cliente: una línea recorre la fila y luego las letras suben desde una máscara
+   (overflow: clip), desenfocadas, una tras otra. */
 .projects-list__client {
+    overflow: clip;
+    overflow-clip-margin: 0.2em;
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.1em;
@@ -521,13 +495,7 @@ button {
     color: rgb(255 255 255 / 0.6);
 }
 
-/* Revelación del cliente: una línea recorre la fila y luego las letras suben desde una máscara,
-   desenfocadas, una tras otra. Sin JS el texto simplemente queda visible. */
-.projects-list__client {
-    overflow: clip;
-    overflow-clip-margin: 0.2em;
-}
-
+/* Línea que recorre la fila */
 .projects-list a::before {
     content: "";
     position: absolute;
@@ -539,10 +507,6 @@ button {
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.5s var(--ease);
-}
-
-.projects-list__title {
-    transition: transform 0.9s var(--ease);
 }
 
 .reveal-word {
@@ -596,7 +560,7 @@ button {
 }
 
 /* Sin hover (táctil) o con movimiento reducido el cliente queda siempre visible */
-@media (hover: none) {
+@media (hover: none), (prefers-reduced-motion: reduce) {
     .reveal-char {
         opacity: 1;
         filter: none;
@@ -606,13 +570,6 @@ button {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .reveal-char {
-        opacity: 1;
-        filter: none;
-        transform: none;
-        transition: none;
-    }
-
     .projects-list a::before,
     .projects-list__title {
         transition: none;
@@ -672,19 +629,6 @@ button {
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-}
-
-.section-title {
-    font-size: clamp(2.4rem, 5.2vw, 4.6rem);
-    font-weight: 800;
-    letter-spacing: -0.045em;
-    line-height: 0.95;
-    padding: 0 5rem;
-    margin-bottom: 3.5rem;
-}
-
-.light-text {
-    color: var(--white);
 }
 
 /* --- TRUST / TESTIMONIOS --- */
@@ -768,8 +712,6 @@ button {
 
 /* --- EXTRAVAGANT STATS --- */
 .extravagant-stats {
-    background-color: var(--white);
-    color: var(--black);
     padding-bottom: 5rem;
 }
 
@@ -804,17 +746,19 @@ button {
     align-items: baseline;
 }
 
-.stat-number {
+.stat-number,
+.stat-suffix {
     font-family: 'Moul', sans-serif;
-    font-size: clamp(80px, 12vw, 200px);
     line-height: 1;
+}
+
+.stat-number {
+    font-size: clamp(80px, 12vw, 200px);
     font-variant-numeric: tabular-nums;
 }
 
 .stat-suffix {
-    font-family: 'Moul', sans-serif;
     font-size: clamp(40px, 6vw, 100px);
-    line-height: 1;
 }
 
 /* --- INSIGHTS + FAQ --- */
@@ -838,9 +782,7 @@ button {
 
 .insight-card__media {
     width: 100%;
-    /* Misma proporción que las capturas (~1903x854): con 1 / 0.92
-       object-fit: cover recortaba ambos laterales. */
-    aspect-ratio: 2.2 / 1;
+    aspect-ratio: 2.2 / 1; /* misma proporción que las capturas, así no se recortan */
     object-fit: cover;
     object-position: center top;
     border-radius: 22px;
@@ -859,10 +801,6 @@ button {
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 1.35;
-}
-
-.faq-section {
-    color: var(--white);
 }
 
 .faq-section .section-title {
@@ -890,7 +828,6 @@ button {
     font-size: clamp(1rem, 1.6vw, 1.35rem);
     font-weight: 600;
     line-height: 1.3;
-    color: var(--white);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -928,7 +865,7 @@ button {
 /* --- FOOTER --- */
 .footer {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr auto;
+    grid-template-columns: 1fr 1fr auto;
     gap: 2rem;
     align-items: start;
     padding-block: 10rem 3rem;
@@ -1017,120 +954,22 @@ button {
     font-weight: 700;
 }
 
-/* --- INTERSECTION ANIMATIONS --- */
+/* --- APARICIÓN AL HACER SCROLL (script.js cambia .hidden-element por .visible-element) --- */
 .hidden-element {
     opacity: 0;
     transform: translateY(50px);
-    transition: opacity var(--slow) var(--ease), transform var(--slow) var(--ease);
 }
 
+/* Es una animation y no una transition para no pisar las transiciones propias de cada
+   elemento (el hover de .service-row, el despliegue de .testimonial-fan...) */
 .visible-element {
     opacity: 1;
     transform: translateY(0);
+    animation: reveal-up var(--slow) var(--ease);
 }
 
-/* --- IMAGE TRAIL --- */
-#trail-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 10;
-    overflow: hidden;
-}
-
-.trail-img {
-    position: absolute;
-    width: 250px;
-    transform: translate(-50%, -50%);
-    transition: opacity 0.8s, transform 0.8s;
-    pointer-events: none;
-    border-radius: 10px;
-}
-
-/* --- PRELOADER: ver components/preloader/preloader.css --- */
-
-/* --- COREOGRAFÍA DE ENTRADA (HERO & PANEL VIOLETA) --- */
-
-/* 1. El panel violeta se inyecta por detrás de las letras en el Hero */
-.hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--violet);
-    z-index: 0;
-    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
-    transition-delay: 1.6s; /* Espera a que las letras se formen antes de irse */
-}
-
-body.start-anim .hero::before {
-    transform: translateX(-100%);
-}
-
-/* Aseguramos que los textos destaquen por encima del panel violeta */
-.hero-content {
-    position: relative;
-    z-index: 2;
-}
-
-/* Letras individuales generadas por JS */
-.rand-letter {
-    position: relative;
-    display: inline-block; /* Crucial para que funcionen las animaciones de movimiento */
-    opacity: 0;
-    top: 30px;
-    filter: blur(12px);
-    transition: opacity 0.6s ease, top 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
-}
-
-/* Estado materializado */
-.rand-letter.revealed {
-    opacity: 1;
-    top: 0;
-    filter: blur(0);
-}
-
-/* Usamos 'top' en lugar de 'transform' para que el Parallax no la anule */
-.hero-content > * {
-    position: relative;
-    opacity: 0;
-    top: 40px;
-    filter: blur(15px);
-    transition: opacity 1.5s ease, top 1.5s cubic-bezier(0.16, 1, 0.3, 1), filter 1.5s ease;
-}
-
-/* Materialización en cascada sobre el fondo violeta */
-body.start-anim .hero-content .subtitle {
-    opacity: 1; top: 0; filter: blur(0);
-    transition-delay: 0.2s;
-}
-
-body.start-anim .hero-content .text-image {
-    opacity: 1; top: 0; filter: blur(0);
-    transition-delay: 0.4s;
-}
-
-body.start-anim .hero-content .role {
-    opacity: 1; top: 0; filter: blur(0);
-    transition-delay: 0.6s;
-}
-
-/* HEADER: no se materializa, baja suavemente después de que el panel se va */
-.site-header {
-    opacity: 0;
-    margin-top: -20px;
-    transition: opacity 1s ease, margin-top 1s ease;
-    transition-delay: 1.8s;
-}
-
-body.start-anim .site-header {
-    opacity: 1;
-    margin-top: 0;
+@keyframes reveal-up {
+    from { opacity: 0; transform: translateY(50px); }
 }
 
 /* ==========================================================
@@ -1208,7 +1047,7 @@ body.start-anim .site-header {
     }
 
     .footer {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr;
     }
 
     .footer-socials {

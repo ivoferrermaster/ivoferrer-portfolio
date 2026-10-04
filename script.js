@@ -1,200 +1,152 @@
 /**
  * PREFERENCIA DE MOVIMIENTO REDUCIDO
  */
-const reduceMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-let reduceMotion = reduceMotionQuery.matches;
-reduceMotionQuery.addEventListener('change', (e) => reduceMotion = e.matches);
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
- * 0. PRELOADER & ENTRANCE ANIMATION
+ * SCROLL SUAVE Y PARALLAX (components/smoothscroll)
  */
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. Preparar las letras del Hero dividiéndolas en spans.
-    //    El texto completo queda en un span oculto para lectores de pantalla
-    //    y las letras sueltas se marcan aria-hidden para que no se lean de a una.
-    const heroTexts = document.querySelectorAll('.hero-content > *');
+const smoothScroll = new SmoothScroll();
 
-    heroTexts.forEach(el => {
-        const srText = document.createElement('span');
-        srText.className = 'visually-hidden';
-        const visual = document.createElement('span');
-        visual.setAttribute('aria-hidden', 'true');
+/**
+ * TRABAJO SELECCIONADO
+ *    Las filas de la lista se arman con los proyectos de data/proyectos.js (los mismos que muestra
+ *    trabajo.html). Va antes que el resto porque el cursor y las apariciones al hacer scroll
+ *    buscan las filas cuando arrancan.
+ */
 
-        el.childNodes.forEach(node => {
-            if (node.nodeType === Node.TEXT_NODE) {
-                srText.append(node.textContent);
-                for (const char of node.textContent) {
-                    if (char.trim() === '') {
-                        visual.append(char); // Mantiene espacios
-                    } else {
-                        const letter = document.createElement('span');
-                        letter.className = 'rand-letter';
-                        letter.textContent = char;
-                        visual.append(letter);
-                    }
-                }
-            } else {
-                srText.append(' ');
-                visual.append(node.cloneNode(true)); // Mantiene etiquetas como <br>
-            }
-        });
-        el.replaceChildren(srText, visual);
+// El cliente va letra por letra para que suban una a una (ver .projects-list__client en style.css);
+// --i es su orden, que el CSS usa como retraso. Las letras de una palabra van juntas en un
+// .reveal-word para que no se corte a la mitad. El texto completo queda oculto para lectores de pantalla.
+function splitLetters(text) {
+    let i = 0;
+    const words = text.split(' ').map(word => {
+        const letters = [...word].map(char => `<span class="reveal-char" style="--i: ${i++}">${char}</span>`);
+        i++; // el espacio entre palabras también cuenta en el orden
+        return `<span class="reveal-word">${letters.join('')}</span>`;
     });
+    return `<span class="visually-hidden">${text}</span><span aria-hidden="true">${words.join(' ')}</span>`;
+}
 
-    // Guardamos todas las letras ocultas en un array
-    const allLetters = Array.from(document.querySelectorAll('.rand-letter'));
+document.querySelector('.projects-list').innerHTML = window.PROYECTOS.map(project => `
+    <li class="hidden-element">
+        <a href="trabajo.html#/proyecto/${project.slug}">
+            <span class="projects-list__title">${project.titulo}</span>
+            <span class="projects-list__client">${splitLetters(project.cliente)}</span>
+            <img class="projects-list__thumb" src="${project.poster}" alt="" loading="lazy" decoding="async">
+        </a>
+    </li>`).join('');
 
-    // 2. Entrada del hero: arranca cuando el preloader empieza a cerrarse
-    //    (el logo cae sobre la barra), no cuando ya desapareció.
-    // arrivedAtAnchor: se llegó navegando directo a una sección (ya se saltó ahí
-    // mientras la cortina tapaba), así que no hay que volver a hacer scroll.
-    const startEntrance = (arrivedAtAnchor = false) => {
-        document.body.classList.add('start-anim');
+/**
+ * 0. ENTRADA DEL HERO
+ *    script.js se carga con defer: cuando corre, el HTML ya está listo.
+ */
 
-        // Revela las letras de a una, en orden aleatorio
-        const revealInterval = setInterval(() => {
-            if (allLetters.length === 0) {
-                clearInterval(revealInterval);
-                return;
-            }
-            const randomIndex = Math.floor(Math.random() * allLetters.length);
-            const letter = allLetters.splice(randomIndex, 1)[0];
-            letter.classList.add('revealed');
-        }, 35);
+// Cada letra del hero va en su propio span para revelarlas de a una. El texto completo queda
+// en un span oculto para lectores de pantalla y las letras se marcan aria-hidden.
+document.querySelectorAll('.hero-content > *').forEach(el => {
+    const nodes = [...el.childNodes];
+    // Los nodos que no son texto son <br>: se mantienen (y para el lector de pantalla son un espacio)
+    const srText = nodes.map(node => node.nodeType === Node.TEXT_NODE ? node.textContent : ' ').join('');
+    const letters = nodes.map(node => node.nodeType === Node.TEXT_NODE
+        ? [...node.textContent].map(char => char.trim() ? `<span class="rand-letter">${char}</span>` : char).join('')
+        : '<br>').join('');
 
-        setTimeout(() => {
-            document.body.classList.remove('loading');
+    el.innerHTML = `<span class="visually-hidden">${srText}</span><span aria-hidden="true">${letters}</span>`;
+});
 
-            // Si se entró con un #ancla en la URL, se respeta ahora que se puede hacer scroll
-            if (arrivedAtAnchor) return;
-            const initialTarget = location.hash && document.getElementById(location.hash.slice(1));
-            if (initialTarget) scrollToElement(initialTarget);
-        }, arrivedAtAnchor ? 600 : 3000);
-    };
+const hiddenLetters = [...document.querySelectorAll('.rand-letter')];
 
-    if (PageTransition.arrived) {
-        // Se llegó navegando desde otra sección: sin preloader completo. La
-        // cortina de page-transition hace de "sub-preloader" y el hero entra
-        // cuando esta empieza a abrirse.
-        document.getElementById('preloader')?.remove();
+// Arranca cuando el preloader empieza a cerrarse (el logo cae sobre la barra) o cuando se abre
+// la cortina de la transición entre páginas.
+// arrivedAtAnchor: se llegó directo a una sección (ya se saltó ahí mientras la cortina tapaba),
+// así que no hay que volver a hacer scroll.
+function startEntrance(arrivedAtAnchor = false) {
+    document.body.classList.add('start-anim');
 
-        // Si el destino es una sección de esta página (ej. #contacto), se salta
-        // ahí de golpe mientras la cortina aún tapa: el usuario no ve pasar por el hero.
-        const anchorTarget = location.hash && document.getElementById(location.hash.slice(1));
-        if (anchorTarget) {
-            const jump = () => {
-                scrollToElement(anchorTarget);
-                currentScrollY = targetScrollY; // sin deslizamiento suave
-            };
-            if (document.readyState === 'complete') jump();
-            else window.addEventListener('load', jump, { once: true });
+    // Revela una letra cada 35ms, en orden aleatorio
+    const revealInterval = setInterval(() => {
+        if (hiddenLetters.length === 0) {
+            clearInterval(revealInterval);
+            return;
         }
-        PageTransition.revealStart.then(() => startEntrance(Boolean(anchorTarget)));
-    } else {
-        // Entrada al sitio o recarga: preloader completo (components/preloader/Preloader.js)
-        new Preloader('#preloader', { onPreHidden: startEntrance });
+        const randomIndex = Math.floor(Math.random() * hiddenLetters.length);
+        hiddenLetters.splice(randomIndex, 1)[0].classList.add('revealed');
+    }, 35);
+
+    setTimeout(() => {
+        document.body.classList.remove('loading');
+
+        // Si se entró con un #ancla en la URL, se respeta ahora que se puede hacer scroll
+        if (arrivedAtAnchor) return;
+        const hashTarget = location.hash && document.getElementById(location.hash.slice(1));
+        if (hashTarget) smoothScroll.scrollTo(hashTarget);
+    }, arrivedAtAnchor ? 600 : 3000);
+}
+
+if (pageArrived) {
+    // Se llegó desde otra página: sin preloader. La cortina de page-transition hace de
+    // "sub-preloader" y el hero entra cuando empieza a abrirse.
+    document.getElementById('preloader').remove();
+
+    // Si el destino es una sección (ej. #contacto), se salta ahí de golpe mientras la cortina
+    // todavía tapa: así no se ve pasar por el hero.
+    const anchorTarget = location.hash && document.getElementById(location.hash.slice(1));
+    if (anchorTarget) {
+        window.addEventListener('load', () => smoothScroll.scrollTo(anchorTarget, true), { once: true });
     }
-});
+    pageRevealStart.then(() => startEntrance(Boolean(anchorTarget)));
+} else {
+    // Entrada al sitio o recarga: preloader completo (components/preloader/Preloader.js)
+    new Preloader(startEntrance);
+
+    // Si la URL trae un #ancla, el navegador salta solo ahí mientras está el preloader: se vuelve
+    // arriba para que se vea la entrada del hero (al terminar, startEntrance baja hasta el ancla)
+    if (location.hash) window.addEventListener('load', () => smoothScroll.scrollTo(0, true), { once: true });
+}
 
 /**
- * 1. SMOOTH SCROLL & PARALLAX
+ * 1. NAVEGACIÓN CON ANCLAS Y TECLADO
  */
-const body = document.body;
-const scrollWrapper = document.getElementById('scroll-wrapper');
 const siteHeader = document.querySelector('.site-header');
-const parallaxElements = document.querySelectorAll('.parallax');
-
-let currentScrollY = 0;
-let targetScrollY = 0;
-const ease = 0.08;
-
-function setBodyHeight() {
-    body.style.height = `${scrollWrapper.getBoundingClientRect().height}px`;
-}
-
-window.addEventListener('load', setBodyHeight);
-window.addEventListener('resize', setBodyHeight);
-
-const resizeObserver = new ResizeObserver(() => {
-    setBodyHeight();
-});
-resizeObserver.observe(scrollWrapper);
-
-window.addEventListener('scroll', () => {
-    targetScrollY = window.scrollY;
-});
-
-function updateScroll() {
-    // Con movimiento reducido el desplazamiento es inmediato y sin parallax
-    currentScrollY += (targetScrollY - currentScrollY) * (reduceMotion ? 1 : ease);
-    scrollWrapper.style.transform = `translate3d(0, -${currentScrollY}px, 0)`;
-
-    parallaxElements.forEach(el => {
-        const speed = reduceMotion ? 0 : parseFloat(el.getAttribute('data-speed'));
-        const yPos = currentScrollY * speed;
-        el.style.transform = `translate3d(0, ${yPos}px, 0)`;
-    });
-
-    requestAnimationFrame(updateScroll);
-}
-
-updateScroll();
-
-/**
- * 1.1 NAVEGACIÓN ACCESIBLE CON EL SCROLL VIRTUAL
- * Como #scroll-wrapper es fijo, el navegador no puede desplazarse solo hacia
- * los #anclas ni hacia el elemento enfocado con Tab: lo resolvemos a mano.
- */
 let skipFocusScroll = false;
 
-// Posición del elemento dentro del documento (independiente del scroll actual)
-function getDocumentTop(el) {
-    return el.getBoundingClientRect().top + currentScrollY;
-}
-
-function scrollToElement(el, offset = 0) {
-    const top = Math.max(0, getDocumentTop(el) - offset);
-    window.scrollTo(0, top);
-    targetScrollY = window.scrollY;
-}
-
+// Enlaces a una sección (#servicios...): se llega con scroll suave y el foco pasa al destino,
+// así la navegación con Tab sigue desde ahí
 document.addEventListener('click', (e) => {
     const link = e.target.closest('a[href^="#"]');
-    if (!link) return;
-
-    const id = link.getAttribute('href').slice(1);
-    const target = id && document.getElementById(id);
+    const target = link && document.getElementById(link.getAttribute('href').slice(1));
     if (!target) return;
 
     e.preventDefault();
-    scrollToElement(target);
+    smoothScroll.scrollTo(target);
 
-    // Movemos el foco al destino para que Tab continúe desde ahí
     if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
     skipFocusScroll = true;
     target.focus({ preventScroll: true });
     skipFocusScroll = false;
 
-    history.pushState(null, '', `#${id}`);
+    history.pushState(null, '', link.getAttribute('href'));
 });
 
-// Mantiene visible el elemento que recibe el foco al tabular
+// Al tabular, si el elemento enfocado queda tapado por el header (que es fijo) o fuera de
+// pantalla, se lo lleva a un tercio de la altura. Se calcula contra el destino del scroll
+// (puede estar a mitad de una animación), no contra la posición de este instante.
 document.addEventListener('focusin', (e) => {
-    if (skipFocusScroll || !scrollWrapper.contains(e.target)) return;
+    if (skipFocusScroll || !e.target.closest('main, .footer')) return;
 
     const rect = e.target.getBoundingClientRect();
-    const docTop = rect.top + currentScrollY;
-    const viewTop = docTop - window.scrollY;
-    const headerHeight = siteHeader ? siteHeader.offsetHeight : 0;
-
-    if (viewTop < headerHeight || viewTop + rect.height > window.innerHeight) {
-        window.scrollTo(0, Math.max(0, docTop - window.innerHeight / 3));
-        targetScrollY = window.scrollY;
+    const docTop = rect.top + window.scrollY;               // posición dentro de la página
+    const viewTop = docTop - smoothScroll.destination;      // dónde va a quedar en pantalla
+    if (viewTop < siteHeader.offsetHeight || viewTop + rect.height > window.innerHeight) {
+        smoothScroll.scrollTo(docTop - window.innerHeight / 3);
     }
 });
 
 /**
- * 2. CUSTOM CURSOR & DYNAMIC UPDATES
+ * 2. CURSOR PERSONALIZADO
+ *    Sigue al mouse con un poco de retraso (se acerca un 20% por frame)
+ *    y se agranda sobre los elementos interactivos.
  */
 const cursor = document.getElementById('cursor');
 let mouseX = 0, mouseY = 0;
@@ -214,106 +166,48 @@ function updateCursor() {
 updateCursor();
 
 document.querySelectorAll('button, a, .service-row, .insight-card, .testimonial-fan').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-        cursor.classList.add('hover-active');
-    });
-    el.addEventListener('mouseleave', () => {
-        cursor.classList.remove('hover-active');
-    });
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover-active'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover-active'));
 });
 
 /**
- * 3. IMAGE TRAIL EFFECT (FOOTER)
+ * 3. APARICIÓN AL HACER SCROLL
+ *    Los .hidden-element pasan a .visible-element la primera vez que entran en pantalla.
  */
-const trailContainer = document.getElementById('trail-container');
-const footer = document.querySelector('.footer');
-
-let lastMouseX = 0;
-let lastMouseY = 0;
-let imageIndex = 0;
-let isMouseInFooter = false;
-
-const images = [
-    'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=500',
-    'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500',
-    'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=500',
-    'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500'
-];
-
-footer.addEventListener('mouseenter', () => isMouseInFooter = true);
-footer.addEventListener('mouseleave', () => isMouseInFooter = false);
-
-window.addEventListener('mousemove', (e) => {
-    if (!isMouseInFooter || reduceMotion) return;
-
-    const distance = Math.hypot(e.clientX - lastMouseX, e.clientY - lastMouseY);
-    if (distance > 100) {
-        createTrailImage(e.clientX, e.clientY + currentScrollY);
-        lastMouseX = e.clientX;
-        lastMouseY = e.clientY;
-    }
-});
-
-function createTrailImage(x, y) {
-    const img = document.createElement('img');
-    img.src = images[imageIndex % images.length];
-    img.alt = '';
-    img.classList.add('trail-img');
-    img.style.left = `${x}px`;
-    img.style.top = `${y}px`;
-    trailContainer.appendChild(img);
-    imageIndex++;
-
-    setTimeout(() => {
-        img.style.opacity = '0';
-        img.style.transform = 'translate(-50%, -50%) scale(0.5)';
-        setTimeout(() => { img.remove(); }, 800);
-    }, 100);
-}
-
-/**
- * 4. INTERSECTION OBSERVER ANIMATIONS
- */
-const observer = new IntersectionObserver((entries, obs) => {
+const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible-element');
-            entry.target.classList.remove('hidden-element');
-            obs.unobserve(entry.target);
-        }
+        if (!entry.isIntersecting) return;
+        entry.target.classList.replace('hidden-element', 'visible-element');
+        revealObserver.unobserve(entry.target);
     });
 }, { threshold: 0.15 });
 
-document.querySelectorAll('.hidden-element').forEach(el => {
-    observer.observe(el);
-});
+document.querySelectorAll('.hidden-element').forEach(el => revealObserver.observe(el));
 
 /**
- * 5. MAGNETIC BUTTONS
+ * 4. BOTONES MAGNÉTICOS
+ *    El botón (30%) y su texto (20%) se corren hacia el mouse; al salir vuelven a su lugar.
  */
-document.querySelectorAll('.magnetic-btn').forEach(magBtn => {
-    const magText = magBtn.querySelector('.btn-text');
+document.querySelectorAll('.magnetic-btn').forEach(btn => {
+    const text = btn.querySelector('.btn-text');
 
-    magBtn.addEventListener('mousemove', (e) => {
+    btn.addEventListener('mousemove', (e) => {
         if (reduceMotion) return;
-        const rect = magBtn.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const distX = e.clientX - centerX;
-        const distY = e.clientY - centerY;
-
-        magBtn.style.transform = `translate3d(${distX * 0.3}px, ${distY * 0.3}px, 0)`;
-        if (magText) magText.style.transform = `translate3d(${distX * 0.2}px, ${distY * 0.2}px, 0)`;
+        const rect = btn.getBoundingClientRect();
+        const distX = e.clientX - (rect.left + rect.width / 2);
+        const distY = e.clientY - (rect.top + rect.height / 2);
+        btn.style.transform = `translate3d(${distX * 0.3}px, ${distY * 0.3}px, 0)`;
+        text.style.transform = `translate3d(${distX * 0.2}px, ${distY * 0.2}px, 0)`;
     });
 
-    magBtn.addEventListener('mouseleave', () => {
-        magBtn.style.transform = `translate3d(0, 0, 0)`;
-        if (magText) magText.style.transform = `translate3d(0, 0, 0)`;
+    btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate3d(0, 0, 0)';
+        text.style.transform = 'translate3d(0, 0, 0)';
     });
 });
 
 /**
- * 6. SERVICIOS (desplegables con teclado, click o tap)
+ * 5. SERVICIOS (desplegables con teclado, click o tap)
  */
 document.querySelectorAll('.service-row__toggle').forEach(toggle => {
     toggle.addEventListener('click', () => {
@@ -324,7 +218,7 @@ document.querySelectorAll('.service-row__toggle').forEach(toggle => {
 });
 
 /**
- * 7. FAQ ACCORDION
+ * 6. FAQ ACCORDION
  */
 const faqButtons = document.querySelectorAll('.faq-question button');
 
@@ -345,55 +239,38 @@ faqButtons.forEach(button => {
 });
 
 /**
- * 8. COUNTER ANIMATION (STATS)
- * Los números animados son aria-hidden: el valor real está en un texto oculto.
+ * 7. CONTADORES (CIFRAS)
+ *    Al entrar en pantalla cada número sube de 0 a su valor (data-target) en 2 segundos,
+ *    frenando al final. Los números animados son aria-hidden: el valor real está en un texto oculto.
  */
-const statCounters = document.querySelectorAll('.stat-number');
-const animationDuration = 2000; // 2 segundos de animación
-
-const counterObserver = new IntersectionObserver((entries, observer) => {
+const counterObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const counterElement = entry.target;
-            const targetValue = parseInt(counterElement.getAttribute('data-target'));
+        if (!entry.isIntersecting) return;
+        const counter = entry.target;
+        const targetValue = Number(counter.dataset.target);
+        counterObserver.unobserve(counter); // solo se anima la primera vez
 
-            if (reduceMotion) {
-                counterElement.innerText = targetValue;
-                observer.unobserve(counterElement);
-                return;
-            }
-
-            let startTimestamp = null;
-
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                // Progreso de 0 a 1 con ease-out para que el final sea suave
-                const progress = Math.min((timestamp - startTimestamp) / animationDuration, 1);
-                const easeOutProgress = 1 - Math.pow(1 - progress, 4);
-
-                counterElement.innerText = Math.floor(easeOutProgress * targetValue);
-
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                } else {
-                    counterElement.innerText = targetValue; // Aseguramos el número final exacto
-                }
-            };
-
-            window.requestAnimationFrame(step);
-
-            // La animación solo ocurre la primera vez que se hace scroll
-            observer.unobserve(counterElement);
+        if (reduceMotion) {
+            counter.textContent = targetValue;
+            return;
         }
+
+        let startTime = null;
+        const step = (now) => {
+            if (!startTime) startTime = now;
+            const progress = Math.min((now - startTime) / 2000, 1); // de 0 a 1 en 2 s
+            const eased = 1 - Math.pow(1 - progress, 4);              // ease-out: frena al final
+            counter.textContent = Math.floor(eased * targetValue);
+            if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
     });
 }, { threshold: 0.5 });
 
-statCounters.forEach(counter => {
-    counterObserver.observe(counter);
-});
+document.querySelectorAll('.stat-number').forEach(counter => counterObserver.observe(counter));
 
 /**
- * 9. VIDEO DE FONDO: control de pausa (WCAG 2.2.2)
+ * 8. VIDEO DE FONDO: botón de pausa (WCAG 2.2.2)
  */
 const bgVideo = document.querySelector('.video-break__media');
 const videoToggle = document.querySelector('.video-break__toggle');
@@ -402,78 +279,33 @@ function updateVideoToggle() {
     videoToggle.textContent = bgVideo.paused ? 'Reproducir video de fondo' : 'Pausar video de fondo';
 }
 
-if (bgVideo && videoToggle) {
-    if (reduceMotion) {
-        bgVideo.removeAttribute('autoplay');
-        bgVideo.pause();
-    }
-    updateVideoToggle();
-
-    videoToggle.addEventListener('click', () => {
-        if (bgVideo.paused) {
-            bgVideo.play();
-        } else {
-            bgVideo.pause();
-        }
-    });
-    bgVideo.addEventListener('play', updateVideoToggle);
-    bgVideo.addEventListener('pause', updateVideoToggle);
+// Con movimiento reducido el video arranca pausado
+if (reduceMotion) {
+    bgVideo.removeAttribute('autoplay');
+    bgVideo.pause();
 }
+updateVideoToggle();
+
+videoToggle.addEventListener('click', () => {
+    if (bgVideo.paused) bgVideo.play();
+    else bgVideo.pause();
+});
+bgVideo.addEventListener('play', updateVideoToggle);
+bgVideo.addEventListener('pause', updateVideoToggle);
 
 /**
- * 10. FUZZY TEXT (FOOTER)
+ * 9. TEXTO VIBRANTE DEL FOOTER (components/fuzzytext)
+ *    Se espera medio segundo para que estén las fuentes y los estilos antes de dibujarlo.
+ *    Con movimiento reducido se dibuja quieto (intensidad 0).
  */
-document.addEventListener("DOMContentLoaded", () => {
-    // Retrasamos 500ms para asegurar que el DOM, las fuentes (Moul/Work Sans)
-    // y los estilos responsivos estén cargados antes de capturarlos en Canvas.
-    setTimeout(() => {
-        const leadText = document.querySelector('.footer-cta__lead');
-        const linkText = document.querySelector('.footer-cta__link');
-        const still = reduceMotion ? { baseIntensity: 0, hoverIntensity: 0 } : null;
-
-        if (leadText) new FuzzyText(leadText, still || { baseIntensity: 0.1, hoverIntensity: 0.4 });
-        if (linkText) new FuzzyText(linkText, still || { baseIntensity: 0.15, hoverIntensity: 0.6 });
-    }, 500);
-});
+setTimeout(() => {
+    const k = reduceMotion ? 0 : 1;
+    new FuzzyText(document.querySelector('.footer-cta__lead'), { baseIntensity: 0.1 * k, hoverIntensity: 0.4 * k });
+    new FuzzyText(document.querySelector('.footer-cta__link'), { baseIntensity: 0.15 * k, hoverIntensity: 0.6 * k });
+}, 500);
 
 /**
- * 10b. REVELACIÓN DEL CLIENTE EN LA LISTA DE PROYECTOS
- *      Cada palabra se parte en letras para que suban una a una (ver .projects-list__client en style.css).
- *      El texto completo queda en un span oculto para lectores de pantalla.
+ * 10. INIT DE COMPONENTES (Menú, Logo Wall)
  */
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll('.projects-list__client').forEach(el => {
-        const text = el.textContent.trim();
-        const srText = document.createElement('span');
-        srText.className = 'visually-hidden';
-        srText.textContent = text;
-
-        const visual = document.createElement('span');
-        visual.setAttribute('aria-hidden', 'true');
-
-        let i = 0;
-        text.split(' ').forEach((word, w, words) => {
-            const wordEl = document.createElement('span');
-            wordEl.className = 'reveal-word';
-            for (const char of word) {
-                const letter = document.createElement('span');
-                letter.className = 'reveal-char';
-                letter.style.setProperty('--i', i++);
-                letter.textContent = char;
-                wordEl.append(letter);
-            }
-            visual.append(wordEl);
-            if (w < words.length - 1) { visual.append(' '); i++; }
-        });
-
-        el.replaceChildren(srText, visual);
-    });
-});
-
-/**
- * 11. INIT DE COMPONENTES (Menú, Logo Wall)
- */
-document.addEventListener("DOMContentLoaded", () => {
-    new StaggeredMenu('#main-menu');
-    new LogoWall('.logo-wall');
-});
+new StaggeredMenu('#main-menu');
+new LogoWall('.logo-wall');

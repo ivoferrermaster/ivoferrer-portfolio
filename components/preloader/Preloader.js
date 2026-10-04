@@ -1,141 +1,209 @@
 /* components/preloader/Preloader.js
- *
- * Preloader de entrada: cortina de canvas que se abre en dos fases (una
- * rendija vertical y luego una apertura horizontal), un logo en el centro y
- * una barra de 1px que crece desde el centro. Al terminar, el logo "cae" sobre
- * la barra, esta se contrae y el preloader se retira.
- *
- * Es una adaptación de la secuencia del preloader de resn.co.nz, con el logo
- * propio en lugar de la gota. Requiere GSAP 3.
- *
- * Callbacks:
- *   onPreHidden  empieza la salida (el logo cae). Acá arranca la entrada del hero.
- *   onHidden     el preloader ya se retiró del DOM.
- */
+
+   Preloader de entrada (adaptación del de resn.co.nz con el logo propio). Requiere GSAP 3.
+   1. Una cortina gris (dibujada en un canvas) se abre en dos fases: una rendija vertical
+      y después una apertura hacia los costados.
+   2. Debajo aparece el logo y una barra de 1px que avanza con la carga real de la página.
+   3. Al completarse, el logo "cae" sobre la barra, esta se contrae y el preloader se retira.
+
+   onClose: se llama cuando empieza la salida (el logo cae). Ahí arranca la entrada del hero. */
 class Preloader {
-    // Proporción del logo (viewBox de logoivo.svg)
-    static LOGO_RATIO = 1202 / 938;
-    // Alto del logo en px
-    static LOGO_HEIGHT = { desktop: 40, mobile: 30 };
-    // Gris de la cortina (valor RGB final)
-    static CURTAIN_GREY = 35;
-    // Tope de espera si algún recurso nunca termina de cargar
-    static MAX_WAIT = 15000;
+    constructor(onClose) {
+        this.el = document.getElementById('preloader');
+        this.onClose = onClose;
 
-    constructor(selector, options = {}) {
-        this.el = document.querySelector(selector);
-        if (!this.el) return;
-
-        this.onPreHidden = options.onPreHidden || (() => {});
-        this.onHidden = options.onHidden || (() => {});
-
-        this.inner = this.el.querySelector('.preloader__inner');
-        this.logo = this.el.querySelector('.preloader__logo');
-        this.barWrapper = this.el.querySelector('.preloader__bar');
-        this.barProgress = this.el.querySelector('.preloader__bar-fill');
-
+        // Sin GSAP o con movimiento reducido no se anima: se retira y el sitio sigue
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const ready = this.inner && this.logo && this.barWrapper && this.barProgress;
-
-        // Sin GSAP, con movimiento reducido o con markup incompleto no se
-        // anima: se retira el preloader y el sitio sigue su curso.
-        if (typeof gsap === 'undefined' || reduceMotion || !ready) {
-            this.skip();
+        if (!window.gsap || reduceMotion) {
+            this.el.remove();
+            onClose();
             return;
         }
 
+        this.inner = this.el.querySelector('.preloader__inner');
+        this.logo = this.el.querySelector('.preloader__logo');
+        this.bar = this.el.querySelector('.preloader__bar');
+        this.barFill = this.el.querySelector('.preloader__bar-fill');
+
         this.isMobile = window.matchMedia('(max-width: 767px)').matches;
         // Parte de la barra que avanza "de mentira" mientras carga lo real
-        this.STARTING_PROGRESS = this.isMobile ? 0.2 : 0.3;
+        this.fakePart = this.isMobile ? 0.2 : 0.3;
 
-        this.w = 0;
-        this.h = 0;
-        this.pixelRatio = 1;
-        this.fauxPr = 0;
-        this.fauxClipped = false;
-        this.loadProgress = 0;
-        this.tgPr = 0;
-        this.pr = 0;
-        this.renderBar = false;
-        this.bgDone = false;
-        this.isComplete = false;
-        this.tw = { bgMaskScaleXPr: 0, bgMaskScaleYPr: 0, alphaDropPr: 0, alphaBgPr: 0 };
+        // Progreso de la barra (todo de 0 a 1)
+        this.fakeProgress = 0;     // la parte "de mentira"
+        this.loadProgress = 0;     // la carga real
+        this.target = 0;           // a dónde tiene que llegar la barra
+        this.progress = 0;         // dónde está la barra ahora
+        this.fakeRushed = false;   // ¿ya se apuró la parte "de mentira"?
+        this.barActive = false;    // la barra sigue al progreso recién cuando se abrió la cortina
+        this.curtainOpen = false;
+        this.closing = false;
 
-        this.cnv = document.createElement('canvas');
-        this.cnv.className = 'preloader__canvas';
-        this.ctx = this.cnv.getContext('2d');
-        // Silueta negra del logo (la que se ve sobre la cortina gris)
-        this.logoCnv = document.createElement('canvas');
-        this.el.append(this.cnv);
+        // Valores que anima GSAP para dibujar la cortina
+        this.anim = { maskX: 0, maskY: 0, logoAlpha: 0, greyAlpha: 0 };
+
+        this.canvas = document.createElement('canvas');
+        this.canvas.className = 'preloader__canvas';
+        this.ctx = this.canvas.getContext('2d');
+        this.el.append(this.canvas);
+
+        // Silueta negra del logo, la que se ve sobre la cortina gris
+        this.logoCanvas = document.createElement('canvas');
+        this.logoReady = this.logo.complete;
+        if (!this.logoReady) {
+            this.logo.addEventListener('load', () => {
+                this.logoReady = true;
+                this.drawLogoSilhouette();
+            }, { once: true });
+        }
 
         this.onResize = this.onResize.bind(this);
         this.update = this.update.bind(this);
 
         this.onResize();
         window.addEventListener('resize', this.onResize);
-        this.prepareLogo();
         this.trackLoad();
         this.start();
     }
 
-    /* ---------- Salida rápida (sin animación) ---------- */
+    /* ---------- Progreso real de carga ---------- */
 
-    skip() {
-        this.el.remove();
-        // Asíncrono para que quien instancia ya haya terminado de configurarse
-        Promise.resolve().then(() => {
-            this.onPreHidden();
-            this.onHidden();
+    trackLoad() {
+        const tasks = [
+            document.fonts.load('400 1em "Work Sans"'),
+            document.fonts.load('400 1em "Moul"'),
+            // Solo imágenes que cargan de entrada: las lazy no deben retener el preloader
+            ...Array.from(document.images)
+                .filter((img) => img.loading !== 'lazy')
+                .map((img) => img.decode()),
+            new Promise((resolve) => {
+                if (document.readyState === 'complete') resolve();
+                else window.addEventListener('load', resolve, { once: true });
+            })
+        ];
+
+        let done = 0;
+        // Un recurso que falla cuenta igual como terminado: no debe trabar el sitio
+        tasks.forEach((task) => task.catch(() => {}).then(() => {
+            this.loadProgress = ++done / tasks.length;
+        }));
+
+        // Tope de espera por si algún recurso nunca termina de cargar
+        setTimeout(() => { this.loadProgress = 1; }, 15000);
+    }
+
+    /* ---------- Secuencia ---------- */
+
+    start() {
+        // update() corre en cada frame con el mismo reloj de GSAP
+        gsap.ticker.add(this.update);
+
+        gsap.set([this.bar, this.barFill], { scaleX: 0 });
+        gsap.to(this, { fakeProgress: this.fakePart, duration: 7, ease: 'power1.inOut' });
+
+        // Primer frame ya pintado (negro): se retira el fondo negro de seguridad del CSS
+        this.drawCurtain();
+        this.el.classList.add('is-ready');
+
+        gsap.to(this.anim, { greyAlpha: 1, duration: 0.64, delay: 0.23, ease: 'cubic.inOut' });
+        gsap.delayedCall(0.6, () => this.openCurtain());
+    }
+
+    openCurtain() {
+        this.inner.style.opacity = 1;
+        gsap.to(this.anim, { logoAlpha: 1, duration: 1, ease: 'cubic.inOut' });
+        // Fase 1: rendija vertical de arriba hacia abajo
+        gsap.to(this.anim, { maskY: 1, duration: 0.7, delay: 1, ease: 'power2.in' });
+        // Fase 2: la rendija se abre hacia los costados (y a la vez aparece la barra)
+        gsap.to(this.bar, { scaleX: 1, duration: 1.15, delay: 1.75, ease: 'expo.inOut', force3D: true });
+        gsap.to(this.anim, {
+            maskX: 1,
+            duration: 1.1,
+            delay: 1.75,
+            ease: 'expo.inOut',
+            onComplete: () => {
+                // Cortina abierta del todo: se limpia una última vez y se deja de dibujar
+                this.drawCurtain();
+                this.curtainOpen = true;
+                this.canvas.style.display = 'none';
+                this.barActive = true;
+            }
         });
     }
 
-    /* ---------- Progreso real de carga (0 → 1) ---------- */
+    close() {
+        this.closing = true;
+        this.onClose();
 
-    trackLoad() {
-        const tasks = [];
+        // El logo cae hasta la barra y queda recortado por el borde de abajo
+        gsap.to(this.logo, { y: this.innerH, duration: 0.62, ease: 'expo.in', force3D: true });
+        gsap.to(this.bar, { scaleX: 0, duration: 0.79, delay: 0.144, ease: 'expo.inOut', force3D: true });
 
-        if (document.fonts && document.fonts.load) {
-            tasks.push(document.fonts.load('400 1em "Work Sans"'));
-            tasks.push(document.fonts.load('400 1em "Moul"'));
+        gsap.delayedCall(0.79, () => {
+            window.removeEventListener('resize', this.onResize);
+            gsap.ticker.remove(this.update);
+            this.el.remove();
+        });
+    }
+
+    /* ---------- Cada frame ---------- */
+
+    update(time, deltaTime) {
+        // Casi todo cargado: la parte "de mentira" se completa rápido
+        if (this.loadProgress >= 0.95 && !this.fakeRushed) {
+            this.fakeRushed = true;
+            gsap.killTweensOf(this, 'fakeProgress');
+            gsap.to(this, { fakeProgress: this.fakePart, duration: 0.3, ease: 'power1.inOut' });
         }
 
-        // Solo imágenes que cargan de entrada; las lazy no deben retener el preloader
-        Array.from(document.images)
-            .filter((img) => img.loading !== 'lazy')
-            .forEach((img) => {
-                tasks.push(img.decode ? img.decode() : new Promise((res) => {
-                    if (img.complete) res(); else img.addEventListener('load', res, { once: true });
-                }));
-            });
+        // La barra nunca retrocede
+        const target = this.fakeProgress + this.loadProgress * (1 - this.fakePart);
+        if (target > this.target) this.target = Math.min(target, 1);
 
-        tasks.push(document.readyState === 'complete'
-            ? Promise.resolve()
-            : new Promise((res) => window.addEventListener('load', res, { once: true })));
+        if (this.barActive) {
+            // Se acerca un 6% por frame a 60fps, sin importar el refresco del monitor
+            const k = 1 - Math.pow(0.94, (deltaTime || 16.667) / 16.667);
+            this.progress += k * (this.target - this.progress);
+        }
 
-        let done = 0;
-        const step = () => { this.loadProgress = ++done / tasks.length; };
-        // Un recurso que falla cuenta como terminado: no debe trabar el sitio
-        tasks.forEach((task) => Promise.resolve(task).catch(() => {}).then(step));
+        if (!this.curtainOpen) this.drawCurtain();
+        gsap.set(this.barFill, { scaleX: this.progress, force3D: true });
 
-        setTimeout(() => { this.loadProgress = 1; }, Preloader.MAX_WAIT);
+        if (this.target >= 0.999 && this.progress > 0.99 && !this.closing) this.close();
     }
 
-    /* ---------- Logo ---------- */
+    /* ---------- Dibujo ---------- */
 
-    prepareLogo() {
-        this.logoReady = false;
-        const build = () => { this.logoReady = true; this.rasterizeLogo(); };
-        if (this.logo.complete) build();
-        else this.logo.addEventListener('load', build, { once: true });
+    drawCurtain() {
+        const { maskX, maskY, greyAlpha, logoAlpha } = this.anim;
+        const ctx = this.ctx;
+        const grey = Math.round(35 * greyAlpha); // mismo gris que la cortina de page-transition
+
+        ctx.clearRect(0, 0, this.w, this.h);
+
+        ctx.save();
+        ctx.fillStyle = `rgb(${grey},${grey},${grey})`;
+        ctx.fillRect(0, 0, this.w, this.h);
+        if (this.logoReady && logoAlpha > 0) {
+            ctx.globalAlpha = logoAlpha;
+            ctx.drawImage(this.logoCanvas, this.logoX, this.logoY, this.logoW, this.logoH);
+        }
+        ctx.restore();
+
+        // La rendija recorta la cortina (logo incluido) y deja ver lo que hay debajo
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0.5 * (this.w - 1) - 0.5 * this.w * maskX, 0, 2 + this.w * maskX, this.h * maskY);
+        ctx.restore();
     }
 
-    // El SVG es blanco; para la cortina se necesita su silueta en negro
-    rasterizeLogo() {
+    // El SVG del logo es blanco; para la cortina se necesita su silueta en negro
+    drawLogoSilhouette() {
         if (!this.logoReady) return;
-        const dpr = this.pixelRatio;
-        const c = this.logoCnv;
-        c.width = Math.ceil(this.dropW * dpr);
-        c.height = Math.ceil(this.dropH * dpr);
+        const c = this.logoCanvas;
+        c.width = Math.ceil(this.logoW * this.dpr);
+        c.height = Math.ceil(this.logoH * this.dpr);
         const g = c.getContext('2d');
         g.clearRect(0, 0, c.width, c.height);
         g.drawImage(this.logo, 0, 0, c.width, c.height);
@@ -144,150 +212,24 @@ class Preloader {
         g.fillRect(0, 0, c.width, c.height);
     }
 
-    /* ---------- Secuencia ---------- */
-
-    start() {
-        // Los tweens usan el mismo ticker de GSAP: un único rAF para todo
-        gsap.ticker.add(this.update);
-
-        gsap.set([this.barWrapper, this.barProgress], { scaleX: 0 });
-        gsap.to(this, { fauxPr: this.STARTING_PROGRESS, duration: 7, ease: 'power1.inOut' });
-
-        // Primer frame ya pintado (negro): se retira el fondo negro de seguridad
-        this.drawBg();
-        this.el.classList.add('is-ready');
-
-        gsap.to(this.tw, { alphaBgPr: 1, duration: 0.64, delay: 0.23, ease: 'cubic.inOut' });
-        gsap.delayedCall(0.6, () => this.animateBgIn());
-    }
-
-    animateBgIn() {
-        this.inner.style.opacity = 1;
-        gsap.to(this.tw, { alphaDropPr: 1, duration: 1, ease: 'cubic.inOut' });
-        // Fase 1: rendija vertical de arriba hacia abajo
-        gsap.to(this.tw, { bgMaskScaleYPr: 1, duration: 0.7, delay: 1, ease: 'power2.in' });
-        // Fase 2: la rendija se abre hacia los costados
-        gsap.to(this.tw, {
-            bgMaskScaleXPr: 1,
-            duration: 1.1,
-            delay: 1.75,
-            ease: 'expo.inOut',
-            onComplete: () => this.onAnimBgComplete()
-        });
-        gsap.delayedCall(1.75, () => this.animateBarIn());
-    }
-
-    animateBarIn() {
-        gsap.to(this.barWrapper, { scaleX: 1, duration: 1.15, ease: 'expo.inOut', force3D: true });
-    }
-
-    onAnimBgComplete() {
-        // Cortina totalmente abierta: se limpia una última vez y se deja de dibujar
-        this.drawBg();
-        this.bgDone = true;
-        this.cnv.style.display = 'none';
-        // Recién ahora la barra empieza a seguir el progreso real
-        this.renderBar = true;
-    }
-
-    complete() {
-        if (this.isComplete) return;
-        this.isComplete = true;
-        this.animateBarOut();
-    }
-
-    animateBarOut() {
-        this.onPreHidden();
-
-        // El logo cae hasta la barra y queda recortado por el borde inferior
-        gsap.to(this.logo, { y: this.innerH, duration: 0.62, ease: 'expo.in', force3D: true });
-        gsap.to(this.barWrapper, { scaleX: 0, duration: 0.79, delay: 0.144, ease: 'expo.inOut', force3D: true });
-
-        gsap.delayedCall(0.79, () => {
-            this.destroy();
-            this.onHidden();
-        });
-    }
-
-    destroy() {
-        window.removeEventListener('resize', this.onResize);
-        gsap.ticker.remove(this.update);
-        this.el.remove();
-    }
-
-    /* ---------- Frame ---------- */
-
-    update(time, deltaTime) {
-        this.updateProgress();
-
-        if (this.renderBar) {
-            // Lerp de 6% por frame a 60fps, independiente del refresco del monitor
-            const k = 1 - Math.pow(0.94, (deltaTime || 16.667) / 16.667);
-            this.pr += k * (this.tgPr - this.pr);
-        }
-
-        if (!this.bgDone) this.drawBg();
-        gsap.set(this.barProgress, { scaleX: this.pr, force3D: true });
-
-        if (this.tgPr >= 0.999 && this.pr > 0.99) this.complete();
-    }
-
-    updateProgress() {
-        // Casi todo cargado: la parte "de mentira" se completa rápido
-        if (this.loadProgress >= 0.95 && !this.fauxClipped) {
-            this.fauxClipped = true;
-            gsap.killTweensOf(this, 'fauxPr');
-            gsap.to(this, { fauxPr: this.STARTING_PROGRESS, duration: 0.3, ease: 'power1.inOut' });
-        }
-        // La barra nunca retrocede
-        const target = this.fauxPr + this.loadProgress * (1 - this.STARTING_PROGRESS);
-        if (target > this.tgPr) this.tgPr = Math.min(target, 1);
-    }
-
-    /* ---------- Dibujo ---------- */
-
-    drawBg() {
-        const { bgMaskScaleXPr: sx, bgMaskScaleYPr: sy, alphaBgPr, alphaDropPr } = this.tw;
-        const ctx = this.ctx;
-        const grey = Math.round(Preloader.CURTAIN_GREY * alphaBgPr);
-
-        ctx.clearRect(0, 0, this.w, this.h);
-
-        ctx.save();
-        ctx.fillStyle = `rgb(${grey},${grey},${grey})`;
-        ctx.fillRect(0, 0, this.w, this.h);
-        if (this.logoReady && alphaDropPr > 0) {
-            ctx.globalAlpha = alphaDropPr;
-            ctx.drawImage(this.logoCnv, this.logoX, this.logoY, this.dropW, this.dropH);
-        }
-        ctx.restore();
-
-        // La rendija recorta la cortina (logo incluido) y deja ver lo que hay debajo
-        ctx.save();
-        ctx.globalCompositeOperation = 'destination-out';
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0.5 * (this.w - 1) - 0.5 * this.w * sx, 0, 2 + this.w * sx, this.h * sy);
-        ctx.restore();
-    }
-
     onResize() {
-        const dpr = (this.pixelRatio = window.devicePixelRatio || 1);
+        const dpr = (this.dpr = window.devicePixelRatio || 1);
         this.w = window.innerWidth;
         this.h = window.innerHeight;
 
-        this.cnv.width = dpr * this.w;
-        this.cnv.height = dpr * this.h;
-        this.cnv.style.width = `${this.w}px`;
-        this.cnv.style.height = `${this.h}px`;
+        this.canvas.width = dpr * this.w;
+        this.canvas.height = dpr * this.h;
+        this.canvas.style.width = `${this.w}px`;
+        this.canvas.style.height = `${this.h}px`;
         this.ctx.scale(dpr, dpr);
 
-        const logoH = Preloader.LOGO_HEIGHT[this.isMobile ? 'mobile' : 'desktop'];
-        this.dropH = logoH;
-        this.dropW = logoH * Preloader.LOGO_RATIO;
+        // Tamaño del logo (1202 / 938 es la proporción del viewBox de logoivo.svg)
+        this.logoH = this.isMobile ? 30 : 40;
+        this.logoW = this.logoH * (1202 / 938);
 
-        // Caja central: ancho máx. 500px; el alto deja siempre aire entre logo y barra
+        // Caja central: ancho máx. 500px; el alto deja siempre aire entre el logo y la barra
         this.innerW = Math.min(0.6 * this.w, 500);
-        this.innerH = Math.max(0.1 * this.h, this.dropH + 28);
+        this.innerH = Math.max(0.1 * this.h, this.logoH + 28);
         const innerLeft = Math.round(0.5 * (this.w - this.innerW));
         const innerTop = Math.round(0.5 * (this.h - this.innerH));
         Object.assign(this.inner.style, {
@@ -297,16 +239,16 @@ class Preloader {
             height: `${this.innerH}px`
         });
 
-        // El logo del DOM (blanco) y el del canvas (negro) comparten posición exacta
-        this.logoX = Math.ceil(0.5 * (this.w - this.dropW));
+        // El logo del DOM (blanco) y el del canvas (negro) van exactamente en el mismo lugar
+        this.logoX = Math.ceil(0.5 * (this.w - this.logoW));
         this.logoY = innerTop;
         Object.assign(this.logo.style, {
-            width: `${this.dropW}px`,
-            height: `${this.dropH}px`,
+            width: `${this.logoW}px`,
+            height: `${this.logoH}px`,
             left: `${this.logoX - innerLeft}px`
         });
 
-        this.rasterizeLogo();
-        if (!this.bgDone) this.drawBg();
+        this.drawLogoSilhouette();
+        if (!this.curtainOpen) this.drawCurtain();
     }
 }

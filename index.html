@@ -8,25 +8,16 @@
     <link rel="icon" type="image/svg+xml" href="assets/logos/logoivo.svg">
     <link rel="preload" href="assets/fonts/WorkSans-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="preload" href="assets/fonts/Moul-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
     <link rel="stylesheet" href="components/staggeredmenu/staggered-menu.css">
     <link rel="stylesheet" href="components/logo-wall/logo-wall.css">
     <link rel="stylesheet" href="components/preloader/preloader.css">
     <link rel="stylesheet" href="components/page-transition/page-transition.css">
-    <script>
-        // Si se llega navegando entre secciones (clic en un enlace o botón atrás/adelante),
-        // la página nace tapada y no corre el preloader completo (ver components/page-transition)
-        try {
-            var pt = sessionStorage.getItem("ivo:pt");
-            var nav = performance.getEntriesByType("navigation")[0];
-            if ((pt && Date.now() - Number(pt) < 10000) || (nav && nav.type === "back_forward")) {
-                document.documentElement.classList.add("pt-arriving");
-                // Red de seguridad: si PageTransition.js no carga, no se deja la página tapada
-                setTimeout(function () { document.documentElement.classList.remove("pt-arriving"); }, 6000);
-            }
-        } catch (e) {}
-    </script>
+    <link rel="stylesheet" href="components/smoothscroll/smooth-scroll.css">
+    <!-- Sin defer: tiene que correr antes de que se pinte la página (ver el archivo) -->
+    <script src="components/page-transition/PageTransition.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
 </head>
 <body class="loading">
@@ -47,7 +38,6 @@
     </div>
 
     <div id="cursor" aria-hidden="true"></div>
-    <div id="trail-container" aria-hidden="true"></div>
 
     <!-- 1. HEADER (Totalmente independiente y afuera del menú) -->
     <header class="site-header">
@@ -81,7 +71,7 @@
 
         <nav class="staggered-menu-panel" aria-label="Principal">
             <div class="sm-panel-inner">
-                <ul class="sm-panel-list" data-numbering="true">
+                <ul class="sm-panel-list">
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#inicio"><span class="sm-panel-itemLabel">Inicio</span></a></li>
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="#servicios"><span class="sm-panel-itemLabel">Servicios</span></a></li>
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="trabajo.html"><span class="sm-panel-itemLabel">Trabajo</span></a></li>
@@ -98,352 +88,317 @@
         </nav>
     </div>
 
-    <div id="scroll-wrapper">
-        <main id="contenido" tabindex="-1">
+    <main id="contenido" tabindex="-1">
 
-            <section class="hero" id="inicio">
-                <hgroup class="hero-content">
-                    <p class="subtitle parallax" data-speed="-0.2">Portfolio profesional</p>
-                    <h1 class="text-image parallax" data-speed="0.1">Ivo<br>Ferrer</h1>
-                    <p class="role parallax" data-speed="0.3">Creative Developer &amp; Designer</p>
-                </hgroup>
-            </section>
+        <section class="hero" id="inicio">
+            <hgroup class="hero-content">
+                <p class="subtitle parallax" data-speed="-0.2">Portfolio profesional</p>
+                <h1 class="text-image parallax" data-speed="0.1">Ivo<br>Ferrer</h1>
+                <p class="role parallax" data-speed="0.3">Creative Developer &amp; Designer</p>
+            </hgroup>
+        </section>
 
-            <!-- SERVICIOS -->
-            <section class="services wrap" id="servicios" aria-labelledby="servicios-titulo">
-                <h2 id="servicios-titulo" class="visually-hidden">Servicios</h2>
-                <ol class="services-list">
-                    <li class="service-row hidden-element">
-                        <h3 class="service-row__header">
-                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-1">
-                                <span class="service-row__title">Diseño web &amp; estrategia</span>
-                                <span class="service-row__number" aria-hidden="true">01</span>
-                            </button>
-                        </h3>
-                        <div class="service-row__content" id="servicio-1">
-                            <p>Analizo tu mercado y a tus usuarios para definir una arquitectura sólida. A partir de ahí, diseño interfaces que no solo lucen increíbles, sino que convierten y cumplen objetivos concretos de tu negocio.</p>
-                        </div>
-                    </li>
-                    <li class="service-row hidden-element">
-                        <h3 class="service-row__header">
-                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-2">
-                                <span class="service-row__title">Desarrollo web</span>
-                                <span class="service-row__number" aria-hidden="true">02</span>
-                            </button>
-                        </h3>
-                        <div class="service-row__content" id="servicio-2">
-                            <p>Construyo plataformas rápidas, seguras y escalables utilizando las últimas tecnologías nativas. Mi código es limpio, optimizado para SEO y preparado para animaciones fluidas a 60fps.</p>
-                        </div>
-                    </li>
-                    <li class="service-row hidden-element">
-                        <h3 class="service-row__header">
-                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-3">
-                                <span class="service-row__title">Apps móviles</span>
-                                <span class="service-row__number" aria-hidden="true">03</span>
-                            </button>
-                        </h3>
-                        <div class="service-row__content" id="servicio-3">
-                            <p>Llevo la experiencia de tu marca al bolsillo de tus usuarios. Diseño y desarrollo aplicaciones móviles nativas y multiplataforma con interfaces intuitivas y un rendimiento impecable.</p>
-                        </div>
-                    </li>
-                    <li class="service-row hidden-element">
-                        <h3 class="service-row__header">
-                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-4">
-                                <span class="service-row__title">Motion graphics</span>
-                                <span class="service-row__number" aria-hidden="true">04</span>
-                            </button>
-                        </h3>
-                        <div class="service-row__content" id="servicio-4">
-                            <p>Doy vida a tu marca a través del movimiento. Creo animaciones sutiles, microinteracciones y videos inmersivos que capturan la atención y explican conceptos complejos de forma visual.</p>
-                        </div>
-                    </li>
-                    <li class="service-row hidden-element">
-                        <h3 class="service-row__header">
-                            <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-5">
-                                <span class="service-row__title">Identidad de marca</span>
-                                <span class="service-row__number" aria-hidden="true">05</span>
-                            </button>
-                        </h3>
-                        <div class="service-row__content" id="servicio-5">
-                            <p>Creo sistemas visuales memorables y coherentes. Desde el logotipo hasta la paleta de colores y la tipografía, construyo marcas con personalidad que destacan en el competitivo entorno digital.</p>
-                        </div>
-                    </li>
-                </ol>
-            </section>
-
-            <!-- CLIENTES -->
-            <section class="logo-wall wrap" aria-labelledby="clientes-titulo">
-                <h2 id="clientes-titulo" class="logo-wall__heading hidden-element">Compañías que han confiado en mi trabajo</h2>
-                <ul class="logo-wall__grid">
-                    <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
-                        <img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" loading="lazy">
-                    </li>
-                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Apple</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
-                        <img src="assets/logos/logo-montecitos.png" alt="Montecitos Country &amp; Golf" class="logo-wall__logo--montecitos" loading="lazy">
-                    </li>
-                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Google</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Nike</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand">
-                        <img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="logo-wall__logo--enterlab" loading="lazy">
-                    </li>
-                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Ferrari</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Sony</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
-                        <img src="assets/logos/logo-cpd.png" alt="Centro Privado del Diagnóstico" class="logo-wall__logo--cpd" loading="lazy">
-                    </li>
-                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Adobe</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Mercedes</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Samsung</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">IBM</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Airbnb</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Spotify</span></li>
-                    <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Tesla</span></li>
-                </ul>
-            </section>
-
-            <!-- TRABAJO SELECCIONADO: adelanto; la vista completa es trabajo.html (carrusel horizontal) -->
-            <section class="projects" id="trabajo" aria-labelledby="trabajo-titulo">
-                <h2 id="trabajo-titulo" class="section-title light-text hidden-element">Trabajo seleccionado</h2>
-                <ul class="projects-list">
-                    <li class="hidden-element">
-                        <a href="trabajo.html#/proyecto/ascanelli">
-                            <span class="projects-list__title">Ascanelli</span>
-                            <span class="projects-list__client">Ascanelli</span>
-                            <img class="projects-list__thumb" src="assets/img/webp/cap-ascanelli.webp" alt="" loading="lazy" decoding="async">
-                        </a>
-                    </li>
-                    <li class="hidden-element">
-                        <a href="trabajo.html#/proyecto/montecitos">
-                            <span class="projects-list__title">Montecitos</span>
-                            <span class="projects-list__client">Montecitos Country &amp; Golf</span>
-                            <img class="projects-list__thumb" src="assets/img/webp/cap-montecitos.webp" alt="" loading="lazy" decoding="async">
-                        </a>
-                    </li>
-                    <li class="hidden-element">
-                        <a href="trabajo.html#/proyecto/enterlab">
-                            <span class="projects-list__title">Enterlab</span>
-                            <span class="projects-list__client">Enterlab</span>
-                            <img class="projects-list__thumb" src="assets/img/webp/cap-enterlab.webp" alt="" loading="lazy" decoding="async">
-                        </a>
-                    </li>
-                    <li class="hidden-element">
-                        <a href="trabajo.html#/proyecto/cpd">
-                            <span class="projects-list__title">CPD</span>
-                            <span class="projects-list__client">Centro Privado del Diagnóstico</span>
-                            <img class="projects-list__thumb" src="assets/img/webp/cap-cpd.webp" alt="" loading="lazy" decoding="async">
-                        </a>
-                    </li>
-                </ul>
-                <p class="projects-cta hidden-element">
-                    <a href="trabajo.html" class="btn-outline magnetic-btn"><span class="btn-text">Ver todo el trabajo</span></a>
-                </p>
-            </section>
-
-            <!-- PIXELATED VIDEO BREAK -->
-            <section class="video-break wrap" aria-labelledby="que-hago-titulo">
-                <video class="video-break__media" autoplay loop muted playsinline aria-hidden="true">
-                    <source src="asd3.mp4" type="video/mp4">
-                </video>
-                <h2 id="que-hago-titulo" class="video-break__title hidden-element">¿Qué es lo<br>que hago?</h2>
-                <p class="video-break__text hidden-element">
-                    Lo que hago son páginas web totalmente dedicadas y exclusivamente de código puro, originalidad, funciones extraordinarias, hiperenfoque en el diseño y sobre todo buscar la satisfacción del cliente mediante su confianza y un paso a paso de la creación de la página web en conjunto.
-                </p>
-                <button class="video-break__toggle" type="button">Pausar video de fondo</button>
-            </section>
-
-            <!-- TESTIMONIOS -->
-            <section class="trust wrap" id="sobre-mi" aria-labelledby="testimonios-titulo">
-                <h2 id="testimonios-titulo" class="section-title hidden-element">La confianza de<br>mis clientes</h2>
-
-                <ul class="testimonial-fan hidden-element" tabindex="0" aria-label="Testimonios de clientes">
-                    <li class="testimonial-card testimonial-card--1">
-                        <figure>
-                            <blockquote><p>Ivo completó el rebranding de nuestro sitio. La calidad superó nuestras expectativas y desde entonces ganamos varios premios internacionales.</p></blockquote>
-                            <figcaption>CEO, Zelt</figcaption>
-                        </figure>
-                    </li>
-                    <li class="testimonial-card testimonial-card--2">
-                        <figure>
-                            <blockquote><p>Trabajé varios meses junto a Ivo en un rediseño completo: copy, diseño y código. Destacó su rigor, su talento y su forma impecable de colaborar.</p></blockquote>
-                            <figcaption>CMO, Range</figcaption>
-                        </figure>
-                    </li>
-                    <li class="testimonial-card testimonial-card--3">
-                        <figure>
-                            <blockquote><p>Me impresionó el enfoque de Ivo. El resultado final es exactamente lo que necesitábamos para escalar nuestro producto a un nuevo nivel.</p></blockquote>
-                            <figcaption>Founder, Vortex</figcaption>
-                        </figure>
-                    </li>
-                    <li class="testimonial-card testimonial-card--4">
-                        <figure>
-                            <blockquote><p>Entendió nuestra marca desde la primera reunión. Cada entrega llegó a tiempo y con un nivel de detalle que pocas veces vimos en un freelancer.</p></blockquote>
-                            <figcaption>Directora de Marketing, Nimbo</figcaption>
-                        </figure>
-                    </li>
-                    <li class="testimonial-card testimonial-card--5">
-                        <figure>
-                            <blockquote><p>El nuevo sitio duplicó las consultas en el primer mes. Ivo no solo diseña bonito: piensa en el negocio y en cómo convertir visitas en clientes.</p></blockquote>
-                            <figcaption>Product Lead, Lumen</figcaption>
-                        </figure>
-                    </li>
-                    <li class="testimonial-card testimonial-card--6">
-                        <figure>
-                            <blockquote><p>Comunicación clara, cero vueltas y un proceso transparente de principio a fin. Ya estamos planificando el próximo proyecto juntos.</p></blockquote>
-                            <figcaption>Co-founder, Orbital</figcaption>
-                        </figure>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- STATS -->
-            <section class="extravagant-stats" aria-labelledby="cifras-titulo">
-                <h2 id="cifras-titulo" class="visually-hidden">Cifras</h2>
-                <dl class="stats-list">
-                    <div class="stat-row">
-                        <dt class="stat-label">Años de experiencia</dt>
-                        <dd class="stat-value">
-                            <span class="stat-number" data-target="2" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">+</span>
-                            <span class="visually-hidden">Más de 2</span>
-                        </dd>
+        <!-- SERVICIOS -->
+        <section class="services wrap" id="servicios" aria-labelledby="servicios-titulo">
+            <h2 id="servicios-titulo" class="visually-hidden">Servicios</h2>
+            <ol class="services-list">
+                <li class="service-row hidden-element">
+                    <h3 class="service-row__header">
+                        <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-1">
+                            <span class="service-row__title">Diseño web &amp; estrategia</span>
+                            <span class="service-row__number" aria-hidden="true">01</span>
+                        </button>
+                    </h3>
+                    <div class="service-row__content" id="servicio-1">
+                        <p>Analizo tu mercado y a tus usuarios para definir una arquitectura sólida. A partir de ahí, diseño interfaces que no solo lucen increíbles, sino que convierten y cumplen objetivos concretos de tu negocio.</p>
                     </div>
-                    <div class="stat-row">
-                        <dt class="stat-label">Proyectos entregados</dt>
-                        <dd class="stat-value">
-                            <span class="stat-number" data-target="8" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">+</span>
-                            <span class="visually-hidden">Más de 8</span>
-                        </dd>
+                </li>
+                <li class="service-row hidden-element">
+                    <h3 class="service-row__header">
+                        <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-2">
+                            <span class="service-row__title">Desarrollo web</span>
+                            <span class="service-row__number" aria-hidden="true">02</span>
+                        </button>
+                    </h3>
+                    <div class="service-row__content" id="servicio-2">
+                        <p>Construyo plataformas rápidas, seguras y escalables utilizando las últimas tecnologías nativas. Mi código es limpio, optimizado para SEO y preparado para animaciones fluidas a 60fps.</p>
                     </div>
-                    <div class="stat-row">
-                        <dt class="stat-label">Clientes satisfechos</dt>
-                        <dd class="stat-value">
-                            <span class="stat-number" data-target="99" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">%</span>
-                            <span class="visually-hidden">99 %</span>
-                        </dd>
+                </li>
+                <li class="service-row hidden-element">
+                    <h3 class="service-row__header">
+                        <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-3">
+                            <span class="service-row__title">Apps móviles</span>
+                            <span class="service-row__number" aria-hidden="true">03</span>
+                        </button>
+                    </h3>
+                    <div class="service-row__content" id="servicio-3">
+                        <p>Llevo la experiencia de tu marca al bolsillo de tus usuarios. Diseño y desarrollo aplicaciones móviles nativas y multiplataforma con interfaces intuitivas y un rendimiento impecable.</p>
                     </div>
-                    <div class="stat-row">
-                        <dt class="stat-label">Países alcanzados</dt>
-                        <dd class="stat-value">
-                            <span class="stat-number" data-target="3" aria-hidden="true">0</span>
-                            <span class="visually-hidden">3</span>
-                        </dd>
+                </li>
+                <li class="service-row hidden-element">
+                    <h3 class="service-row__header">
+                        <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-4">
+                            <span class="service-row__title">Motion graphics</span>
+                            <span class="service-row__number" aria-hidden="true">04</span>
+                        </button>
+                    </h3>
+                    <div class="service-row__content" id="servicio-4">
+                        <p>Doy vida a tu marca a través del movimiento. Creo animaciones sutiles, microinteracciones y videos inmersivos que capturan la atención y explican conceptos complejos de forma visual.</p>
                     </div>
-                </dl>
-            </section>
+                </li>
+                <li class="service-row hidden-element">
+                    <h3 class="service-row__header">
+                        <button class="service-row__toggle" type="button" aria-expanded="false" aria-controls="servicio-5">
+                            <span class="service-row__title">Identidad de marca</span>
+                            <span class="service-row__number" aria-hidden="true">05</span>
+                        </button>
+                    </h3>
+                    <div class="service-row__content" id="servicio-5">
+                        <p>Creo sistemas visuales memorables y coherentes. Desde el logotipo hasta la paleta de colores y la tipografía, construyo marcas con personalidad que destacan en el competitivo entorno digital.</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
 
-            <!-- CÓMO TRABAJO + FAQ -->
-            <section class="insights-faq wrap" aria-labelledby="insights-titulo">
-                <h2 id="insights-titulo" class="section-title light-text insights-head hidden-element">Cómo trabajo</h2>
-                <ul class="insights-grid">
-                    <li class="insight-card hidden-element">
-                        <img class="insight-card__media" src="assets/img/cap-montecitos.png" alt="Captura del proyecto Montecitos" loading="lazy">
-                        <p class="insight-card__tag">Caso de estudio</p>
-                        <h3>Montecitos: de brief a producción en 6 semanas</h3>
-                    </li>
-                    <li class="insight-card hidden-element">
-                        <img class="insight-card__media" src="assets/img/cap-ascanelli.png" alt="Captura del proyecto Ascanelli" loading="lazy">
-                        <p class="insight-card__tag">Cómo trabajo</p>
-                        <h3>De la primera llamada al lanzamiento: mi proceso en 5 etapas</h3>
-                    </li>
-                    <li class="insight-card hidden-element">
-                        <img class="insight-card__media" src="assets/img/cap-enterlab.png" alt="Captura del proyecto Enterlab" loading="lazy">
-                        <p class="insight-card__tag">Precios y timelines</p>
-                        <h3>¿Cuánto cuesta y cuánto tarda un sitio a medida?</h3>
-                    </li>
-                </ul>
-
-                <section class="faq-section hidden-element" aria-labelledby="faq-titulo">
-                    <h2 id="faq-titulo" class="section-title light-text">FAQ</h2>
-                    <ul class="faq-list">
-                        <li class="faq-item">
-                            <h3 class="faq-question">
-                                <button type="button" aria-expanded="false" aria-controls="faq-1">¿Cómo es mi proceso típico de rediseño o renovación? <span class="icon" aria-hidden="true">+</span></button>
-                            </h3>
-                            <div class="faq-answer" id="faq-1">
-                                <p class="faq-answer-content">Cada proyecto empieza por entender tu negocio, tus usuarios y tus objetivos. Antes de diseñar, analizo el sitio actual, identifico fricciones y defino oportunidades. El proceso incluye discovery, investigación UX, arquitectura, wireframes, UI, prototipos, desarrollo, QA y lanzamiento.</p>
-                            </div>
-                        </li>
-                        <li class="faq-item">
-                            <h3 class="faq-question">
-                                <button type="button" aria-expanded="false" aria-controls="faq-2">¿Qué servicios ofrezco exactamente? <span class="icon" aria-hidden="true">+</span></button>
-                            </h3>
-                            <div class="faq-answer" id="faq-2">
-                                <p class="faq-answer-content">Ofrezco diseño y desarrollo digital de extremo a extremo: identidad, investigación UX, estrategia de producto, interfaz, motion, frontend, backend, CMS y soporte continuo. Algunos clientes llegan por una landing page; otros me confían productos complejos completos.</p>
-                            </div>
-                        </li>
-                        <li class="faq-item">
-                            <h3 class="faq-question">
-                                <button type="button" aria-expanded="false" aria-controls="faq-3">¿Construyes con Webflow o con código a medida? <span class="icon" aria-hidden="true">+</span></button>
-                            </h3>
-                            <div class="faq-answer" id="faq-3">
-                                <p class="faq-answer-content">Ambos. Elijo la tecnología según el objetivo de tu negocio. Webflow encaja perfecto en sitios de marketing con gestión ágil; para productos complejos, animaciones avanzadas (como este portfolio) o plataformas escalables, construyo totalmente a medida.</p>
-                            </div>
-                        </li>
-                        <li class="faq-item">
-                            <h3 class="faq-question">
-                                <button type="button" aria-expanded="false" aria-controls="faq-4">¿Puedes ayudarme a lanzar un MVP rápido? <span class="icon" aria-hidden="true">+</span></button>
-                            </h3>
-                            <div class="faq-answer" id="faq-4">
-                                <p class="faq-answer-content">Sí. Ayudo a startups y fundadores a lanzar MVPs funcionales en pocos meses, priorizando lo esencial para validar la idea en el mercado. El producto puede evolucionar después sin tener que empezar de cero.</p>
-                            </div>
-                        </li>
-                        <li class="faq-item">
-                            <h3 class="faq-question">
-                                <button type="button" aria-expanded="false" aria-controls="faq-5">¿Cuánto tarda un proyecto promedio contigo? <span class="icon" aria-hidden="true">+</span></button>
-                            </h3>
-                            <div class="faq-answer" id="faq-5">
-                                <p class="faq-answer-content">Un sitio web inmersivo suele tomarme entre 4 y 8 semanas desde el concepto inicial hasta su paso a producción. Los productos más complejos los planifico por fases con hitos de entrega claros.</p>
-                            </div>
-                        </li>
-                    </ul>
-                </section>
-            </section>
-
-        </main>
-
-        <!-- FOOTER -->
-        <footer class="footer wrap" id="contacto">
-            <p class="footer-cta__lead hidden-element">¿Tienes un proyecto en mente?</p>
-            <a href="mailto:hello@ivoferrer.com" class="footer-cta__link hidden-element">Hablemos</a>
-
-            <section class="footer-col" aria-labelledby="footer-social">
-                <h2 id="footer-social" class="footer-label">Social</h2>
-                <ul>
-                    <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">WhatsApp</a></li>
-                </ul>
-            </section>
-            <section class="footer-col" aria-labelledby="footer-ubicacion">
-                <h2 id="footer-ubicacion" class="footer-label">Ubicación</h2>
-                <address>
-                    Córdoba, Argentina<br>
-                    Trabajo Remoto<br>
-                    Global
-                </address>
-            </section>
-            <section class="footer-col" aria-labelledby="footer-legal">
-                <h2 id="footer-legal" class="footer-label">Legal</h2>
-                <ul>
-                    <li><a href="#">Privacidad</a></li>
-                    <li><a href="#">Términos</a></li>
-                </ul>
-                <p class="footer-copy"><small>© 2026 Ivo Ferrer</small></p>
-            </section>
-            <ul class="footer-socials">
-                <li><a href="#" class="social-circle" aria-label="Instagram">Ig</a></li>
-                <li><a href="#" class="social-circle" aria-label="LinkedIn">In</a></li>
-                <li><a href="#" class="social-circle" aria-label="Twitter">X</a></li>
-                <li><a href="#" class="social-circle" aria-label="Behance">Be</a></li>
-                <li><a href="#" class="social-circle" aria-label="WhatsApp">Wa</a></li>
+        <!-- CLIENTES -->
+        <section class="logo-wall wrap" aria-labelledby="clientes-titulo">
+            <h2 id="clientes-titulo" class="logo-wall__heading hidden-element">Compañías que han confiado en mi trabajo</h2>
+            <ul class="logo-wall__grid">
+                <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
+                    <img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" loading="lazy">
+                </li>
+                <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Apple</span></li>
+                <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
+                    <img src="assets/logos/logo-montecitos.png" alt="Montecitos Country &amp; Golf" class="logo-wall__logo--montecitos" loading="lazy">
+                </li>
+                <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Google</span></li>
+                <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Nike</span></li>
+                <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand">
+                    <img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="logo-wall__logo--enterlab" loading="lazy">
+                </li>
+                <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Ferrari</span></li>
+                <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Sony</span></li>
+                <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
+                    <img src="assets/logos/logo-cpd.png" alt="Centro Privado del Diagnóstico" class="logo-wall__logo--cpd" loading="lazy">
+                </li>
+                <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Adobe</span></li>
+                <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Mercedes</span></li>
+                <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Samsung</span></li>
+                <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">IBM</span></li>
+                <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Airbnb</span></li>
+                <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Spotify</span></li>
+                <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Tesla</span></li>
             </ul>
-        </footer>
-    </div>
+        </section>
 
+        <!-- TRABAJO SELECCIONADO: adelanto; la vista completa es trabajo.html (carrusel horizontal) -->
+        <section class="projects" id="trabajo" aria-labelledby="trabajo-titulo">
+            <h2 id="trabajo-titulo" class="section-title hidden-element">Trabajo seleccionado</h2>
+            <!-- Las filas las arma script.js con los proyectos de data/proyectos.js -->
+            <ul class="projects-list"></ul>
+            <p class="projects-cta hidden-element">
+                <a href="trabajo.html" class="btn-outline magnetic-btn"><span class="btn-text">Ver todo el trabajo</span></a>
+            </p>
+        </section>
+
+        <!-- PIXELATED VIDEO BREAK -->
+        <section class="video-break wrap" aria-labelledby="que-hago-titulo">
+            <video class="video-break__media" autoplay loop muted playsinline aria-hidden="true">
+                <source src="asd3.mp4" type="video/mp4">
+            </video>
+            <h2 id="que-hago-titulo" class="video-break__title hidden-element">¿Qué es lo<br>que hago?</h2>
+            <p class="video-break__text hidden-element">
+                Lo que hago son páginas web totalmente dedicadas y exclusivamente de código puro, originalidad, funciones extraordinarias, hiperenfoque en el diseño y sobre todo buscar la satisfacción del cliente mediante su confianza y un paso a paso de la creación de la página web en conjunto.
+            </p>
+            <button class="video-break__toggle" type="button">Pausar video de fondo</button>
+        </section>
+
+        <!-- TESTIMONIOS -->
+        <section class="trust wrap" id="sobre-mi" aria-labelledby="testimonios-titulo">
+            <h2 id="testimonios-titulo" class="section-title hidden-element">La confianza de<br>mis clientes</h2>
+
+            <ul class="testimonial-fan hidden-element" tabindex="0" aria-label="Testimonios de clientes">
+                <li class="testimonial-card testimonial-card--1">
+                    <figure>
+                        <blockquote><p>Ivo completó el rebranding de nuestro sitio. La calidad superó nuestras expectativas y desde entonces ganamos varios premios internacionales.</p></blockquote>
+                        <figcaption>CEO, Zelt</figcaption>
+                    </figure>
+                </li>
+                <li class="testimonial-card testimonial-card--2">
+                    <figure>
+                        <blockquote><p>Trabajé varios meses junto a Ivo en un rediseño completo: copy, diseño y código. Destacó su rigor, su talento y su forma impecable de colaborar.</p></blockquote>
+                        <figcaption>CMO, Range</figcaption>
+                    </figure>
+                </li>
+                <li class="testimonial-card testimonial-card--3">
+                    <figure>
+                        <blockquote><p>Me impresionó el enfoque de Ivo. El resultado final es exactamente lo que necesitábamos para escalar nuestro producto a un nuevo nivel.</p></blockquote>
+                        <figcaption>Founder, Vortex</figcaption>
+                    </figure>
+                </li>
+                <li class="testimonial-card testimonial-card--4">
+                    <figure>
+                        <blockquote><p>Entendió nuestra marca desde la primera reunión. Cada entrega llegó a tiempo y con un nivel de detalle que pocas veces vimos en un freelancer.</p></blockquote>
+                        <figcaption>Directora de Marketing, Nimbo</figcaption>
+                    </figure>
+                </li>
+                <li class="testimonial-card testimonial-card--5">
+                    <figure>
+                        <blockquote><p>El nuevo sitio duplicó las consultas en el primer mes. Ivo no solo diseña bonito: piensa en el negocio y en cómo convertir visitas en clientes.</p></blockquote>
+                        <figcaption>Product Lead, Lumen</figcaption>
+                    </figure>
+                </li>
+                <li class="testimonial-card testimonial-card--6">
+                    <figure>
+                        <blockquote><p>Comunicación clara, cero vueltas y un proceso transparente de principio a fin. Ya estamos planificando el próximo proyecto juntos.</p></blockquote>
+                        <figcaption>Co-founder, Orbital</figcaption>
+                    </figure>
+                </li>
+            </ul>
+        </section>
+
+        <!-- STATS -->
+        <section class="extravagant-stats" aria-labelledby="cifras-titulo">
+            <h2 id="cifras-titulo" class="visually-hidden">Cifras</h2>
+            <dl class="stats-list">
+                <div class="stat-row">
+                    <dt class="stat-label">Años de experiencia</dt>
+                    <dd class="stat-value">
+                        <span class="stat-number" data-target="2" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">+</span>
+                        <span class="visually-hidden">Más de 2</span>
+                    </dd>
+                </div>
+                <div class="stat-row">
+                    <dt class="stat-label">Proyectos entregados</dt>
+                    <dd class="stat-value">
+                        <span class="stat-number" data-target="8" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">+</span>
+                        <span class="visually-hidden">Más de 8</span>
+                    </dd>
+                </div>
+                <div class="stat-row">
+                    <dt class="stat-label">Clientes satisfechos</dt>
+                    <dd class="stat-value">
+                        <span class="stat-number" data-target="99" aria-hidden="true">0</span><span class="stat-suffix" aria-hidden="true">%</span>
+                        <span class="visually-hidden">99 %</span>
+                    </dd>
+                </div>
+                <div class="stat-row">
+                    <dt class="stat-label">Países alcanzados</dt>
+                    <dd class="stat-value">
+                        <span class="stat-number" data-target="3" aria-hidden="true">0</span>
+                        <span class="visually-hidden">3</span>
+                    </dd>
+                </div>
+            </dl>
+        </section>
+
+        <!-- CÓMO TRABAJO + FAQ -->
+        <section class="insights-faq wrap" aria-labelledby="insights-titulo">
+            <h2 id="insights-titulo" class="section-title insights-head hidden-element">Cómo trabajo</h2>
+            <ul class="insights-grid">
+                <li class="insight-card hidden-element">
+                    <img class="insight-card__media" src="assets/img/cap-montecitos.png" alt="Captura del proyecto Montecitos" loading="lazy">
+                    <p class="insight-card__tag">Caso de estudio</p>
+                    <h3>Montecitos: de brief a producción en 6 semanas</h3>
+                </li>
+                <li class="insight-card hidden-element">
+                    <img class="insight-card__media" src="assets/img/cap-ascanelli.png" alt="Captura del proyecto Ascanelli" loading="lazy">
+                    <p class="insight-card__tag">Cómo trabajo</p>
+                    <h3>De la primera llamada al lanzamiento: mi proceso en 5 etapas</h3>
+                </li>
+                <li class="insight-card hidden-element">
+                    <img class="insight-card__media" src="assets/img/cap-enterlab.png" alt="Captura del proyecto Enterlab" loading="lazy">
+                    <p class="insight-card__tag">Precios y timelines</p>
+                    <h3>¿Cuánto cuesta y cuánto tarda un sitio a medida?</h3>
+                </li>
+            </ul>
+
+            <section class="faq-section hidden-element" aria-labelledby="faq-titulo">
+                <h2 id="faq-titulo" class="section-title">FAQ</h2>
+                <ul class="faq-list">
+                    <li class="faq-item">
+                        <h3 class="faq-question">
+                            <button type="button" aria-expanded="false" aria-controls="faq-1">¿Cómo es mi proceso típico de rediseño o renovación? <span class="icon" aria-hidden="true">+</span></button>
+                        </h3>
+                        <div class="faq-answer" id="faq-1">
+                            <p class="faq-answer-content">Cada proyecto empieza por entender tu negocio, tus usuarios y tus objetivos. Antes de diseñar, analizo el sitio actual, identifico fricciones y defino oportunidades. El proceso incluye discovery, investigación UX, arquitectura, wireframes, UI, prototipos, desarrollo, QA y lanzamiento.</p>
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <h3 class="faq-question">
+                            <button type="button" aria-expanded="false" aria-controls="faq-2">¿Qué servicios ofrezco exactamente? <span class="icon" aria-hidden="true">+</span></button>
+                        </h3>
+                        <div class="faq-answer" id="faq-2">
+                            <p class="faq-answer-content">Ofrezco diseño y desarrollo digital de extremo a extremo: identidad, investigación UX, estrategia de producto, interfaz, motion, frontend, backend, CMS y soporte continuo. Algunos clientes llegan por una landing page; otros me confían productos complejos completos.</p>
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <h3 class="faq-question">
+                            <button type="button" aria-expanded="false" aria-controls="faq-3">¿Construyes con Webflow o con código a medida? <span class="icon" aria-hidden="true">+</span></button>
+                        </h3>
+                        <div class="faq-answer" id="faq-3">
+                            <p class="faq-answer-content">Ambos. Elijo la tecnología según el objetivo de tu negocio. Webflow encaja perfecto en sitios de marketing con gestión ágil; para productos complejos, animaciones avanzadas (como este portfolio) o plataformas escalables, construyo totalmente a medida.</p>
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <h3 class="faq-question">
+                            <button type="button" aria-expanded="false" aria-controls="faq-4">¿Puedes ayudarme a lanzar un MVP rápido? <span class="icon" aria-hidden="true">+</span></button>
+                        </h3>
+                        <div class="faq-answer" id="faq-4">
+                            <p class="faq-answer-content">Sí. Ayudo a startups y fundadores a lanzar MVPs funcionales en pocos meses, priorizando lo esencial para validar la idea en el mercado. El producto puede evolucionar después sin tener que empezar de cero.</p>
+                        </div>
+                    </li>
+                    <li class="faq-item">
+                        <h3 class="faq-question">
+                            <button type="button" aria-expanded="false" aria-controls="faq-5">¿Cuánto tarda un proyecto promedio contigo? <span class="icon" aria-hidden="true">+</span></button>
+                        </h3>
+                        <div class="faq-answer" id="faq-5">
+                            <p class="faq-answer-content">Un sitio web inmersivo suele tomarme entre 4 y 8 semanas desde el concepto inicial hasta su paso a producción. Los productos más complejos los planifico por fases con hitos de entrega claros.</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer wrap" id="contacto">
+        <p class="footer-cta__lead hidden-element">¿Tienes un proyecto en mente?</p>
+        <a href="mailto:hello@ivoferrer.com" class="footer-cta__link hidden-element">Hablemos</a>
+
+        <section class="footer-col" aria-labelledby="footer-social">
+            <h2 id="footer-social" class="footer-label">Social</h2>
+            <ul>
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="#">WhatsApp</a></li>
+            </ul>
+        </section>
+        <section class="footer-col" aria-labelledby="footer-ubicacion">
+            <h2 id="footer-ubicacion" class="footer-label">Ubicación</h2>
+            <address>
+                Córdoba, Argentina<br>
+                Trabajo Remoto<br>
+                Global
+            </address>
+            <p class="footer-copy"><small>© 2026 Ivo Ferrer</small></p>
+        </section>
+        <ul class="footer-socials">
+            <li><a href="#" class="social-circle" aria-label="Instagram">Ig</a></li>
+            <li><a href="#" class="social-circle" aria-label="LinkedIn">In</a></li>
+            <li><a href="#" class="social-circle" aria-label="Twitter">X</a></li>
+            <li><a href="#" class="social-circle" aria-label="Behance">Be</a></li>
+            <li><a href="#" class="social-circle" aria-label="WhatsApp">Wa</a></li>
+        </ul>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js" defer></script>
+    <script src="components/smoothscroll/SmoothScroll.js" defer></script>
+    <script src="data/proyectos.js" defer></script>
     <script src="components/fuzzytext/FuzzyText.js" defer></script>
     <script src="components/staggeredmenu/StaggeredMenu.js" defer></script>
     <script src="components/logo-wall/LogoWall.js" defer></script>
     <script src="components/preloader/Preloader.js" defer></script>
-    <script src="components/page-transition/PageTransition.js" defer></script>
     <script src="script.js" defer></script>
 </body>
 </html>

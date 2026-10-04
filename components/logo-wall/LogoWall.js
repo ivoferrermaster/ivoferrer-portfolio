@@ -1,69 +1,51 @@
-/* components/logo-wall/LogoWall.js */
+/* components/logo-wall/LogoWall.js
+   Grilla de logos de clientes. Las tarjetas (.logo-wall__chip) aparecen escalonadas al entrar
+   en pantalla. Con mouse, las cercanas al cursor se iluminan (--reveal, de 0 a 1), se inclinan
+   hacia él y crecen un poco; además un halo sigue al cursor (--lw-mx / --lw-my en el CSS).
+   En táctil o con movimiento reducido quedan fijas e iluminadas (clase is-static). */
 class LogoWall {
-    constructor(selector, options = {}) {
+    constructor(selector) {
         this.root = document.querySelector(selector);
-        if (!this.root) return;
-
         this.chips = Array.from(this.root.querySelectorAll('.logo-wall__chip'));
-        if (!this.chips.length) return;
+        this.radius = 260; // distancia (px) a la que el cursor empieza a afectar una tarjeta
 
-        this.radius = options.radius || 260;
-
-        // El índice alimenta un transition-delay en CSS (calc(var(--i) * 40ms))
-        // para escalonar la entrada.
+        // El índice alimenta el retraso escalonado de la entrada en el CSS
         this.chips.forEach((chip, i) => chip.style.setProperty('--i', i));
         this.observeEntrance();
 
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const isTouch = window.matchMedia('(hover: none)').matches;
-
         if (reducedMotion || isTouch) {
             this.root.classList.add('is-static');
             return;
         }
 
-        this.pointer = { x: -9999, y: -9999 };
-        // Lerp manual por chip (mismo patrón que el cursor custom en script.js),
-        // en vez de gsap.quickTo: llamar varios quickTo por frame sobre las mismas
-        // propiedades de transform del mismo elemento dispara un RangeError
-        // ("Maximum call stack size exceeded") dentro de GSAP al resolver el tween.
+        this.pointer = { x: -9999, y: -9999 }; // lejos de todo = sin efecto
+        // Valores actuales de cada tarjeta: en cada frame se acercan un poco a su objetivo
         this.state = this.chips.map(() => ({ reveal: 0, rotX: 0, rotY: 0, scale: 1 }));
-
-        // Centros de cada chip relativos a la sección. Se miden una vez (y al
-        // redimensionar) en vez de llamar getBoundingClientRect() 16 veces por
-        // frame: la rotación/escala se aplica sobre el centro, así que el
-        // centro no cambia aunque la chip esté transformada.
+        // Centro de cada tarjeta (se mide al entrar el mouse, no en cada frame)
         this.centers = [];
         this.rafId = null;
-        this.tick = () => this.loop();
+        this.loop = this.loop.bind(this);
 
         this.bindEvents();
     }
 
+    // Entrada: cada tarjeta aparece al entrar en pantalla. Por las dudas, a los 3 s aparecen todas.
     observeEntrance() {
-        // Observer propio en vez del IntersectionObserver global de script.js:
-        // esta página no usa scroll nativo (hay un #scroll-wrapper con
-        // position:fixed + transform simulándolo), y en ese esquema el
-        // observer global podía no disparar para alguna chip puntual,
-        // dejándola invisible para siempre. Un timeout de respaldo asegura
-        // que nunca quede una tarjeta oculta si el observer no llega a notar
-        // la intersección por algún motivo.
-        const reveal = (chip) => chip.classList.add('is-visible');
-
-        const observer = new IntersectionObserver((entries, obs) => {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    reveal(entry.target);
-                    obs.unobserve(entry.target);
-                }
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
             });
         }, { threshold: 0.01 });
 
         this.chips.forEach(chip => observer.observe(chip));
-
-        setTimeout(() => this.chips.forEach(reveal), 3000);
+        setTimeout(() => this.chips.forEach(chip => chip.classList.add('is-visible')), 3000);
     }
 
+    // Centros relativos a la sección: no cambian con el scroll ni con la inclinación de la tarjeta
     measure() {
         const wallRect = this.root.getBoundingClientRect();
         this.centers = this.chips.map(chip => {
@@ -71,14 +53,15 @@ class LogoWall {
             return {
                 x: r.left - wallRect.left + r.width / 2,
                 y: r.top - wallRect.top + r.height / 2,
-                hw: r.width / 2,
-                hh: r.height / 2
+                halfW: r.width / 2,
+                halfH: r.height / 2
             };
         });
     }
 
+    // Arranca el loop si estaba detenido
     start() {
-        if (this.rafId === null) this.rafId = requestAnimationFrame(this.tick);
+        if (this.rafId === null) this.rafId = requestAnimationFrame(this.loop);
     }
 
     bindEvents() {
@@ -87,8 +70,6 @@ class LogoWall {
 
         this.root.addEventListener('pointermove', (e) => {
             const wallRect = this.root.getBoundingClientRect();
-            // Coordenadas relativas a la sección: así no hace falta volver a
-            // medir mientras el scroll virtual mueve #scroll-wrapper.
             this.pointer.x = e.clientX - wallRect.left;
             this.pointer.y = e.clientY - wallRect.top;
 
@@ -110,6 +91,7 @@ class LogoWall {
         this.rafId = null;
         if (!this.centers.length) this.measure();
 
+        const clamp9 = (v) => Math.max(-9, Math.min(9, v)); // inclinación máxima: 9 grados
         let moving = false;
 
         this.chips.forEach((chip, i) => {
@@ -117,27 +99,26 @@ class LogoWall {
             const c = this.centers[i];
             const dx = this.pointer.x - c.x;
             const dy = this.pointer.y - c.y;
-            const target = Math.max(0, 1 - Math.hypot(dx, dy) / this.radius);
 
-            const nx = target > 0.001 ? dx / c.hw : 0;
-            const ny = target > 0.001 ? dy / c.hh : 0;
-            const targetRotY = Math.max(-9, Math.min(9, nx * 9)) * target;
-            const targetRotX = Math.max(-9, Math.min(9, -ny * 9)) * target;
-            const targetScale = 1 + 0.035 * target;
+            // Cercanía al cursor: 1 encima de la tarjeta, 0 a partir de `radius`
+            const near = Math.max(0, 1 - Math.hypot(dx, dy) / this.radius);
+            const targetRotY = clamp9(dx / c.halfW * 9) * near;
+            const targetRotX = clamp9(-dy / c.halfH * 9) * near;
+            const targetScale = 1 + 0.035 * near;
 
-            s.reveal += (target - s.reveal) * 0.18;
+            s.reveal += (near - s.reveal) * 0.18;
             s.rotX += (targetRotX - s.rotX) * 0.15;
             s.rotY += (targetRotY - s.rotY) * 0.15;
             s.scale += (targetScale - s.scale) * 0.15;
 
             const settled =
-                Math.abs(target - s.reveal) < 0.001 &&
+                Math.abs(near - s.reveal) < 0.001 &&
                 Math.abs(targetRotX - s.rotX) < 0.01 &&
                 Math.abs(targetRotY - s.rotY) < 0.01 &&
                 Math.abs(targetScale - s.scale) < 0.0005;
 
             if (settled) {
-                s.reveal = target;
+                s.reveal = near;
                 s.rotX = targetRotX;
                 s.rotY = targetRotY;
                 s.scale = targetScale;
@@ -145,15 +126,15 @@ class LogoWall {
                 moving = true;
             }
 
-            // Solo escribimos estilos si el valor cambió: evita recalcular
-            // estilos de las 16 chips en cada frame cuando están quietas.
+            // Solo se escriben los estilos que cambiaron (evita recalcular las 16 tarjetas en cada frame)
             const reveal = s.reveal.toFixed(3);
             if (reveal !== s.lastReveal) {
                 chip.style.setProperty('--reveal', reveal);
                 s.lastReveal = reveal;
             }
 
-            const transform = s.reveal === 0 && s.rotX === 0 && s.rotY === 0 && s.scale === 1
+            const atRest = s.reveal === 0 && s.rotX === 0 && s.rotY === 0 && s.scale === 1;
+            const transform = atRest
                 ? ''
                 : `perspective(700px) rotateX(${s.rotX.toFixed(2)}deg) rotateY(${s.rotY.toFixed(2)}deg) scale(${s.scale.toFixed(3)})`;
             if (transform !== s.lastTransform) {
@@ -162,8 +143,7 @@ class LogoWall {
             }
         });
 
-        // El loop se detiene solo cuando todo llegó a su destino; el próximo
-        // pointermove/pointerleave lo vuelve a arrancar.
+        // El loop se detiene cuando todo llegó a su objetivo; el próximo movimiento lo vuelve a arrancar
         if (moving) this.start();
     }
 }

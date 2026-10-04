@@ -1,0 +1,11 @@
+/* components/smoothscroll/smooth-scroll.css
+   CSS que recomienda Lenis (la clase .lenis la pone la librería en <html>). */
+
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+
+.parallax {
+    will-change: transform;
+}

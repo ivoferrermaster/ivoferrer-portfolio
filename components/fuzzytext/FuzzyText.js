@@ -1,124 +1,104 @@
+/* components/fuzzytext/FuzzyText.js
+   Texto "vibrante": se dibuja en un canvas cortado en franjas horizontales de 1px que se
+   desplazan al azar en cada frame. Con el mouse o el foco encima vibra más fuerte.
+   El texto original queda oculto para lectores de pantalla; el canvas es decorativo.
+
+   Opciones: baseIntensity (en reposo) y hoverIntensity (con el mouse encima), de 0 a 1. */
 class FuzzyText {
-    constructor(el, options = {}) {
+    constructor(el, { baseIntensity = 0.18, hoverIntensity = 0.5 } = {}) {
         this.el = el;
+        this.baseIntensity = baseIntensity;
+        this.hoverIntensity = hoverIntensity;
+        this.fuzzRange = 30;            // desplazamiento máximo de una franja, en px
+        this.frameDuration = 1000 / 60; // como mucho 60 frames por segundo
+
         // innerText respeta text-transform (lo que se dibuja); textContent es lo que se lee
         this.text = el.innerText.trim();
-        this.label = el.textContent.trim();
-        
-        // Configuraciones predeterminadas (imitando los props del JSX)
-        this.options = {
-            baseIntensity: 0.18,
-            hoverIntensity: 0.5,
-            fuzzRange: 30,
-            fps: 60,
-            ...options
-        };
-        
-        // Esconde el texto original de forma accesible (SR only)
+        const label = el.textContent.trim();
+
+        // El texto original queda solo para lectores de pantalla
         const srText = document.createElement('span');
         srText.className = 'visually-hidden';
-        srText.textContent = this.label;
+        srText.textContent = label;
         this.el.replaceChildren(srText);
 
-        // Crea y añade el Canvas (decorativo: el texto real está en srText)
         this.canvas = document.createElement('canvas');
         this.canvas.className = 'fuzzy-text-canvas';
         this.canvas.setAttribute('aria-hidden', 'true');
         this.el.appendChild(this.canvas);
-        
-        // 'willReadFrequently' optimiza el rendimiento cuando leemos/escribimos píxeles constantemente
+        // willReadFrequently: el canvas se redibuja constantemente
         this.ctx = this.canvas.getContext('2d', { willReadFrequently: true });
-        
+
         this.isHovering = false;
-        this.currentIntensity = this.options.baseIntensity;
+        this.currentIntensity = baseIntensity;
         this.lastFrameTime = 0;
-        this.frameDuration = 1000 / this.options.fps;
-        
+
         this.init();
         this.bindEvents();
     }
-    
+
+    // Dibuja el texto limpio una sola vez en un canvas aparte; loop() después copia franjas de ahí
     async init() {
-        // Asegura que las fuentes personalizadas (ej. Moul o Work Sans) estén listas antes de dibujar
+        // Espera a que carguen las fuentes (Moul / Work Sans) antes de dibujar
         await document.fonts.ready;
-        
-        // Heredar estilos exactos del CSS actual del elemento
+
+        // Copia la tipografía y el color que el CSS le da al elemento
         const styles = window.getComputedStyle(this.el);
-        this.fontFamily = styles.fontFamily || 'sans-serif';
-        this.fontSize = parseFloat(styles.fontSize) || 50;
-        this.fontWeight = styles.fontWeight || 900;
-        this.color = styles.color || '#ffffff';
-        
-        // Lienzo secundario (Offscreen) donde dibujamos el texto perfecto una sola vez
+        const font = `${styles.fontWeight} ${parseFloat(styles.fontSize)}px ${styles.fontFamily}`;
+
         this.offscreen = document.createElement('canvas');
-        this.offCtx = this.offscreen.getContext('2d');
-        
-        this.offCtx.font = `${this.fontWeight} ${this.fontSize}px ${this.fontFamily}`;
-        this.offCtx.textBaseline = 'alphabetic';
-        
-        // Cálculos matemáticos precisos para evitar que las letras se corten
-        const metrics = this.offCtx.measureText(this.text);
-        const actualLeft = metrics.actualBoundingBoxLeft ?? 0;
-        const actualRight = metrics.actualBoundingBoxRight ?? metrics.width;
-        const actualAscent = metrics.actualBoundingBoxAscent ?? this.fontSize;
-        const actualDescent = metrics.actualBoundingBoxDescent ?? this.fontSize * 0.2;
-        
-        this.textWidth = Math.ceil(actualLeft + actualRight);
-        this.textHeight = Math.ceil(actualAscent + actualDescent);
-        
-        const extraBuffer = 10;
-        this.offscreenWidth = this.textWidth + extraBuffer;
-        
+        const offCtx = this.offscreen.getContext('2d');
+        offCtx.font = font;
+
+        // Medidas reales del texto, para que no se corte ninguna letra
+        const metrics = offCtx.measureText(this.text);
+        const left = metrics.actualBoundingBoxLeft;
+        const ascent = metrics.actualBoundingBoxAscent;
+        this.textHeight = Math.ceil(ascent + metrics.actualBoundingBoxDescent);
+        this.offscreenWidth = Math.ceil(left + metrics.actualBoundingBoxRight) + 10; // 10px de aire
+
+        // Cambiar el tamaño del canvas borra su configuración: la fuente se vuelve a poner después
         this.offscreen.width = this.offscreenWidth;
         this.offscreen.height = this.textHeight;
-        
-        this.offCtx.font = `${this.fontWeight} ${this.fontSize}px ${this.fontFamily}`;
-        this.offCtx.textBaseline = 'alphabetic';
-        this.offCtx.fillStyle = this.color;
-        this.offCtx.fillText(this.text, extraBuffer / 2 - actualLeft, actualAscent);
-        
-        // Configuración final del Canvas visible (con márgenes para que el 'fuzz' no se salga de los bordes)
-        this.horizontalMargin = this.options.fuzzRange + 20;
-        
-        this.canvas.width = this.offscreenWidth + (this.horizontalMargin * 2);
+        offCtx.font = font;
+        offCtx.fillStyle = styles.color;
+        offCtx.fillText(this.text, 5 - left, ascent);
+
+        // El canvas visible tiene margen a los costados para que las franjas desplazadas no se corten
+        this.margin = this.fuzzRange + 20;
+        this.canvas.width = this.offscreenWidth + this.margin * 2;
         this.canvas.height = this.textHeight;
-        this.ctx.translate(this.horizontalMargin, 0);
-        
-        if (!this.animationFrameId) {
-            this.loop();
-        }
+        this.ctx.translate(this.margin, 0);
+
+        if (!this.animationFrameId) this.loop();
     }
-    
+
     loop(timestamp = 0) {
         if (timestamp - this.lastFrameTime >= this.frameDuration) {
             this.lastFrameTime = timestamp;
-            
-            // Limpiar lienzo previo
-            this.ctx.clearRect(-this.horizontalMargin, -10, this.canvas.width, this.canvas.height + 20);
-            
-            // Transición fluida de intensidad (ease)
-            const targetIntensity = this.isHovering ? this.options.hoverIntensity : this.options.baseIntensity;
-            this.currentIntensity += (targetIntensity - this.currentIntensity) * 0.15; 
-            
-            // El corazón del efecto: dibuja rebanadas horizontales desplazadas al azar
-            for (let j = 0; j < this.textHeight; j++) {
-                const dx = Math.floor(this.currentIntensity * (Math.random() - 0.5) * this.options.fuzzRange);
-                this.ctx.drawImage(this.offscreen, 0, j, this.offscreenWidth, 1, dx, j, this.offscreenWidth, 1);
+            this.ctx.clearRect(-this.margin, -10, this.canvas.width, this.canvas.height + 20);
+
+            // La intensidad se acerca de a poco (15% por frame) a la de reposo o a la de hover
+            const targetIntensity = this.isHovering ? this.hoverIntensity : this.baseIntensity;
+            this.currentIntensity += (targetIntensity - this.currentIntensity) * 0.15;
+
+            // Cada franja de 1px se copia corrida al azar a la izquierda o a la derecha
+            for (let y = 0; y < this.textHeight; y++) {
+                const dx = Math.floor(this.currentIntensity * (Math.random() - 0.5) * this.fuzzRange);
+                this.ctx.drawImage(this.offscreen, 0, y, this.offscreenWidth, 1, dx, y, this.offscreenWidth, 1);
             }
         }
         this.animationFrameId = requestAnimationFrame((t) => this.loop(t));
     }
-    
+
     bindEvents() {
         this.el.addEventListener('mouseenter', () => this.isHovering = true);
         this.el.addEventListener('mouseleave', () => this.isHovering = false);
         // Mismo efecto al navegar con teclado
         this.el.addEventListener('focus', () => this.isHovering = true);
         this.el.addEventListener('blur', () => this.isHovering = false);
-        
-        // Ajusta el tamaño de la fuente dinámicamente al redimensionar la ventana (Clamp)
-        window.addEventListener('resize', () => {
-            this.init();
-        });
+
+        // El tamaño de la fuente depende del ancho de la ventana (clamp): se redibuja al cambiarlo
+        window.addEventListener('resize', () => this.init());
     }
 }

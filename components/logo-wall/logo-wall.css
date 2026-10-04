@@ -1,15 +1,13 @@
-/* components/logo-wall/logo-wall.css */
+/* components/logo-wall/logo-wall.css
+   Grilla de logos de clientes (ver LogoWall.js). --reveal (0 a 1) lo actualiza el JS según
+   la cercanía del cursor: ilumina el borde, el fondo y el logo de cada tarjeta. */
 
 .logo-wall {
     position: relative;
     overflow: hidden;
     background: var(--ink);
     padding-block: 6rem;
-    /* Arranca el bloque oscuro que sigue con .projects (misma técnica que usa
-       .insights-faq): esquinas redondeadas arriba para la transición prolija
-       desde la sección clara de arriba; abajo queda a nivel con .projects,
-       que ahora es plana, para que ambas se vean como un único bloque negro
-       sin el hueco blanco que quedaba entre las dos. */
+    /* Esquinas redondeadas solo arriba: abajo sigue .projects y se ven como un único bloque negro */
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
@@ -26,9 +24,6 @@
     background-image: radial-gradient(var(--black) 1px, transparent 2px);
     background-size: 4px 4px;
     opacity: 0.4;
-    /* Sin mix-blend-mode: puntos negros/transparentes en multiply dan el mismo
-       resultado que el blending normal, y el blend obligaba a recomponer toda
-       la sección en cada frame del scroll virtual. */
     pointer-events: none;
     z-index: 1;
 }
@@ -75,15 +70,7 @@
     border-radius: var(--radius);
     background: rgba(255, 255, 255, calc(0.05 + var(--reveal) * 0.07));
     border: 1px solid rgba(255, 255, 255, calc(0.14 + var(--reveal) * 0.28));
-    /* Sin backdrop-filter: el fondo detrás de las chips es casi liso, así que el
-       blur no se notaba, pero como #scroll-wrapper se mueve con transform en cada
-       frame el navegador tenía que re-desenfocar 16 capas constantemente (era la
-       causa principal del lag de la sección). */
-    /* Entrada propia (ver LogoWall.js observeEntrance), no la clase global
-       .hidden-element/.visible-element: en esta página el scroll no es nativo
-       (hay un #scroll-wrapper con position:fixed + transform simulándolo), y
-       el IntersectionObserver global podía no disparar para alguna chip
-       puntual dejándola invisible para siempre. */
+    /* Entrada escalonada: LogoWall.js agrega .is-visible y --i (orden de cada tarjeta) */
     opacity: 0;
     transition: opacity 1s var(--ease);
     transition-delay: calc(var(--i, 0) * 40ms);
@@ -106,34 +93,29 @@
     opacity: calc(0.55 + var(--reveal) * 0.45);
 }
 
-/* Logos con fondo transparente y colores pensados para fondo claro (no
-   garantizan contraste sobre el vidrio oscuro de la sección): se les sube
-   brillo/contraste para que se lean manteniendo su color real, sin caja ni
-   placa de fondo. El isotipo de Enterlab ya trae su propia placa oscura
-   incorporada, así que queda fuera de este ajuste. */
+/* Logos pensados para fondo claro: se les sube brillo y contraste para que se lean sobre el
+   fondo oscuro sin perder su color (Enterlab ya trae su propia placa oscura y no lo necesita). */
 .logo-wall__chip--boost img {
     filter: brightness(1.6) saturate(1.15) contrast(1.05) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.45));
 }
 
-/* Ajustes ópticos por logo: cada archivo tiene proporciones y márgenes
-   internos distintos, así que a la misma altura no pesan igual. */
+/* Ajustes por logo: cada archivo tiene márgenes internos distintos y a la misma altura no pesan igual */
 .logo-wall__chip--brand .logo-wall__logo--montecitos { height: 90px; } /* logo apilado con mucho aire transparente */
 .logo-wall__chip--brand .logo-wall__logo--enterlab { height: 34px; }
 .logo-wall__chip--brand .logo-wall__logo--cpd { height: 44px; }
 
 .logo-wall__word {
-    font-family: 'Work Sans', sans-serif;
     font-weight: 800;
     letter-spacing: -0.03em;
     font-size: clamp(1rem, 1.4vw, 1.4rem);
     color: var(--white);
-    /* Base 0.6 (antes 0.32) para que el texto tenga contraste AA sin interacción */
+    /* Base 0.6: contraste suficiente (AA) aunque el cursor no esté cerca */
     opacity: calc(0.6 + var(--reveal) * 0.4);
     text-shadow: 0 0 calc(var(--reveal) * 22px) rgba(71, 210, 245, calc(var(--reveal) * 0.85));
     white-space: nowrap;
 }
 
-/* Sin JS de interacción (reduced-motion / táctil): todo visible y estático */
+/* Táctil o movimiento reducido: todas iluminadas y quietas */
 .logo-wall.is-static .logo-wall__chip {
     --reveal: 1;
 }

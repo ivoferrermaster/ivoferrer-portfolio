@@ -22,15 +22,11 @@
     user-select: none;
 }
 
-/* La página nace tapada (clase puesta por un script inline en <head>,
-   antes del primer pintado) y PageTransition.js la abre al terminar de cargar. */
+/* La página nace tapada (PageTransition.js pone la clase antes del primer pintado)
+   y la cortina se abre al terminar de cargar. */
 html.pt-arriving .page-transition {
     visibility: visible;
     clip-path: inset(0% 0% 0% 0%);
-}
-
-html.pt-arriving .page-transition__logo {
-    opacity: 1;
 }
 
 @media (max-width: 767px) {

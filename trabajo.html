@@ -7,30 +7,19 @@
     <title>Trabajo seleccionado · Ivo Ferrer</title>
     <link rel="icon" type="image/svg+xml" href="assets/logos/logoivo.svg">
     <link rel="preload" href="assets/fonts/WorkSans-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="components/staggeredmenu/staggered-menu.css">
     <link rel="stylesheet" href="components/work-carousel/work-carousel.css">
     <link rel="stylesheet" href="components/work-views/work-views.css">
     <link rel="stylesheet" href="trabajo.css">
     <link rel="stylesheet" href="components/page-transition/page-transition.css">
-    <script>
-        // Si se llega navegando entre secciones (clic en un enlace o botón atrás/adelante),
-        // la página nace tapada y no corre el preloader completo (ver components/page-transition)
-        try {
-            var pt = sessionStorage.getItem("ivo:pt");
-            var nav = performance.getEntriesByType("navigation")[0];
-            if ((pt && Date.now() - Number(pt) < 10000) || (nav && nav.type === "back_forward")) {
-                document.documentElement.classList.add("pt-arriving");
-                // Red de seguridad: si PageTransition.js no carga, no se deja la página tapada
-                setTimeout(function () { document.documentElement.classList.remove("pt-arriving"); }, 6000);
-            }
-        } catch (e) {}
-    </script>
+    <!-- Sin defer: tiene que correr antes de que se pinte la página (ver el archivo) -->
+    <script src="components/page-transition/PageTransition.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
     <script src="components/staggeredmenu/StaggeredMenu.js" defer></script>
     <script src="components/work-carousel/WorkCarousel.js" defer></script>
     <script src="components/work-views/WorkViews.js" defer></script>
     <script src="data/proyectos.js" defer></script>
-    <script src="components/page-transition/PageTransition.js" defer></script>
     <script src="trabajo.js" defer></script>
 </head>
 <body class="work-page">
@@ -71,7 +60,7 @@
 
         <nav class="staggered-menu-panel" aria-label="Principal">
             <div class="sm-panel-inner">
-                <ul class="sm-panel-list" data-numbering="true">
+                <ul class="sm-panel-list">
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#inicio"><span class="sm-panel-itemLabel">Inicio</span></a></li>
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#servicios"><span class="sm-panel-itemLabel">Servicios</span></a></li>
                     <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="trabajo.html" aria-current="page"><span class="sm-panel-itemLabel">Trabajo</span></a></li>
@@ -81,9 +70,7 @@
 
                 <p class="sm-socials-title" id="sm-socials-title">Socials</p>
                 <ul class="sm-socials-list" aria-labelledby="sm-socials-title">
-                    <li><a href="#" class="sm-socials-link">Instagram</a></li>
                     <li><a href="#" class="sm-socials-link">LinkedIn</a></li>
-                    <li><a href="#" class="sm-socials-link">Twitter</a></li>
                     <li><a href="#" class="sm-socials-link">WhatsApp</a></li>
                 </ul>
             </div>
@@ -93,9 +80,7 @@
     <main id="trabajo" tabindex="-1">
         <h1 class="visually-hidden">Trabajo seleccionado</h1>
 
-        <p class="work-all"><a href="#/proyectos">Ver todos los proyectos</a></p>
-
-        <!-- El carrusel lo construye components/work-carousel/WorkCarousel.js a partir de data/proyectos.js -->
+        <!-- El póster y los títulos los agrega components/work-carousel/WorkCarousel.js a partir de data/proyectos.js -->
         <section class="work-carousel" id="work-carousel" aria-roledescription="carrusel" aria-label="Proyectos destacados">
             <noscript>
                 <ul class="work-fallback">
@@ -105,7 +90,27 @@
                     <li><a href="#/proyecto/cpd">CPD</a></li>
                 </ul>
             </noscript>
+
+            <div class="work-controls" role="group" aria-label="Navegación del carrusel">
+                <button class="work-arrow work-arrow--prev" type="button" aria-label="Proyecto anterior"></button>
+                <button class="work-arrow work-arrow--next" type="button" aria-label="Proyecto siguiente"></button>
+            </div>
+            <p class="work-count" aria-hidden="true"></p>
+            <!-- Anuncia el proyecto actual a los lectores de pantalla -->
+            <p class="work-status visually-hidden" role="status"></p>
         </section>
+
+        <!-- Ficha: se abre encima del carrusel con #/proyecto/<slug>.
+             La completa components/work-views/WorkViews.js con el proyecto elegido. -->
+        <article class="work-detail" id="work-detail" tabindex="-1" aria-labelledby="work-detail-title" hidden>
+            <h2 class="work-detail__title" id="work-detail-title"></h2>
+            <p class="work-detail__lead"></p>
+            <dl class="work-detail__meta"></dl>
+            <p class="work-detail__cta"></p>
+            <figure class="work-detail__media"><img alt=""></figure>
+            <a class="work-pn work-pn--prev" rel="prev"><span class="visually-hidden"></span></a>
+            <a class="work-pn work-pn--next" rel="next"><span class="visually-hidden"></span></a>
+        </article>
     </main>
 </body>
 </html>

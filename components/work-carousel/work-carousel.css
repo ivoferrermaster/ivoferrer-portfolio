@@ -1,7 +1,7 @@
 /* components/work-carousel/work-carousel.css
-   Medidas tomadas de la vista /work de resn.co.nz sobre un lienzo de 1920×1080:
-   póster 1500×680 centrado, títulos de 65px, etiquetas de 11–12px, flechas de 62px. */
+   Medidas tomadas de la vista /work de resn.co.nz (lienzo de 1920×1080). */
 
+/* --z, --rx y --ry los actualiza el JS: profundidad e inclinación 3D del póster */
 .work-carousel {
     --z: 0px;
     --rx: 0deg;
@@ -33,23 +33,44 @@
     aspect-ratio: 2.2 / 1;
     margin: 0;
     background: #111;
-    outline: 1px solid transparent;
+    outline: 1px solid transparent; /* suaviza los bordes al inclinarse en 3D */
     transform: translate(-50%, -50%) translateZ(var(--z)) rotateX(var(--rx)) rotateY(var(--ry));
     transform-style: preserve-3d;
     will-change: transform;
+    transition: background-color 0.7s 0.1s var(--ease);
 }
 
-/* Al agarrar el carrusel el póster desaparece y reaparece al elegir un proyecto (clase is-away).
-   La opacidad va en la imagen y el velo, no en el figure, que ya tiene la animación de entrada. */
+.work-poster__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.work-poster__img.is-active {
+    visibility: visible;
+}
+
+/* Velo que oscurece el póster: más oscuro cuanto más clara es la captura
+   (lo calcula sampleScrim en el JS), para que el título blanco siempre se lea. */
+.work-poster::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / var(--scrim));
+    pointer-events: none;
+}
+
 .work-poster__img,
 .work-poster::after {
-    transition: opacity 0.7s 0.1s var(--ease, ease);
+    transition: opacity 0.7s 0.1s var(--ease);
 }
 
-.work-poster {
-    transition: background-color 0.7s 0.1s var(--ease, ease);
-}
-
+/* Al arrastrar, el póster desaparece y vuelve al elegir un proyecto (clase is-away).
+   La opacidad va en la imagen y el velo, no en el figure, que ya tiene la animación de entrada. */
 .work-carousel.is-away .work-poster {
     background-color: transparent;
     transition-duration: 0.35s;
@@ -63,32 +84,6 @@
     transition-delay: 0s;
 }
 
-.work-poster__img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    object-fit: cover;
-    visibility: hidden;
-    pointer-events: none;
-    -webkit-user-drag: none;
-}
-
-.work-poster__img.is-active {
-    visibility: visible;
-}
-
-/* Velo adaptativo (ver sampleScrim en el JS): más oscuro cuanto más clara es la captura,
-   para que el título blanco y fino siempre se lea. */
-.work-poster::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgb(0 0 0 / var(--scrim));
-    pointer-events: none;
-}
-
 /* ---------- Tira de títulos ---------- */
 
 .work-track {
@@ -99,10 +94,13 @@
     pointer-events: none;
 }
 
-.work-carousel:not(.is-ready) .work-track {
+/* Ocultos hasta que el JS arma el carrusel (y sin JS, para que no queden flechas sueltas) */
+.work-carousel:not(.is-ready) .work-track,
+.work-carousel:not(.is-ready) .work-controls {
     visibility: hidden;
 }
 
+/* --x lo actualiza el JS: posición horizontal de cada título */
 .work-item {
     position: absolute;
     top: 50%;
@@ -122,17 +120,31 @@
 }
 
 .work-title {
+    position: relative;
     padding: 0 0.1em;
     font-size: clamp(2.5rem, 3.385vw, 7.5rem);
     font-weight: 200;
     line-height: 1.415;
     letter-spacing: -0.02em;
-    transition: opacity 0.4s var(--ease, ease);
+    transition: opacity 0.4s var(--ease);
 }
 
 .work-title a {
     color: #fff;
     text-decoration: none;
+}
+
+/* Efecto de texto: mientras se ve el canvas, el texto real queda transparente */
+.work-fx {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.work-title.has-fx a {
+    color: transparent;
 }
 
 .work-client {
@@ -146,7 +158,7 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     opacity: 0;
-    transition: opacity 0.4s var(--ease, ease);
+    transition: opacity 0.4s var(--ease);
     pointer-events: none;
 }
 
@@ -177,7 +189,7 @@
     }
 }
 
-/* ---------- Flechas de arrastre (también son botones) ---------- */
+/* ---------- Flechas (indican el arrastre y también son botones) ---------- */
 
 .work-controls {
     position: absolute;
@@ -196,12 +208,17 @@
     border: 0;
     background: none;
     color: #fff;
-    /* La referencia las deja al 20%; se sube para cumplir el contraste mínimo de controles (WCAG 1.4.11) */
-    opacity: 0.5;
+    opacity: 0.5; /* mínimo para cumplir el contraste de controles (WCAG 1.4.11) */
     cursor: pointer;
-    transition: opacity 0.4s var(--ease, ease);
+    transition: opacity 0.4s var(--ease);
 }
 
+.work-arrow:hover,
+.work-arrow:focus-visible {
+    opacity: 1;
+}
+
+/* ::before es la línea y ::after la punta de la flecha */
 .work-arrow::before,
 .work-arrow::after {
     content: "";
@@ -209,7 +226,6 @@
     top: 50%;
 }
 
-/* línea de 1px (media flecha de 31px: juntas forman los 62px de la referencia) */
 .work-arrow::before {
     width: 31px;
     height: 1px;
@@ -217,7 +233,6 @@
     transform: translateY(-50%);
 }
 
-/* punta de flecha */
 .work-arrow::after {
     width: 9px;
     height: 9px;
@@ -241,11 +256,6 @@
 .work-arrow--next::after {
     left: 20.1px;
     transform: translateY(-50%) rotate(135deg);
-}
-
-.work-arrow:hover,
-.work-arrow:focus-visible {
-    opacity: 1;
 }
 
 /* Al arrastrar solo queda la flecha del sentido en que se arrastra */
@@ -274,32 +284,6 @@
     pointer-events: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .work-title,
-    .work-client,
-    .work-arrow {
-        transition: none;
-    }
-}
-
-/* ---------- Efecto de texto (canvas) ---------- */
-
-.work-title {
-    position: relative;
-}
-
-.work-fx {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-}
-
-.work-title.has-fx a {
-    color: transparent;
-}
-
 /* ---------- Entrada ---------- */
 
 @keyframes work-poster-in {
@@ -317,11 +301,11 @@
 }
 
 .work-carousel.is-ready .work-poster {
-    animation: work-poster-in 1.1s var(--ease, ease) both;
+    animation: work-poster-in 1.1s var(--ease) both;
 }
 
 .work-carousel.is-ready .work-title {
-    animation: work-rise-in 1s 0.35s var(--ease, ease) both;
+    animation: work-rise-in 1s 0.35s var(--ease) both;
 }
 
 .work-carousel.is-ready .work-controls,
@@ -332,7 +316,10 @@
 @media (prefers-reduced-motion: reduce) {
     .work-poster,
     .work-poster__img,
-    .work-poster::after {
+    .work-poster::after,
+    .work-title,
+    .work-client,
+    .work-arrow {
         transition: none;
     }
 
@@ -353,7 +340,7 @@
 }
 
 @media (max-width: 768px) {
-    /* Con tan poco ancho el póster apaisado queda diminuto: se hace más alto y se recorta al centro */
+    /* Con poco ancho el póster apaisado queda diminuto: se hace más alto y se recorta al centro */
     .work-poster {
         width: 92vw;
         aspect-ratio: 1.45 / 1;
