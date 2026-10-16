@@ -8,7 +8,7 @@
     <link rel="icon" type="image/svg+xml" href="assets/logos/logoivo.svg">
     <link rel="preload" href="assets/fonts/WorkSans-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" href="base.css">
-    <link rel="stylesheet" href="components/staggeredmenu/staggered-menu.css">
+    <link rel="stylesheet" href="components/sidemenu/side-menu.css">
     <link rel="stylesheet" href="components/work-carousel/work-carousel.css">
     <link rel="stylesheet" href="components/work-views/work-views.css">
     <link rel="stylesheet" href="trabajo.css">
@@ -16,7 +16,7 @@
     <!-- Sin defer: tiene que correr antes de que se pinte la página (ver el archivo) -->
     <script src="components/page-transition/PageTransition.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-    <script src="components/staggeredmenu/StaggeredMenu.js" defer></script>
+    <script src="components/sidemenu/SideMenu.js" defer></script>
     <script src="components/work-carousel/WorkCarousel.js" defer></script>
     <script src="components/work-views/WorkViews.js" defer></script>
     <script src="data/proyectos.js" defer></script>
@@ -29,51 +29,34 @@
     <a class="skip-link" href="#trabajo">Saltar al carrusel de proyectos</a>
 
     <header class="site-header">
-        <a href="index.html" class="sm-logo">
-            <img src="assets/logos/logoivo.svg" alt="Ivo Ferrer, ir al inicio" class="sm-logo-img">
+        <a href="index.html" class="site-logo">
+            <img src="assets/logos/logoivo.svg" alt="Ivo Ferrer, ir al inicio" class="site-logo__img">
         </a>
 
         <a class="work-close" href="#/" hidden>Cerrar proyecto</a>
 
-        <button class="sm-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
-            <span class="sm-toggle-textWrap" aria-hidden="true">
-                <span class="sm-toggle-textInner">
-                    <span class="sm-toggle-line">Menu</span>
-                    <span class="sm-toggle-line">Cerrar</span>
-                    <span class="sm-toggle-line">Menu</span>
-                    <span class="sm-toggle-line">Cerrar</span>
-                </span>
-            </span>
-            <span class="sm-icon" aria-hidden="true">
-                <span class="sm-icon-line" id="sm-plus-h"></span>
-                <span class="sm-icon-line" id="sm-plus-v"></span>
-            </span>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
+            <span class="menu-toggle__text" aria-hidden="true">Menu</span>
+            <span class="menu-toggle__icon" aria-hidden="true"></span>
             <span class="visually-hidden">Menú</span>
         </button>
     </header>
 
-    <div class="staggered-menu-wrapper" id="main-menu" inert>
-        <div class="sm-prelayers" aria-hidden="true">
-            <div class="sm-prelayer" style="background: #2a2a2a;"></div>
-            <div class="sm-prelayer" style="background: #7628b6;"></div>
-        </div>
+    <div class="side-menu" id="main-menu" inert>
+        <nav class="side-menu__panel" aria-label="Principal">
+            <ul class="side-menu__list">
+                <li><a class="side-menu__link" href="index.html#inicio">Inicio</a></li>
+                <li><a class="side-menu__link" href="index.html#servicios">Servicios</a></li>
+                <li><a class="side-menu__link" href="trabajo.html" aria-current="page">Trabajo</a></li>
+                <li><a class="side-menu__link" href="index.html#sobre-mi">Sobre mí</a></li>
+                <li><a class="side-menu__link" href="index.html#contacto">Contacto</a></li>
+            </ul>
 
-        <nav class="staggered-menu-panel" aria-label="Principal">
-            <div class="sm-panel-inner">
-                <ul class="sm-panel-list">
-                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#inicio"><span class="sm-panel-itemLabel">Inicio</span></a></li>
-                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#servicios"><span class="sm-panel-itemLabel">Servicios</span></a></li>
-                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="trabajo.html" aria-current="page"><span class="sm-panel-itemLabel">Trabajo</span></a></li>
-                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#sobre-mi"><span class="sm-panel-itemLabel">Sobre mí</span></a></li>
-                    <li class="sm-panel-itemWrap"><a class="sm-panel-item" href="index.html#contacto"><span class="sm-panel-itemLabel">Contacto</span></a></li>
-                </ul>
-
-                <p class="sm-socials-title" id="sm-socials-title">Socials</p>
-                <ul class="sm-socials-list" aria-labelledby="sm-socials-title">
-                    <li><a href="#" class="sm-socials-link">LinkedIn</a></li>
-                    <li><a href="#" class="sm-socials-link">WhatsApp</a></li>
-                </ul>
-            </div>
+            <p class="side-menu__socials-title" id="side-menu-socials">Socials</p>
+            <ul class="side-menu__socials" aria-labelledby="side-menu-socials">
+                <li><a href="#">LinkedIn</a></li>
+                <li><a href="#">WhatsApp</a></li>
+            </ul>
         </nav>
     </div>
 

@@ -294,18 +294,7 @@ bgVideo.addEventListener('play', updateVideoToggle);
 bgVideo.addEventListener('pause', updateVideoToggle);
 
 /**
- * 9. TEXTO VIBRANTE DEL FOOTER (components/fuzzytext)
- *    Se espera medio segundo para que estén las fuentes y los estilos antes de dibujarlo.
- *    Con movimiento reducido se dibuja quieto (intensidad 0).
+ * 9. INIT DE COMPONENTES (Menú, Logo Wall)
  */
-setTimeout(() => {
-    const k = reduceMotion ? 0 : 1;
-    new FuzzyText(document.querySelector('.footer-cta__lead'), { baseIntensity: 0.1 * k, hoverIntensity: 0.4 * k });
-    new FuzzyText(document.querySelector('.footer-cta__link'), { baseIntensity: 0.15 * k, hoverIntensity: 0.6 * k });
-}, 500);
-
-/**
- * 10. INIT DE COMPONENTES (Menú, Logo Wall)
- */
-new StaggeredMenu('#main-menu');
+new SideMenu('#main-menu');
 new LogoWall('.logo-wall');

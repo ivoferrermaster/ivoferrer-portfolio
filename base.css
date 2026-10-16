@@ -10,7 +10,7 @@
     font-display: swap;
 }
 
-/* --- VARIABLES COMUNES (las usa también components/staggeredmenu) --- */
+/* --- VARIABLES COMUNES (las usa también components/sidemenu) --- */
 :root {
     --white: #ffffff;
     --black: #000000;
@@ -88,9 +88,37 @@ button {
     outline: none;
 }
 
-/* --- HEADER (el resto está en components/staggeredmenu/staggered-menu.css) --- */
+/* --- HEADER FIJO (logo + botón del menú, ver components/sidemenu) --- */
 .site-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 9000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 1.35rem 3vw;
+    color: var(--white);
+    mix-blend-mode: difference; /* se ve blanco sobre fondos oscuros y negro sobre claros */
+    pointer-events: none; /* el espacio vacío del header deja pasar el scroll y los clics */
+}
+
+.site-header > * {
+    pointer-events: auto; /* el logo y los botones sí reciben clics */
+}
+
+.site-logo {
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
+}
+
+.site-logo__img {
+    display: block;
+    height: 50px;
+    width: auto;
+    object-fit: contain;
 }
 
 @media (prefers-reduced-motion: reduce) {
