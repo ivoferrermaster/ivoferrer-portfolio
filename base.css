@@ -10,7 +10,7 @@
     font-display: swap;
 }
 
-/* --- VARIABLES COMUNES (las usa también components/sidemenu) --- */
+/* --- VARIABLES COMUNES --- */
 :root {
     --white: #ffffff;
     --black: #000000;
@@ -66,63 +66,75 @@ button {
     border: 0;
 }
 
-/* "Saltar al contenido": escondido arriba hasta que recibe el foco con Tab (los colores van en cada página) */
-.skip-link {
-    position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 100000;
-    padding: 0.8rem 1.4rem;
-    border-radius: 999px;
-    font-weight: 600;
-    transform: translateY(-200%);
-    transition: transform 0.33s var(--ease);
+/* --- SCROLL SUAVE al tocar un enlace a una sección (#servicios...) --- */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* para que el header fijo no tape el principio de la sección */
 }
 
-.skip-link:focus {
-    transform: translateY(0);
-}
-
-/* Destinos de enlaces internos: reciben foco por JS pero no muestran anillo */
-[tabindex="-1"]:focus {
-    outline: none;
-}
-
-/* --- HEADER FIJO (logo + botón del menú, ver components/sidemenu) --- */
+/* --- HEADER FIJO (logo + botón del menú) --- */
 .site-header {
     position: fixed;
     top: 0;
-    right: 0;
     left: 0;
+    width: 100%;
     z-index: 9000;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.35rem 3vw;
+    padding: 1rem 4vw;
+    background: var(--black);
     color: var(--white);
-    mix-blend-mode: difference; /* se ve blanco sobre fondos oscuros y negro sobre claros */
-    pointer-events: none; /* el espacio vacío del header deja pasar el scroll y los clics */
 }
 
-.site-header > * {
-    pointer-events: auto; /* el logo y los botones sí reciben clics */
+.site-logo img {
+    height: 40px;
 }
 
-.site-logo {
-    display: inline-flex;
-    align-items: center;
-    user-select: none;
+/* --- BOTÓN DEL MENÚ --- */
+.menu-toggle {
+    padding: 0.7rem 1.4rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--white);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
 }
 
-.site-logo__img {
+/* --- MENÚ LATERAL: espera escondido a la derecha y entra con la clase .abierto (menu.js) --- */
+.menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 8000; /* debajo del header, así el botón sigue visible */
+    width: 450px;
+    max-width: 100%;
+    height: 100%;
+    padding: 8rem 3rem 3rem;
+    background: var(--white);
+    transform: translateX(100%);
+    transition: transform 0.5s ease;
+}
+
+.menu.abierto {
+    transform: translateX(0);
+}
+
+.menu a {
     display: block;
-    height: 50px;
-    width: auto;
-    object-fit: contain;
+    padding: 0.3rem 0;
+    color: var(--black);
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    transition: color 0.3s;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .skip-link {
-        transition: none;
-    }
+.menu a:hover {
+    color: var(--cyan);
 }

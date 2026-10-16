@@ -18,7 +18,7 @@ class WorkViews {
 
         // Escape cierra la ficha (salvo que el menú esté abierto)
         document.addEventListener('keydown', (e) => {
-            const menuOpen = !document.getElementById('main-menu').inert;
+            const menuOpen = document.querySelector('.menu').classList.contains('abierto');
             if (e.key === 'Escape' && this.isOpen && !e.defaultPrevented && !menuOpen) {
                 window.location.hash = '#/';
             }

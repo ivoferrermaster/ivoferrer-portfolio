@@ -4,11 +4,6 @@
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
- * SCROLL SUAVE Y PARALLAX (components/smoothscroll)
- */
-const smoothScroll = new SmoothScroll();
-
-/**
  * TRABAJO SELECCIONADO
  *    Las filas de la lista se arman con los proyectos de data/proyectos.js (los mismos que muestra
  *    trabajo.html). Va antes que el resto porque el cursor y las apariciones al hacer scroll
@@ -38,7 +33,7 @@ document.querySelector('.projects-list').innerHTML = window.PROYECTOS.map(projec
     </li>`).join('');
 
 /**
- * 0. ENTRADA DEL HERO
+ * 0. PRELOADER Y ENTRADA DEL HERO
  *    script.js se carga con defer: cuando corre, el HTML ya está listo.
  */
 
@@ -57,11 +52,7 @@ document.querySelectorAll('.hero-content > *').forEach(el => {
 
 const hiddenLetters = [...document.querySelectorAll('.rand-letter')];
 
-// Arranca cuando el preloader empieza a cerrarse (el logo cae sobre la barra) o cuando se abre
-// la cortina de la transición entre páginas.
-// arrivedAtAnchor: se llegó directo a una sección (ya se saltó ahí mientras la cortina tapaba),
-// así que no hay que volver a hacer scroll.
-function startEntrance(arrivedAtAnchor = false) {
+function startEntrance() {
     document.body.classList.add('start-anim');
 
     // Revela una letra cada 35ms, en orden aleatorio
@@ -73,74 +64,12 @@ function startEntrance(arrivedAtAnchor = false) {
         const randomIndex = Math.floor(Math.random() * hiddenLetters.length);
         hiddenLetters.splice(randomIndex, 1)[0].classList.add('revealed');
     }, 35);
-
-    setTimeout(() => {
-        document.body.classList.remove('loading');
-
-        // Si se entró con un #ancla en la URL, se respeta ahora que se puede hacer scroll
-        if (arrivedAtAnchor) return;
-        const hashTarget = location.hash && document.getElementById(location.hash.slice(1));
-        if (hashTarget) smoothScroll.scrollTo(hashTarget);
-    }, arrivedAtAnchor ? 600 : 3000);
 }
 
-if (pageArrived) {
-    // Se llegó desde otra página: sin preloader. La cortina de page-transition hace de
-    // "sub-preloader" y el hero entra cuando empieza a abrirse.
-    document.getElementById('preloader').remove();
-
-    // Si el destino es una sección (ej. #contacto), se salta ahí de golpe mientras la cortina
-    // todavía tapa: así no se ve pasar por el hero.
-    const anchorTarget = location.hash && document.getElementById(location.hash.slice(1));
-    if (anchorTarget) {
-        window.addEventListener('load', () => smoothScroll.scrollTo(anchorTarget, true), { once: true });
-    }
-    pageRevealStart.then(() => startEntrance(Boolean(anchorTarget)));
-} else {
-    // Entrada al sitio o recarga: preloader completo (components/preloader/Preloader.js)
-    new Preloader(startEntrance);
-
-    // Si la URL trae un #ancla, el navegador salta solo ahí mientras está el preloader: se vuelve
-    // arriba para que se vea la entrada del hero (al terminar, startEntrance baja hasta el ancla)
-    if (location.hash) window.addEventListener('load', () => smoothScroll.scrollTo(0, true), { once: true });
-}
-
-/**
- * 1. NAVEGACIÓN CON ANCLAS Y TECLADO
- */
-const siteHeader = document.querySelector('.site-header');
-let skipFocusScroll = false;
-
-// Enlaces a una sección (#servicios...): se llega con scroll suave y el foco pasa al destino,
-// así la navegación con Tab sigue desde ahí
-document.addEventListener('click', (e) => {
-    const link = e.target.closest('a[href^="#"]');
-    const target = link && document.getElementById(link.getAttribute('href').slice(1));
-    if (!target) return;
-
-    e.preventDefault();
-    smoothScroll.scrollTo(target);
-
-    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
-    skipFocusScroll = true;
-    target.focus({ preventScroll: true });
-    skipFocusScroll = false;
-
-    history.pushState(null, '', link.getAttribute('href'));
-});
-
-// Al tabular, si el elemento enfocado queda tapado por el header (que es fijo) o fuera de
-// pantalla, se lo lleva a un tercio de la altura. Se calcula contra el destino del scroll
-// (puede estar a mitad de una animación), no contra la posición de este instante.
-document.addEventListener('focusin', (e) => {
-    if (skipFocusScroll || !e.target.closest('main, .footer')) return;
-
-    const rect = e.target.getBoundingClientRect();
-    const docTop = rect.top + window.scrollY;               // posición dentro de la página
-    const viewTop = docTop - smoothScroll.destination;      // dónde va a quedar en pantalla
-    if (viewTop < siteHeader.offsetHeight || viewTop + rect.height > window.innerHeight) {
-        smoothScroll.scrollTo(docTop - window.innerHeight / 3);
-    }
+// Cuando termina de cargar toda la página se va el preloader y entra el hero
+window.addEventListener('load', () => {
+    document.querySelector('.preloader').classList.add('oculto');
+    startEntrance();
 });
 
 /**
@@ -294,7 +223,6 @@ bgVideo.addEventListener('play', updateVideoToggle);
 bgVideo.addEventListener('pause', updateVideoToggle);
 
 /**
- * 9. INIT DE COMPONENTES (Menú, Logo Wall)
+ * 9. INIT DE COMPONENTES (Logo Wall)
  */
-new SideMenu('#main-menu');
 new LogoWall('.logo-wall');

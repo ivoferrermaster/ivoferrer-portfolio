@@ -440,7 +440,7 @@ class WorkCarousel {
         document.addEventListener('keydown', (e) => {
             if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
             // Con el menú abierto, o una vista (listado/ficha) encima, las flechas no mueven el carrusel
-            const menuOpen = !document.getElementById('main-menu').inert;
+            const menuOpen = document.querySelector('.menu').classList.contains('abierto');
             if (menuOpen || root.inert) return;
 
             // Si el foco está en un título, el foco acompaña al carrusel

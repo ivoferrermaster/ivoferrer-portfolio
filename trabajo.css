@@ -24,7 +24,6 @@ main {
     position: relative;
     height: 100%;
 }
-
 /* Grano de película por encima de todo (menos el header y el menú) */
 @keyframes grain {
     0%   { transform: translate(0, 0); }
@@ -47,11 +46,6 @@ body::after {
 }
 
 /* --- ACCESIBILIDAD (la base está en base.css) --- */
-.skip-link {
-    background: #fff;
-    color: #000;
-}
-
 :focus-visible {
     outline: 2px solid var(--cyan);
     outline-offset: 4px;

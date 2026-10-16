@@ -6,61 +6,40 @@
     <meta name="description" content="Trabajo seleccionado de Ivo Ferrer: sitios web a medida para marcas y empresas.">
     <title>Trabajo seleccionado · Ivo Ferrer</title>
     <link rel="icon" type="image/svg+xml" href="assets/logos/logoivo.svg">
-    <link rel="preload" href="assets/fonts/WorkSans-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
     <link rel="stylesheet" href="base.css">
-    <link rel="stylesheet" href="components/sidemenu/side-menu.css">
     <link rel="stylesheet" href="components/work-carousel/work-carousel.css">
     <link rel="stylesheet" href="components/work-views/work-views.css">
     <link rel="stylesheet" href="trabajo.css">
-    <link rel="stylesheet" href="components/page-transition/page-transition.css">
-    <!-- Sin defer: tiene que correr antes de que se pinte la página (ver el archivo) -->
-    <script src="components/page-transition/PageTransition.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
-    <script src="components/sidemenu/SideMenu.js" defer></script>
+    <script src="menu.js" defer></script>
     <script src="components/work-carousel/WorkCarousel.js" defer></script>
     <script src="components/work-views/WorkViews.js" defer></script>
     <script src="data/proyectos.js" defer></script>
     <script src="trabajo.js" defer></script>
 </head>
 <body class="work-page">
-    <div class="page-transition" aria-hidden="true">
-        <img class="page-transition__logo" src="assets/logos/logoivo.svg" alt="" draggable="false">
-    </div>
-    <a class="skip-link" href="#trabajo">Saltar al carrusel de proyectos</a>
-
+    <!-- HEADER -->
     <header class="site-header">
         <a href="index.html" class="site-logo">
-            <img src="assets/logos/logoivo.svg" alt="Ivo Ferrer, ir al inicio" class="site-logo__img">
+            <img src="assets/logos/logoivo.svg" alt="Ivo Ferrer, ir al inicio">
         </a>
 
         <a class="work-close" href="#/" hidden>Cerrar proyecto</a>
 
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
-            <span class="menu-toggle__text" aria-hidden="true">Menu</span>
-            <span class="menu-toggle__icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Menú</span>
-        </button>
+        <button class="menu-toggle" type="button">Menu</button>
     </header>
 
-    <div class="side-menu" id="main-menu" inert>
-        <nav class="side-menu__panel" aria-label="Principal">
-            <ul class="side-menu__list">
-                <li><a class="side-menu__link" href="index.html#inicio">Inicio</a></li>
-                <li><a class="side-menu__link" href="index.html#servicios">Servicios</a></li>
-                <li><a class="side-menu__link" href="trabajo.html" aria-current="page">Trabajo</a></li>
-                <li><a class="side-menu__link" href="index.html#sobre-mi">Sobre mí</a></li>
-                <li><a class="side-menu__link" href="index.html#contacto">Contacto</a></li>
-            </ul>
+    <!-- MENÚ LATERAL (lo abre y lo cierra menu.js) -->
+    <nav class="menu">
+        <ul>
+            <li><a href="index.html#inicio">Inicio</a></li>
+            <li><a href="index.html#servicios">Servicios</a></li>
+            <li><a href="trabajo.html">Trabajo</a></li>
+            <li><a href="index.html#sobre-mi">Sobre mí</a></li>
+            <li><a href="index.html#contacto">Contacto</a></li>
+        </ul>
+    </nav>
 
-            <p class="side-menu__socials-title" id="side-menu-socials">Socials</p>
-            <ul class="side-menu__socials" aria-labelledby="side-menu-socials">
-                <li><a href="#">LinkedIn</a></li>
-                <li><a href="#">WhatsApp</a></li>
-            </ul>
-        </nav>
-    </div>
-
-    <main id="trabajo" tabindex="-1">
+    <main id="trabajo">
         <h1 class="visually-hidden">Trabajo seleccionado</h1>
 
         <!-- El póster y los títulos los agrega components/work-carousel/WorkCarousel.js a partir de data/proyectos.js -->
