@@ -24,42 +24,11 @@ body {
     letter-spacing: -0.045em;
 }
 
-/* --- PRELOADER: tapa la pantalla hasta que carga la página; script.js le pone .oculto --- */
-.preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 10000; /* por encima de todo, incluido el header */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--black);
-    transition: opacity 0.6s, visibility 0.6s;
-}
-
-/* El logo late suavemente mientras espera */
-.preloader img {
-    width: 70px;
-    animation: latido 0.8s ease-in-out infinite alternate;
-}
-
-@keyframes latido {
-    from { opacity: 0.3; }
-    to   { opacity: 1; }
-}
-
-.preloader.oculto {
-    opacity: 0;
-    visibility: hidden; /* además de invisible, deja de tapar los clics */
-}
-
 /* --- HERO --- */
 .hero {
-    position: relative;
-    overflow: hidden;
+    overflow: hidden; /* con el parallax los textos se mueven: lo que sale del hero no se ve */
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -82,71 +51,12 @@ body {
     line-height: 0.85;
     letter-spacing: -0.1rem;
     text-transform: uppercase;
-    white-space: nowrap; /* que "FERRER" no se corte entre los <span> de cada letra */
 }
 
 .role {
     margin-top: 2rem;
     font-size: 1.5rem;
     font-weight: 300;
-}
-
-/* Entrada del hero: arranca cuando script.js le pone la clase start-anim al body */
-
-/* Panel violeta que tapa el hero y se corre a la izquierda cuando ya aparecieron las letras */
-.hero::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #7628b6;
-    transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1) 1.6s;
-}
-
-body.start-anim .hero::before {
-    transform: translateX(-100%);
-}
-
-.hero-content {
-    position: relative; /* así queda por encima del panel violeta */
-}
-
-/* Cada línea (subtítulo, título, rol) llega desenfocada desde abajo, una después de otra.
-   Se mueve con top y no con transform, porque transform lo usa el parallax. */
-.hero-content > * {
-    position: relative;
-    top: 40px;
-    opacity: 0;
-    filter: blur(15px);
-    transition: opacity 1.5s ease, top 1.5s var(--ease), filter 1.5s ease;
-}
-
-body.start-anim .hero-content > * {
-    opacity: 1;
-    top: 0;
-    filter: blur(0);
-}
-
-body.start-anim .subtitle { transition-delay: 0.2s; }
-body.start-anim .hero h1  { transition-delay: 0.4s; }
-body.start-anim .role     { transition-delay: 0.6s; }
-
-/* Cada letra (las arma script.js) aparece por separado, en orden al azar */
-.letra {
-    position: relative;
-    top: 30px;
-    display: inline-block;
-    opacity: 0;
-    filter: blur(12px);
-    transition: opacity 0.6s ease, top 0.6s var(--ease), filter 0.6s ease;
-}
-
-.letra.visible {
-    opacity: 1;
-    top: 0;
-    filter: blur(0);
 }
 
 /* --- SERVICIOS: con el mouse encima (o al tocarlo en el celular) se pone negro y muestra el texto.

@@ -10,11 +10,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- PRELOADER: se oculta cuando termina de cargar la página (script.js) -->
-    <div class="preloader">
-        <img src="assets/logos/logoivo.svg" alt="">
-    </div>
-
     <!-- HEADER -->
     <header class="site-header">
         <a href="#inicio" class="site-logo">
@@ -36,13 +31,11 @@
 
     <main>
 
-        <!-- HERO: las letras y el parallax los maneja script.js -->
+        <!-- HERO: el parallax lo maneja script.js con el data-speed de cada texto -->
         <section class="hero" id="inicio">
-            <div class="hero-content">
-                <p class="subtitle letras parallax" data-speed="-0.2">Portfolio profesional</p>
-                <h1 class="parallax" data-speed="0.1"><span class="letras">Ivo</span><br><span class="letras">Ferrer</span></h1>
-                <p class="role letras parallax" data-speed="0.3">Creative Developer &amp; Designer</p>
-            </div>
+            <p class="subtitle parallax" data-speed="-0.2">Portfolio profesional</p>
+            <h1 class="parallax" data-speed="0.1">Ivo<br>Ferrer</h1>
+            <p class="role parallax" data-speed="0.3">Creative Developer &amp; Designer</p>
         </section>
 
         <!-- SERVICIOS: se despliegan con el mouse encima (o al tocarlos), todo con CSS -->
