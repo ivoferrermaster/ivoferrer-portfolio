@@ -8,6 +8,31 @@
     --cyan: #47D2F5;
     --muted: #6b6b6b;
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Tamaños de letra: todo el sitio usa estas variables (en celular cambian, ver abajo) */
+    --titulo-hero: 14vw;        /* IVO FERRER */
+    --titulo-proyecto: 7vw;     /* nombres de la lista "Trabajo seleccionado" */
+    --cifra: 150px;             /* números de la sección de cifras */
+    --titulo-grande: 6rem;      /* "¿Qué es lo que hago?", footer y título de trabajo.html */
+    --titulo-seccion: 4.5rem;   /* título de cada sección */
+    --enlaces-menu: 2.5rem;     /* enlaces del menú lateral */
+    --subtitulo: 2.3rem;        /* servicios y nombres de proyecto en trabajo.html */
+    --destacado: 1.4rem;        /* rol del hero, preguntas del FAQ, texto del video */
+    --texto: 1.05rem;           /* texto normal y descripciones */
+    --chico: 0.78rem;           /* etiquetas, autores y botones */
+}
+
+/* En celular los títulos se achican: alcanza con cambiar las variables */
+@media (max-width: 768px) {
+    :root {
+        --titulo-hero: 20vw;
+        --titulo-proyecto: 2.6rem;
+        --cifra: 80px;
+        --titulo-grande: 2.8rem;
+        --titulo-seccion: 2.5rem;
+        --subtitulo: 1.5rem;
+        --destacado: 1.1rem;
+    }
 }
 
 /* --- RESET --- */
@@ -20,6 +45,7 @@
 }
 
 body {
+    font-size: var(--texto);
     line-height: 1.5;
 }
 
@@ -76,7 +102,7 @@ html {
     border-radius: 999px;
     background: transparent;
     color: var(--white);
-    font-size: 0.8rem;
+    font-size: var(--chico);
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -106,7 +132,7 @@ html {
     display: block;
     padding: 0.3rem 0;
     color: var(--black);
-    font-size: 2.5rem;
+    font-size: var(--enlaces-menu);
     font-weight: 700;
     letter-spacing: -0.04em;
     text-transform: uppercase;

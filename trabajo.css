@@ -12,7 +12,7 @@ body {
 
 .work h1 {
     margin-bottom: 4rem;
-    font-size: 6rem;
+    font-size: var(--titulo-grande);
     font-weight: 200;
     line-height: 1;
     letter-spacing: -0.03em;
@@ -33,7 +33,7 @@ body {
 
 .work-card h2 {
     margin-bottom: 1rem;
-    font-size: 2.5rem;
+    font-size: var(--subtitulo);
     font-weight: 200;
     letter-spacing: -0.02em;
 }
@@ -46,7 +46,7 @@ body {
 
 /* Cliente y rol, en chiquito */
 .work-card .work-meta {
-    font-size: 0.75rem;
+    font-size: var(--chico);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.5);
@@ -60,15 +60,10 @@ body {
 
     .work h1 {
         margin-bottom: 2.5rem;
-        font-size: 3rem;
     }
 
     .work-grid {
         grid-template-columns: 1fr;
         gap: 3.5rem;
-    }
-
-    .work-card h2 {
-        font-size: 2rem;
     }
 }
