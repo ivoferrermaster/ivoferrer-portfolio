@@ -36,35 +36,37 @@
 
     <main>
 
-        <!-- HERO -->
+        <!-- HERO: las letras y el parallax los maneja script.js -->
         <section class="hero" id="inicio">
-            <p class="subtitle">Portfolio profesional</p>
-            <h1>Ivo<br>Ferrer</h1>
-            <p class="role">Creative Developer &amp; Designer</p>
+            <div class="hero-content">
+                <p class="subtitle letras parallax" data-speed="-0.2">Portfolio profesional</p>
+                <h1 class="parallax" data-speed="0.1"><span class="letras">Ivo</span><br><span class="letras">Ferrer</span></h1>
+                <p class="role letras parallax" data-speed="0.3">Creative Developer &amp; Designer</p>
+            </div>
         </section>
 
-        <!-- SERVICIOS: cada <details> se abre al hacerle clic -->
+        <!-- SERVICIOS: se despliegan con el mouse encima (o al tocarlos), todo con CSS -->
         <section class="services" id="servicios">
-            <details class="service">
-                <summary>Diseño web &amp; estrategia <span>01</span></summary>
+            <div class="service" tabindex="0">
+                <h3>Diseño web &amp; estrategia <span>01</span></h3>
                 <p>Analizo tu mercado y a tus usuarios para definir una arquitectura sólida. A partir de ahí, diseño interfaces que no solo lucen increíbles, sino que convierten y cumplen objetivos concretos de tu negocio.</p>
-            </details>
-            <details class="service">
-                <summary>Desarrollo web <span>02</span></summary>
+            </div>
+            <div class="service" tabindex="0">
+                <h3>Desarrollo web <span>02</span></h3>
                 <p>Construyo plataformas rápidas, seguras y escalables utilizando las últimas tecnologías nativas. Mi código es limpio, optimizado para SEO y preparado para animaciones fluidas a 60fps.</p>
-            </details>
-            <details class="service">
-                <summary>Apps móviles <span>03</span></summary>
+            </div>
+            <div class="service" tabindex="0">
+                <h3>Apps móviles <span>03</span></h3>
                 <p>Llevo la experiencia de tu marca al bolsillo de tus usuarios. Diseño y desarrollo aplicaciones móviles nativas y multiplataforma con interfaces intuitivas y un rendimiento impecable.</p>
-            </details>
-            <details class="service">
-                <summary>Motion graphics <span>04</span></summary>
+            </div>
+            <div class="service" tabindex="0">
+                <h3>Motion graphics <span>04</span></h3>
                 <p>Doy vida a tu marca a través del movimiento. Creo animaciones sutiles, microinteracciones y videos inmersivos que capturan la atención y explican conceptos complejos de forma visual.</p>
-            </details>
-            <details class="service">
-                <summary>Identidad de marca <span>05</span></summary>
+            </div>
+            <div class="service" tabindex="0">
+                <h3>Identidad de marca <span>05</span></h3>
                 <p>Creo sistemas visuales memorables y coherentes. Desde el logotipo hasta la paleta de colores y la tipografía, construyo marcas con personalidad que destacan en el competitivo entorno digital.</p>
-            </details>
+            </div>
         </section>
 
         <!-- CLIENTES -->
@@ -93,8 +95,32 @@
         <!-- TRABAJO SELECCIONADO: adelanto; la vista completa es trabajo.html -->
         <section class="projects" id="trabajo">
             <h2 class="section-title">Trabajo seleccionado</h2>
-            <!-- Las filas las arma script.js con los proyectos de data/proyectos.js -->
-            <ul class="projects-list"></ul>
+            <ul class="projects-list">
+                <li>
+                    <a href="trabajo.html#ascanelli">
+                        <span class="project-name">Ascanelli</span>
+                        <span class="project-client">Ascanelli</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="trabajo.html#montecitos">
+                        <span class="project-name">Montecitos</span>
+                        <span class="project-client">Montecitos Country &amp; Golf</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="trabajo.html#enterlab">
+                        <span class="project-name">Enterlab</span>
+                        <span class="project-client">Enterlab</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="trabajo.html#cpd">
+                        <span class="project-name">CPD</span>
+                        <span class="project-client">Centro Privado del Diagnóstico</span>
+                    </a>
+                </li>
+            </ul>
             <p class="projects-cta">
                 <a href="trabajo.html" class="btn-outline">Ver todo el trabajo</a>
             </p>
@@ -225,7 +251,6 @@
         </div>
     </footer>
 
-    <script src="data/proyectos.js" defer></script>
     <script src="menu.js" defer></script>
     <script src="script.js" defer></script>
 </body>

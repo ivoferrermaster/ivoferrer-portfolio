@@ -7,24 +7,15 @@
     <title>Trabajo seleccionado · Ivo Ferrer</title>
     <link rel="icon" type="image/svg+xml" href="assets/logos/logoivo.svg">
     <link rel="stylesheet" href="base.css">
-    <link rel="stylesheet" href="components/work-carousel/work-carousel.css">
-    <link rel="stylesheet" href="components/work-views/work-views.css">
     <link rel="stylesheet" href="trabajo.css">
     <script src="menu.js" defer></script>
-    <script src="components/work-carousel/WorkCarousel.js" defer></script>
-    <script src="components/work-views/WorkViews.js" defer></script>
-    <script src="data/proyectos.js" defer></script>
-    <script src="trabajo.js" defer></script>
 </head>
-<body class="work-page">
+<body>
     <!-- HEADER -->
     <header class="site-header">
         <a href="index.html" class="site-logo">
             <img src="assets/logos/logoivo.svg" alt="Ivo Ferrer, ir al inicio">
         </a>
-
-        <a class="work-close" href="#/" hidden>Cerrar proyecto</a>
-
         <button class="menu-toggle" type="button">Menu</button>
     </header>
 
@@ -39,40 +30,39 @@
         </ul>
     </nav>
 
-    <main id="trabajo">
-        <h1 class="visually-hidden">Trabajo seleccionado</h1>
+    <main class="work">
+        <h1>Trabajo seleccionado</h1>
 
-        <!-- El póster y los títulos los agrega components/work-carousel/WorkCarousel.js a partir de data/proyectos.js -->
-        <section class="work-carousel" id="work-carousel" aria-roledescription="carrusel" aria-label="Proyectos destacados">
-            <noscript>
-                <ul class="work-fallback">
-                    <li><a href="#/proyecto/ascanelli">Ascanelli</a></li>
-                    <li><a href="#/proyecto/montecitos">Montecitos</a></li>
-                    <li><a href="#/proyecto/enterlab">Enterlab</a></li>
-                    <li><a href="#/proyecto/cpd">CPD</a></li>
-                </ul>
-            </noscript>
+        <!-- Un <article> por proyecto. El id es el que usan los enlaces del inicio (trabajo.html#ascanelli) -->
+        <div class="work-grid">
+            <article class="work-card" id="ascanelli">
+                <img src="assets/img/webp/cap-ascanelli.webp" alt="Captura del sitio web de Ascanelli">
+                <h2>Ascanelli</h2>
+                <p>Sitio web de Ascanelli. Ordena su línea de productos (tolvas autodescargables, sembradoras, mixers, embolsadoras y más), las promociones y la red de ventas en una navegación clara y visual.</p>
+                <p class="work-meta">Cliente: Ascanelli · Rol: Diseño y desarrollo web</p>
+            </article>
 
-            <div class="work-controls" role="group" aria-label="Navegación del carrusel">
-                <button class="work-arrow work-arrow--prev" type="button" aria-label="Proyecto anterior"></button>
-                <button class="work-arrow work-arrow--next" type="button" aria-label="Proyecto siguiente"></button>
-            </div>
-            <p class="work-count" aria-hidden="true"></p>
-            <!-- Anuncia el proyecto actual a los lectores de pantalla -->
-            <p class="work-status visually-hidden" role="status"></p>
-        </section>
+            <article class="work-card" id="montecitos">
+                <img src="assets/img/webp/cap-montecitos.webp" alt="Captura del sitio web de Montecitos Country &amp; Golf">
+                <h2>Montecitos</h2>
+                <p>Sitio web de Montecitos Country &amp; Golf, el club de campo con cancha de golf de 9 hoyos en Río Tercero. Una portada inmersiva que transmite deporte y naturaleza desde el primer vistazo.</p>
+                <p class="work-meta">Cliente: Montecitos Country &amp; Golf · Rol: Diseño y desarrollo web</p>
+            </article>
 
-        <!-- Ficha: se abre encima del carrusel con #/proyecto/<slug>.
-             La completa components/work-views/WorkViews.js con el proyecto elegido. -->
-        <article class="work-detail" id="work-detail" tabindex="-1" aria-labelledby="work-detail-title" hidden>
-            <h2 class="work-detail__title" id="work-detail-title"></h2>
-            <p class="work-detail__lead"></p>
-            <dl class="work-detail__meta"></dl>
-            <p class="work-detail__cta"></p>
-            <figure class="work-detail__media"><img alt=""></figure>
-            <a class="work-pn work-pn--prev" rel="prev"><span class="visually-hidden"></span></a>
-            <a class="work-pn work-pn--next" rel="next"><span class="visually-hidden"></span></a>
-        </article>
+            <article class="work-card" id="enterlab">
+                <img src="assets/img/webp/cap-enterlab.webp" alt="Captura del sitio web de Enterlab">
+                <h2>Enterlab</h2>
+                <p>Sitio web de Enterlab Tech Management, consultora de software que diseña infraestructuras resilientes y software escalable. Estética tecnológica, animada y disponible en español e inglés.</p>
+                <p class="work-meta">Cliente: Enterlab · Rol: Diseño y desarrollo web</p>
+            </article>
+
+            <article class="work-card" id="cpd">
+                <img src="assets/img/webp/cap-cpd.webp" alt="Captura del sitio web del Centro Privado del Diagnóstico">
+                <h2>CPD</h2>
+                <p>Sitio web del Centro Privado del Diagnóstico. Una propuesta centrada en el confort y la seguridad de cada paciente, con acceso directo para sacar turno.</p>
+                <p class="work-meta">Cliente: Centro Privado del Diagnóstico · Rol: Diseño y desarrollo web</p>
+            </article>
+        </div>
     </main>
 </body>
 </html>

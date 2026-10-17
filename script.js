@@ -1,35 +1,62 @@
 /**
- * TRABAJO SELECCIONADO
- *    Las filas de la lista se arman con los proyectos de data/proyectos.js (los mismos que muestra
- *    trabajo.html).
+ * 1. LETRAS DEL HERO
+ *    Cada letra de los textos con la clase "letras" se mete en su propio <span class="letra">,
+ *    así después se pueden hacer aparecer de a una.
  */
+const textosHero = document.querySelectorAll('.letras');
 
-// El cliente va letra por letra para que suban una a una (ver .projects-list__client en style.css);
-// --i es su orden, que el CSS usa como retraso. Las letras de una palabra van juntas en un
-// .reveal-word para que no se corte a la mitad. El texto completo queda oculto para lectores de pantalla.
-function splitLetters(text) {
-    let i = 0;
-    const words = text.split(' ').map(word => {
-        const letters = [...word].map(char => `<span class="reveal-char" style="--i: ${i++}">${char}</span>`);
-        i++; // el espacio entre palabras también cuenta en el orden
-        return `<span class="reveal-word">${letters.join('')}</span>`;
+textosHero.forEach((texto) => {
+    const letras = texto.textContent.split('');
+    texto.textContent = '';
+
+    letras.forEach((letra) => {
+        // Los espacios quedan como texto común (un <span> con un espacio adentro no ocupa lugar)
+        if (letra === ' ') {
+            texto.append(' ');
+            return;
+        }
+        const span = document.createElement('span');
+        span.classList.add('letra');
+        span.textContent = letra;
+        texto.append(span);
     });
-    return `<span class="visually-hidden">${text}</span><span aria-hidden="true">${words.join(' ')}</span>`;
+});
+
+// Muestra una letra cada 35 milisegundos, elegida al azar, hasta que no quede ninguna
+function mostrarLetras() {
+    const letrasOcultas = Array.from(document.querySelectorAll('.letra'));
+
+    const intervalo = setInterval(() => {
+        if (letrasOcultas.length === 0) {
+            clearInterval(intervalo);
+            return;
+        }
+        const azar = Math.floor(Math.random() * letrasOcultas.length);
+        letrasOcultas[azar].classList.add('visible');
+        letrasOcultas.splice(azar, 1); // se saca de la lista para no elegirla de nuevo
+    }, 35);
 }
 
-document.querySelector('.projects-list').innerHTML = window.PROYECTOS.map(project => `
-    <li>
-        <a href="trabajo.html#/proyecto/${project.slug}">
-            <span class="projects-list__title">${project.titulo}</span>
-            <span class="projects-list__client">${splitLetters(project.cliente)}</span>
-            <img class="projects-list__thumb" src="${project.poster}" alt="" loading="lazy" decoding="async">
-        </a>
-    </li>`).join('');
-
 /**
- * PRELOADER
- *    Cuando termina de cargar toda la página, se le pone la clase "oculto" y desaparece.
+ * 2. PRELOADER Y ENTRADA DEL HERO
+ *    Cuando termina de cargar toda la página se va el preloader y arranca la entrada del hero
+ *    (la clase start-anim dispara el panel violeta y las transiciones de style.css).
  */
 window.addEventListener('load', () => {
     document.querySelector('.preloader').classList.add('oculto');
+    document.body.classList.add('start-anim');
+    mostrarLetras();
+});
+
+/**
+ * 3. PARALLAX
+ *    Al scrollear, cada texto del hero se mueve a su propia velocidad (el data-speed del HTML).
+ */
+const elementosParallax = document.querySelectorAll('.parallax');
+
+window.addEventListener('scroll', () => {
+    elementosParallax.forEach((elemento) => {
+        const velocidad = elemento.dataset.speed;
+        elemento.style.transform = `translateY(${window.scrollY * velocidad}px)`;
+    });
 });
