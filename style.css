@@ -1,13 +1,5 @@
-/* style.css — página de inicio. Lo común a todas las páginas está en base.css */
-
-/* --- FUENTE DE LOS TÍTULOS GRANDES (.ttf en assets/fonts) --- */
-@font-face {
-    font-family: 'Moul';
-    src: url('assets/fonts/Moul-Regular.ttf') format('truetype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
+/* style.css — página de inicio. Lo común a todas las páginas está en base.css
+   y las fuentes en css/fonts.css */
 
 body {
     background-color: var(--white);
@@ -46,7 +38,6 @@ body {
 }
 
 .hero h1 {
-    font-family: 'Moul', sans-serif;
     font-size: 14vw;
     line-height: 0.85;
     letter-spacing: -0.1rem;
@@ -261,7 +252,6 @@ body {
 
 .video-break h2 {
     margin-bottom: 8rem;
-    font-family: 'Moul', sans-serif;
     font-size: 7rem;
     line-height: 1.05;
     text-transform: uppercase;
@@ -327,7 +317,6 @@ body {
 }
 
 .stat-number {
-    font-family: 'Moul', sans-serif;
     font-size: 150px;
     line-height: 1;
 }

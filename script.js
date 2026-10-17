@@ -1,7 +1,4 @@
-/**
- * PARALLAX DEL HERO
- *    Al scrollear, cada texto del hero se mueve a su propia velocidad (el data-speed del HTML).
- */
+/* PARALLAX DEL HERO */
 const elementosParallax = document.querySelectorAll('.parallax');
 
 window.addEventListener('scroll', () => {

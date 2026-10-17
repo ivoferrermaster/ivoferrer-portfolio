@@ -1,14 +1,5 @@
 /* base.css — estilos comunes a todas las páginas (inicio y trabajo).
-   Se carga antes que las demás hojas de estilo: cada página pisa lo que necesite. */
-
-/* --- FUENTE LOCAL (.ttf en assets/fonts) --- */
-@font-face {
-    font-family: 'Work Sans';
-    src: url('assets/fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-}
+   Las fuentes están aparte, en css/fonts.css. Cada página pisa lo que necesite. */
 
 /* --- VARIABLES COMUNES --- */
 :root {
@@ -29,7 +20,7 @@
 }
 
 body {
-    font: 400 1rem/1.5 'Work Sans', sans-serif;
+    line-height: 1.5;
 }
 
 img,
