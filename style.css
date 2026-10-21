@@ -1,9 +1,9 @@
 /* style.css — página de inicio. Lo común a todas las páginas está en base.css */
 
-/* --- FUENTE LOCAL DEL INICIO (.ttf en assets/fonts) --- */
+/* --- FUENTE LOCAL DEL INICIO (.woff2 en assets/fonts) --- */
 @font-face {
     font-family: 'Moul';
-    src: url('assets/fonts/Moul-Regular.ttf') format('truetype');
+    src: url('assets/fonts/Moul-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
     font-display: swap;
@@ -139,7 +139,7 @@ body.start-anim .site-header {
 
 /* --- HERO (text-image + parallax) --- */
 .hero {
-    min-height: 100vh;
+    min-height: 100svh; /* svh: el alto con las barras del navegador móvil visibles, no salta al scrollear */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -256,14 +256,14 @@ body.start-anim .hero-content .role { transition-delay: 0.6s; }
 
 .service-row__header {
     font: inherit;
+    font-size: var(--fs-h3);
+    line-height: 1.2;
     position: relative;
     z-index: 2;
 }
 
 .service-row__toggle {
     display: flex;
-    font-size: var(--fs-h3);
-    line-height: 1.2;
     /* El número se alinea con la primera línea del título cuando este ocupa dos */
     align-items: first baseline;
     gap: 1.5rem;
@@ -364,7 +364,7 @@ body.start-anim .hero-content .role { transition-delay: 0.6s; }
 /* --- PIXELATED VIDEO BREAK --- */
 .video-break {
     position: relative;
-    min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
     align-items: flex-start;

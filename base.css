@@ -1,10 +1,10 @@
 /* base.css — estilos comunes a todas las páginas (inicio y trabajo).
    Se carga antes que las demás hojas de estilo: cada página pisa lo que necesite. */
 
-/* --- FUENTE LOCAL (.ttf en assets/fonts) --- */
+/* --- FUENTE LOCAL (.woff2 en assets/fonts) --- */
 @font-face {
     font-family: 'Work Sans';
-    src: url('assets/fonts/WorkSans-VariableFont_wght.ttf') format('truetype');
+    src: url('assets/fonts/WorkSans-VariableFont_wght.woff2') format('woff2');
     font-weight: 100 900;
     font-style: normal;
     font-display: swap;
@@ -51,10 +51,13 @@ p {
     text-wrap: pretty;
 }
 
+/* height: auto mantiene la proporción cuando el <img> trae width/height (que se ponen para
+   reservar el espacio antes de que cargue) y el CSS solo le fija el ancho */
 img,
 video {
     display: block;
     max-width: 100%;
+    height: auto;
 }
 
 ul,

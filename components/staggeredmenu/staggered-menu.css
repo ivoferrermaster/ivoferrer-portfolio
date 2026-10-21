@@ -51,7 +51,7 @@
 .staggered-menu-wrapper {
   position: fixed;
   top: 0; left: 0;
-  width: 100vw; height: 100vh;
+  width: 100vw; height: 100dvh; /* dvh: siempre cubre el área visible, aunque cambien las barras del navegador móvil */
   z-index: 8000; /* debajo del header, para que el mix-blend-mode lo vuelva negro */
   pointer-events: none; /* cerrado deja pasar los clics (el JS lo cambia al abrir) */
 }

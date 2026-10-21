@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Color de la barra del navegador en móvil: el del hero. "only light" evita que el modo
+         oscuro automático de algunos navegadores invierta los colores del diseño -->
+    <meta name="theme-color" content="#0c0c0c">
+    <meta name="color-scheme" content="only light">
     <meta name="description" content="Portfolio de Ivo Ferrer, Creative Developer &amp; Designer: diseño web, desarrollo, apps móviles, motion graphics e identidad de marca.">
     <title>Ivo Ferrer</title>
     <link rel="icon" type="image/svg+xml" href="assets/logos/logoivo.svg">
-    <link rel="preload" href="assets/fonts/WorkSans-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
-    <link rel="preload" href="assets/fonts/Moul-Regular.ttf" as="font" type="font/ttf" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preload" href="assets/fonts/WorkSans-VariableFont_wght.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/Moul-Regular.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/fuzzytext/fuzzy-text.css">
@@ -22,14 +28,14 @@
 </head>
 <body class="loading">
     <div class="page-transition" aria-hidden="true">
-        <img class="page-transition__logo" src="assets/logos/logoivo.svg" alt="" draggable="false">
+        <img class="page-transition__logo" src="assets/logos/logoivo.svg" width="1202" height="938" alt="" draggable="false">
     </div>
     <a class="skip-link" href="#contenido">Saltar al contenido principal</a>
 
     <!-- PRELOADER (decorativo) -->
     <div id="preloader" class="preloader" aria-hidden="true">
         <div class="preloader__inner">
-            <img class="preloader__logo" src="assets/logos/logoivo.svg" alt="" draggable="false">
+            <img class="preloader__logo" src="assets/logos/logoivo.svg" width="1202" height="938" alt="" draggable="false">
             <div class="preloader__bar">
                 <div class="preloader__bar-track"></div>
                 <div class="preloader__bar-fill"></div>
@@ -42,7 +48,7 @@
     <!-- 1. HEADER (Totalmente independiente y afuera del menú) -->
     <header class="site-header">
         <a href="#inicio" class="sm-logo">
-            <img src="assets/logos/logoivo.svg" alt="Ivo Ferrer, ir al inicio" class="sm-logo-img">
+            <img src="assets/logos/logoivo.svg" width="1202" height="938" alt="Ivo Ferrer, ir al inicio" class="sm-logo-img">
         </a>
 
         <button class="sm-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
@@ -165,21 +171,21 @@
             <h2 id="clientes-titulo" class="logo-wall__heading hidden-element">Compañías que han confiado en mi trabajo</h2>
             <ul class="logo-wall__grid">
                 <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
-                    <img src="assets/logos/logo-ascanellib.png" alt="Ascanelli" loading="lazy">
+                    <img src="assets/logos/logo-ascanellib.png" width="390" height="114" alt="Ascanelli" loading="lazy">
                 </li>
                 <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Apple</span></li>
                 <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
-                    <img src="assets/logos/logo-montecitos.png" alt="Montecitos Country &amp; Golf" class="logo-wall__logo--montecitos" loading="lazy">
+                    <img src="assets/logos/logo-montecitos.png" width="696" height="300" alt="Montecitos Country &amp; Golf" class="logo-wall__logo--montecitos" loading="lazy">
                 </li>
                 <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Google</span></li>
                 <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Nike</span></li>
                 <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand">
-                    <img src="assets/logos/logo-enterlab.webp" alt="Enterlab" class="logo-wall__logo--enterlab" loading="lazy">
+                    <img src="assets/logos/logo-enterlab.webp" width="948" height="209" alt="Enterlab" class="logo-wall__logo--enterlab" loading="lazy">
                 </li>
                 <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Ferrari</span></li>
                 <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Sony</span></li>
                 <li class="logo-wall__chip logo-wall__chip--lg logo-wall__chip--brand logo-wall__chip--boost">
-                    <img src="assets/logos/logo-cpd.png" alt="Centro Privado del Diagnóstico" class="logo-wall__logo--cpd" loading="lazy">
+                    <img src="assets/logos/logo-cpd.png" width="2111" height="720" alt="Centro Privado del Diagnóstico" class="logo-wall__logo--cpd" loading="lazy">
                 </li>
                 <li class="logo-wall__chip logo-wall__chip--md logo-wall__chip--text"><span class="logo-wall__word">Adobe</span></li>
                 <li class="logo-wall__chip logo-wall__chip--sm logo-wall__chip--text"><span class="logo-wall__word">Mercedes</span></li>
@@ -203,7 +209,7 @@
 
         <!-- PIXELATED VIDEO BREAK -->
         <section class="video-break wrap" aria-labelledby="que-hago-titulo">
-            <video class="video-break__media" autoplay loop muted playsinline aria-hidden="true">
+            <video class="video-break__media" autoplay loop muted playsinline poster="assets/img/video-break-poster.jpg" aria-hidden="true">
                 <source src="asd3.mp4" type="video/mp4">
             </video>
             <h2 id="que-hago-titulo" class="video-break__title hidden-element">¿Qué es lo<br>que hago?</h2>
@@ -297,17 +303,17 @@
             <h2 id="insights-titulo" class="section-title insights-head hidden-element">Cómo trabajo</h2>
             <ul class="insights-grid">
                 <li class="insight-card hidden-element">
-                    <img class="insight-card__media" src="assets/img/cap-montecitos.png" alt="Captura del proyecto Montecitos" loading="lazy">
+                    <img class="insight-card__media" src="assets/img/webp/cap-montecitos.webp" width="1907" height="872" alt="Captura del proyecto Montecitos" loading="lazy">
                     <p class="insight-card__tag">Caso de estudio</p>
                     <h3>Montecitos: de brief a producción en 6 semanas</h3>
                 </li>
                 <li class="insight-card hidden-element">
-                    <img class="insight-card__media" src="assets/img/cap-ascanelli.png" alt="Captura del proyecto Ascanelli" loading="lazy">
+                    <img class="insight-card__media" src="assets/img/webp/cap-ascanelli.webp" width="1903" height="854" alt="Captura del proyecto Ascanelli" loading="lazy">
                     <p class="insight-card__tag">Cómo trabajo</p>
                     <h3>De la primera llamada al lanzamiento: mi proceso en 5 etapas</h3>
                 </li>
                 <li class="insight-card hidden-element">
-                    <img class="insight-card__media" src="assets/img/cap-enterlab.png" alt="Captura del proyecto Enterlab" loading="lazy">
+                    <img class="insight-card__media" src="assets/img/webp/cap-enterlab.webp" width="2400" height="1115" alt="Captura del proyecto Enterlab" loading="lazy">
                     <p class="insight-card__tag">Precios y timelines</p>
                     <h3>¿Cuánto cuesta y cuánto tarda un sitio a medida?</h3>
                 </li>

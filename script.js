@@ -33,7 +33,7 @@ document.querySelector('.projects-list').innerHTML = window.PROYECTOS.map(projec
         <a href="trabajo.html#/proyecto/${project.slug}">
             <span class="projects-list__title">${project.titulo}</span>
             <span class="projects-list__client">${splitLetters(project.cliente)}</span>
-            <img class="projects-list__thumb" src="${project.poster}" alt="" loading="lazy" decoding="async">
+            <img class="projects-list__thumb" src="${project.poster}" alt="" width="1920" height="873" loading="lazy" decoding="async">
         </a>
     </li>`).join('');
 
