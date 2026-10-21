@@ -8,6 +8,9 @@
 
    onClose: se llama cuando empieza la salida (el logo cae). Ahí arranca la entrada del hero. */
 class Preloader {
+    // Velocidad de la secuencia de apertura respecto del original: 2.5 la deja en ~1,4 s
+    static SPEED = 2.5;
+
     constructor(onClose) {
         this.el = document.getElementById('preloader');
         this.onClose = onClose;
@@ -99,36 +102,35 @@ class Preloader {
         gsap.ticker.add(this.update);
 
         gsap.set([this.bar, this.barFill], { scaleX: 0 });
-        gsap.to(this, { fakeProgress: this.fakePart, duration: 7, ease: 'power1.inOut' });
+        gsap.to(this, { fakeProgress: this.fakePart, duration: 7 / Preloader.SPEED, ease: 'power1.inOut' });
 
         // Primer frame ya pintado (negro): se retira el fondo negro de seguridad del CSS
         this.drawCurtain();
         this.el.classList.add('is-ready');
 
-        gsap.to(this.anim, { greyAlpha: 1, duration: 0.64, delay: 0.23, ease: 'cubic.inOut' });
-        gsap.delayedCall(0.6, () => this.openCurtain());
-    }
-
-    openCurtain() {
-        this.inner.style.opacity = 1;
-        gsap.to(this.anim, { logoAlpha: 1, duration: 1, ease: 'cubic.inOut' });
-        // Fase 1: rendija vertical de arriba hacia abajo
-        gsap.to(this.anim, { maskY: 1, duration: 0.7, delay: 1, ease: 'power2.in' });
-        // Fase 2: la rendija se abre hacia los costados (y a la vez aparece la barra)
-        gsap.to(this.bar, { scaleX: 1, duration: 1.15, delay: 1.75, ease: 'expo.inOut', force3D: true });
-        gsap.to(this.anim, {
-            maskX: 1,
-            duration: 1.1,
-            delay: 1.75,
-            ease: 'expo.inOut',
-            onComplete: () => {
-                // Cortina abierta del todo: se limpia una última vez y se deja de dibujar
-                this.drawCurtain();
-                this.curtainOpen = true;
-                this.canvas.style.display = 'none';
-                this.barActive = true;
-            }
-        });
+        // Los tiempos son los del original (~3,5 s); timeScale comprime toda la secuencia
+        gsap.timeline()
+            .to(this.anim, { greyAlpha: 1, duration: 0.64, ease: 'cubic.inOut' }, 0.23)
+            .call(() => { this.inner.style.opacity = 1; }, null, 0.6)
+            .to(this.anim, { logoAlpha: 1, duration: 1, ease: 'cubic.inOut' }, 0.6)
+            // Fase 1: rendija vertical de arriba hacia abajo
+            .to(this.anim, { maskY: 1, duration: 0.7, ease: 'power2.in' }, 1.6)
+            // Fase 2: la rendija se abre hacia los costados y a la vez aparece la barra,
+            // que ya empieza a seguir la carga
+            .call(() => { this.barActive = true; }, null, 2.35)
+            .to(this.bar, { scaleX: 1, duration: 1.15, ease: 'expo.inOut', force3D: true }, 2.35)
+            .to(this.anim, {
+                maskX: 1,
+                duration: 1.1,
+                ease: 'expo.inOut',
+                onComplete: () => {
+                    // Cortina abierta del todo: se limpia una última vez y se deja de dibujar
+                    this.drawCurtain();
+                    this.curtainOpen = true;
+                    this.canvas.style.display = 'none';
+                }
+            }, 2.35)
+            .timeScale(Preloader.SPEED);
     }
 
     close() {
@@ -161,15 +163,16 @@ class Preloader {
         if (target > this.target) this.target = Math.min(target, 1);
 
         if (this.barActive) {
-            // Se acerca un 6% por frame a 60fps, sin importar el refresco del monitor
-            const k = 1 - Math.pow(0.94, (deltaTime || 16.667) / 16.667);
+            // Se acerca un 12% por frame a 60fps, sin importar el refresco del monitor
+            const k = 1 - Math.pow(0.88, (deltaTime || 16.667) / 16.667);
             this.progress += k * (this.target - this.progress);
         }
 
         if (!this.curtainOpen) this.drawCurtain();
         gsap.set(this.barFill, { scaleX: this.progress, force3D: true });
 
-        if (this.target >= 0.999 && this.progress > 0.99 && !this.closing) this.close();
+        // Se cierra recién con la cortina abierta, aunque la barra llegue antes
+        if (this.curtainOpen && this.target >= 0.999 && this.progress > 0.99 && !this.closing) this.close();
     }
 
     /* ---------- Dibujo ---------- */
