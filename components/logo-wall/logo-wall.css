@@ -46,7 +46,7 @@
 
 .logo-wall__heading {
     text-align: center;
-    font-size: 0.95rem;
+    font-size: var(--fs-body);
     font-weight: 400;
     color: rgba(255, 255, 255, 0.6);
     margin-bottom: 3rem;
@@ -152,5 +152,5 @@
     .logo-wall__chip--brand .logo-wall__logo--montecitos { height: 70px; }
     .logo-wall__chip--brand .logo-wall__logo--enterlab { height: 26px; }
     .logo-wall__chip--brand .logo-wall__logo--cpd { height: 30px; }
-    .logo-wall__word { font-size: 0.95rem; }
+    .logo-wall__word { font-size: var(--fs-body); }
 }

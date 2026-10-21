@@ -35,7 +35,7 @@
   position: relative; display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.78rem 1.35rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 999px;
   background: transparent; color: var(--white); cursor: pointer;
-  font-weight: 700; font-size: 0.78rem; letter-spacing: 0.06em; line-height: 1;
+  font-weight: 700; font-size: var(--fs-sm); letter-spacing: 0.06em; line-height: 1;
 }
 
 /* Las 4 líneas de texto (Menu / Cerrar / Menu / Cerrar) se desplazan hacia arriba dentro de una ventana de 1 línea */
@@ -119,7 +119,7 @@
 }
 
 /* --- REDES --- */
-.sm-socials-title { margin: auto 0 1rem; padding-top: 3rem; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
+.sm-socials-title { margin: auto 0 1rem; padding-top: 3rem; font-size: var(--fs-sm); font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); }
 .sm-socials-list { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.5rem; flex-wrap: wrap; }
 .sm-socials-link { font-size: 1.1rem; font-weight: 500; color: var(--black); text-decoration: none; transition: opacity 0.3s ease, color 0.3s ease; }
 .sm-socials-list:hover .sm-socials-link { opacity: 0.4; }

@@ -17,6 +17,14 @@
     --cyan: #47D2F5;
     --muted: #6b6b6b;
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Escala tipográfica: el texto usa solo estos tamaños (los números gigantes del hero,
+       las cifras y el footer son momentos "display" y llevan su propio tamaño) */
+    --fs-sm: 0.875rem;                          /* 14px: etiquetas, botones, notas */
+    --fs-body: 1rem;                            /* 16px: texto corrido */
+    --fs-lead: clamp(1.125rem, 1.8vw, 1.625rem); /* 18–26px: párrafos destacados, preguntas */
+    --fs-h3: clamp(1.5rem, 3vw, 2.35rem);       /* 24–38px: subtítulos */
+    --fs-h2: clamp(2.4rem, 5.2vw, 4.6rem);      /* 38–74px: títulos de sección */
 }
 
 /* --- RESET --- */
@@ -29,7 +37,18 @@
 }
 
 body {
-    font: 400 1rem/1.5 'Work Sans', sans-serif;
+    font: 400 var(--fs-body)/1.5 'Work Sans', sans-serif;
+}
+
+/* Reparte las líneas de los títulos y evita palabras sueltas al final de los párrafos */
+h1,
+h2,
+h3 {
+    text-wrap: balance;
+}
+
+p {
+    text-wrap: pretty;
 }
 
 img,
