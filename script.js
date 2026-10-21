@@ -143,6 +143,16 @@ document.addEventListener('focusin', (e) => {
     }
 });
 
+// En pantallas chicas el logo y el botón Menu quedan encima de los títulos mientras se lee:
+// el header se esconde al bajar y vuelve apenas se sube. Arriba de todo siempre se ve.
+const smallScreen = window.matchMedia('(max-width: 768px)');
+
+smoothScroll.onScroll((scroll, direction) => {
+    if (direction === 0) return;
+    const hide = smallScreen.matches && direction === 1 && scroll > siteHeader.offsetHeight;
+    siteHeader.classList.toggle('is-hidden', hide);
+});
+
 /**
  * 2. CURSOR PERSONALIZADO
  *    Sigue al mouse con un poco de retraso (se acerca un 20% por frame)

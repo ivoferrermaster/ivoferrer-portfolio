@@ -35,6 +35,11 @@ class SmoothScroll {
         this.lenis.scrollTo(target, { immediate });
     }
 
+    // Avisa en cada scroll con la posición (px) y la dirección (1 bajando, -1 subiendo)
+    onScroll(callback) {
+        this.lenis.on('scroll', ({ scroll, direction }) => callback(scroll, direction));
+    }
+
     // Posición (en px) a la que se dirige el scroll; si no se está animando, es la actual
     get destination() {
         return this.lenis.targetScroll;

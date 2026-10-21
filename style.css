@@ -123,12 +123,18 @@ address {
     /* Entrada: aparece y baja suavemente después de que se va el panel violeta del hero */
     opacity: 0;
     margin-top: -20px;
-    transition: opacity 1s ease 1.8s, margin-top 1s ease 1.8s;
+    transition: opacity 1s ease 1.8s, margin-top 1s ease 1.8s, translate 0.45s var(--ease);
 }
 
 body.start-anim .site-header {
     opacity: 1;
     margin-top: 0;
+}
+
+/* Escondido al bajar en pantallas chicas (lo maneja script.js); con el foco del teclado adentro
+   vuelve a mostrarse */
+.site-header.is-hidden:not(:focus-within) {
+    translate: 0 -100%;
 }
 
 /* --- HERO (text-image + parallax) --- */
