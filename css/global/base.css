@@ -1,7 +1,5 @@
-/* base.css — estilos comunes a todas las páginas (inicio y trabajo).
-   Las fuentes están aparte, en css/fonts.css. Cada página pisa lo que necesite. */
+/* base.css estilos globales para toda la pagina */
 
-/* --- VARIABLES COMUNES --- */
 :root {
     --white: #ffffff;
     --black: #000000;
@@ -9,7 +7,7 @@
     --muted: #6b6b6b;
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
 
-    /* Tamaños de letra: todo el sitio usa estas variables (en celular cambian, ver abajo) */
+    /* Tamaños de letra: todo el sitio usa estas variables */
     --titulo-hero: 14vw;        /* IVO FERRER */
     --titulo-proyecto: 7vw;     /* nombres de la lista "Trabajo seleccionado" */
     --cifra: 150px;             /* números de la sección de cifras */
@@ -22,7 +20,7 @@
     --chico: 0.78rem;           /* etiquetas, autores y botones */
 }
 
-/* En celular los títulos se achican: alcanza con cambiar las variables */
+/* root var para celulaler (media query) */
 @media (max-width: 768px) {
     :root {
         --titulo-hero: 20vw;
@@ -35,7 +33,6 @@
     }
 }
 
-/* --- RESET --- */
 *,
 *::before,
 *::after {
@@ -70,10 +67,8 @@ button {
     color: inherit;
 }
 
-/* --- SCROLL SUAVE al tocar un enlace a una sección (#servicios...) --- */
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 80px; /* para que el header fijo no tape el principio de la sección */
 }
 
 /* --- HEADER FIJO (logo + botón del menú) --- */
@@ -109,6 +104,10 @@ html {
     cursor: pointer;
 }
 
+.menu-toggle:hover {
+    background-color: var(--white);
+    color: var(--black);
+}
 /* --- MENÚ LATERAL: espera escondido a la derecha y entra con la clase .abierto (menu.js) --- */
 .menu {
     position: fixed;

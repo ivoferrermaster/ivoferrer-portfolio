@@ -1,13 +1,9 @@
-/* style.css — página de inicio. Lo común a todas las páginas está en base.css
-   y las fuentes en css/fonts.css */
-
 body {
     background-color: var(--white);
     color: var(--black);
     overflow-x: hidden;
 }
 
-/* Título grande de sección (trabajo, testimonios, cómo trabajo, FAQ) */
 .section-title {
     margin-bottom: 3.5rem;
     font-size: var(--titulo-seccion);
@@ -16,7 +12,6 @@ body {
     letter-spacing: -0.045em;
 }
 
-/* --- HERO --- */
 .hero {
     overflow: hidden; /* con el parallax los textos se mueven: lo que sale del hero no se ve */
     display: flex;
@@ -50,14 +45,12 @@ body {
     font-weight: 300;
 }
 
-/* --- SERVICIOS: con el mouse encima (o al tocarlo en el celular) se pone negro y muestra el texto.
-   :focus funciona porque cada servicio tiene tabindex="0" en el HTML. --- */
 .services {
     padding: 2rem 4vw 6rem;
 }
 
 .service {
-    margin-bottom: 10px;
+    margin-bottom: 0.8rem;
     padding: 1.5rem 2.2rem;
     border-radius: 18px;
     background: #f7f7f7;
@@ -72,13 +65,11 @@ body {
     letter-spacing: -0.03em;
 }
 
-/* Número del servicio */
 .service h3 span {
     font-size: var(--destacado);
     opacity: 0.4;
 }
 
-/* La descripción está escondida hasta que se pasa el mouse */
 .service p {
     display: none;
     max-width: 75%;
@@ -88,26 +79,22 @@ body {
 }
 
 /* Con el mouse encima: fondo negro, letras blancas y aparece la descripción */
-.service:hover,
-.service:focus {
+.service:hover {
     background: var(--black);
     color: var(--white);
 }
 
-.service:hover h3 span,
-.service:focus h3 span {
+.service:hover h3 span {
     opacity: 1;
 }
 
-.service:hover p,
-.service:focus p {
+.service:hover p {
     display: block;
 }
 
-/* --- CLIENTES --- */
 .clients {
     padding: 6rem 4vw;
-    border-radius: 40px 40px 0 0;
+    border-radius: 2.5rem 2.5rem 0 0;
     background: var(--black);
     color: var(--white);
     text-align: center;
@@ -130,27 +117,22 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 96px;
+    height: 6.5rem;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 28px;
+    border-radius: 2rem;
     background: rgba(255, 255, 255, 0.05);
     font-size: var(--destacado);
     font-weight: 800;
-    letter-spacing: -0.03em;
 }
 
-/* Los logos están hechos para fondo claro: se les sube el brillo para que se vean sobre el negro */
 .clients-grid img {
     height: 40px;
-    filter: brightness(1.6);
 }
 
-/* Este logo tiene mucho espacio vacío alrededor, por eso va más grande */
 .clients-grid .logo-montecitos {
     height: 90px;
 }
 
-/* --- TRABAJO SELECCIONADO --- */
 .projects {
     padding: 8rem 4vw 7rem;
     background: var(--black);
@@ -427,16 +409,14 @@ body {
 
 /* Fila de abajo: ubicación, redes y copyright */
 .footer-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    
     gap: 1rem;
     font-size: var(--texto);
     color: #8a8a8a;
 }
 
 .footer-socials {
-    display: flex;
+    
     gap: 1.5rem;
 }
 
